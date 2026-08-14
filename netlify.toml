@@ -1,11 +1,13 @@
 [build]
   command = "npm run build"
+  # Required by @netlify/plugin-nextjs. NOTE: a publish directory set in the
+  # Netlify UI (Site configuration -> Build & deploy -> Build settings)
+  # overrides this value. If the UI field is set to the repo root (or
+  # anything other than ".next"), the plugin fails with "Your publish
+  # directory cannot be the same as the base directory of your site" — clear
+  # that UI field so this value takes effect.
+  publish = ".next"
 
-# Do not set `publish` — the Next.js Runtime plugin below manages Netlify's
-# publish directory and serverless/edge functions internally. Manually
-# pointing `publish` at ".next" (a common manual misconfiguration) causes a
-# generic Netlify "Page not found" screen, since .next/ has no static
-# index.html at its root for a hybrid app with dynamic API routes.
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
