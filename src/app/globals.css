@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  /* Brand palette — strictly Red / Black / White, no other hues */
-  --color-ink: #0a0a0a;          /* near-black */
-  --color-ink-soft: #1a1a1a;
-  --color-red-900: #2b0607;
-  --color-red-800: #4a0a0c;
-  --color-red-700: #b3111a;      /* primary CTA red */
-  --color-red-600: #d41922;      /* hover red */
-  --color-red-500: #e5333c;
-  --color-red-400: #ee6169;
-  --color-red-300: #f49aa0;
-  --color-red-100: #fbe6e7;      /* light red tint for badges/tints */
-  --color-paper: #fafafa;        /* light neutral background */
-  --color-paper-dim: #efefef;
+  /* Brand palette — strictly China Red / Grey / White, no other hues (no gold) */
+  --color-ink: #333333;          /* charcoal grey — replaces black */
+  --color-ink-soft: #4a4a4a;     /* lighter grey for hover states */
+  --color-red-900: #3d1206;
+  --color-red-800: #6b200b;
+  --color-red-700: #aa381e;      /* China Red — primary CTA */
+  --color-red-600: #c14a2a;      /* hover red */
+  --color-red-500: #d0654a;
+  --color-red-400: #dd8a72;
+  --color-red-300: #ecb5a5;
+  --color-red-100: #faeae5;      /* light red tint for badges/tints */
+  --color-paper: #f7f7f7;        /* light grey background */
+  --color-paper-dim: #ececec;
   --color-white: #ffffff;
 
   --background: var(--color-white);
