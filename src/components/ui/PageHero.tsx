@@ -12,14 +12,21 @@ export function PageHero({
 }) {
   return (
     <section className="relative overflow-hidden bg-ink py-20 sm:py-28">
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/70 via-ink to-ink" />
+      <div className="absolute inset-0 bg-gradient-to-br from-ink-soft via-ink to-ink" />
       <div
-        className="absolute inset-0 opacity-[0.06]"
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(115deg, transparent, transparent 60px, rgba(255,255,255,0.6) 60px, rgba(255,255,255,0.6) 62px)",
-        }}
         aria-hidden
+        className="pointer-events-none absolute left-1/2 top-1/2 hidden h-[120%] w-auto -translate-x-1/2 -translate-y-1/2 bg-red-700 opacity-[0.08] sm:block"
+        style={{
+          aspectRatio: "590 / 746",
+          WebkitMaskImage: "url(/brand/stella-mark.png)",
+          maskImage: "url(/brand/stella-mark.png)",
+          WebkitMaskSize: "contain",
+          maskSize: "contain",
+          WebkitMaskRepeat: "no-repeat",
+          maskRepeat: "no-repeat",
+          WebkitMaskPosition: "center",
+          maskPosition: "center",
+        }}
       />
       <Container className="relative">
         {eyebrow && (
