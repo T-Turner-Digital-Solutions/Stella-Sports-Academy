@@ -25,7 +25,7 @@ export default function DonationPolicyPage() {
         <h2>Designations</h2>
         <p>
           Donors may designate gifts to a specific fund or campaign (such as Sponsor an Athlete,
-          Equipment Fund, or Scholarship Fund) or to the General Fund / Greatest Need. Stella will
+          Equipment Fund, or Scholarship Fund) or to the General Fund / Greatest Need. Steller will
           make reasonable efforts to honor donor designations; if a designated fund is
           fully met or discontinued, funds may be redirected to a similar program area at the
           organization&rsquo;s discretion.

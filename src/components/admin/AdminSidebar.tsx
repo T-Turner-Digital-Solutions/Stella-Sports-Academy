@@ -20,7 +20,7 @@ export function AdminSidebar() {
   return (
     <aside className="flex h-full w-64 flex-shrink-0 flex-col bg-ink text-white">
       <div className="px-5 py-6">
-        <p className="font-display text-lg uppercase tracking-wide text-white">Stella Admin</p>
+        <p className="font-display text-lg uppercase tracking-wide text-white">Steller Admin</p>
         <p className="mt-1 text-xs text-white/45">Submission review</p>
       </div>
       <nav className="flex-1 px-3">

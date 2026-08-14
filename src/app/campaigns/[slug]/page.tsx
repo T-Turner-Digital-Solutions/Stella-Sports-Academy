@@ -135,7 +135,7 @@ export default async function CampaignDetailPage({
             </div>
 
             <p className="mt-5 text-xs leading-relaxed text-ink/45">
-              Donors may choose to remain anonymous. Stella never publishes payment details or
+              Donors may choose to remain anonymous. Steller never publishes payment details or
               donor contact information.
             </p>
           </aside>

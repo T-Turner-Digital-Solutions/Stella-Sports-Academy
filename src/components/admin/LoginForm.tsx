@@ -37,7 +37,7 @@ export function LoginForm() {
           <ShieldCheck className="h-6 w-6 text-red-700" />
         </span>
         <h1 className="font-display text-2xl uppercase tracking-wide text-ink">Admin Sign In</h1>
-        <p className="text-sm text-ink/60">Stella Sports Academy — internal review access only.</p>
+        <p className="text-sm text-ink/60">Steller Sports Academy — internal review access only.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-4 rounded-2xl border border-ink/10 bg-white p-6">

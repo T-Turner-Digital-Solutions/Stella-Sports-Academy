@@ -221,7 +221,7 @@ export function AthleteApplicationForm() {
         checked={consent}
         onChange={(e) => setConsent(e.target.checked)}
         error={fieldErrors.consent}
-        label="I am the parent/guardian of the athlete named above and I consent to submitting this application to Stella Sports Academy. I understand this information will be kept confidential and reviewed by authorized program staff only."
+        label="I am the parent/guardian of the athlete named above and I consent to submitting this application to Steller Sports Academy. I understand this information will be kept confidential and reviewed by authorized program staff only."
       />
 
       <Button type="submit" size="lg" disabled={state.status === "submitting"} className="self-start">

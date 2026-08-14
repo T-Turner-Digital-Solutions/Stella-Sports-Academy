@@ -22,7 +22,7 @@ export default async function DonatePage({
     <>
       <PageHero
         eyebrow="Give Today"
-        title="Donate to Stella"
+        title="Donate to Steller"
         description="Your gift funds athletic training, academic support, mentorship, and life-skills development for young athletes who need it most."
       />
 
@@ -32,12 +32,12 @@ export default async function DonatePage({
             <InfoRow
               icon={ShieldCheck}
               title="Secure & PCI-Compliant"
-              description="Payments are processed through Stripe. Stella never sees or stores your card information."
+              description="Payments are processed through Stripe. Steller never sees or stores your card information."
             />
             <InfoRow
               icon={Repeat}
               title="Give Monthly"
-              description="Join the Stella Champions Club — recurring donors who provide steady, dependable support all year."
+              description="Join the Steller Champions Club — recurring donors who provide steady, dependable support all year."
             />
             <InfoRow
               icon={HeartHandshake}

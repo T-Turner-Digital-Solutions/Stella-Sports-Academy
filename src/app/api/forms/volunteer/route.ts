@@ -16,7 +16,7 @@ export async function POST(request: Request) {
   }
 
   if (parsed.data.website) {
-    return NextResponse.json({ message: "Thank you for volunteering with Stella." });
+    return NextResponse.json({ message: "Thank you for volunteering with Steller." });
   }
 
   const v = parsed.data;
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
   }
 
   await sendAdminNotification(
-    "New Stella volunteer application",
+    "New Steller volunteer application",
     `
       <h2>New Volunteer Application</h2>
       <p><strong>Name:</strong> ${escapeHtml(v.name)}</p>
@@ -51,8 +51,8 @@ export async function POST(request: Request) {
 
   await sendConfirmationEmail(
     v.email,
-    "We received your Stella volunteer application",
-    `<p>Hi ${escapeHtml(v.name)},</p><p>Thank you for your interest in volunteering with Stella Sports Academy. Our team will follow up soon.</p>`
+    "We received your Steller volunteer application",
+    `<p>Hi ${escapeHtml(v.name)},</p><p>Thank you for your interest in volunteering with Steller Sports Academy. Our team will follow up soon.</p>`
   );
 
   return NextResponse.json({ message: "Thank you! Your volunteer application has been received." });

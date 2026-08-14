@@ -39,7 +39,7 @@ export function Footer() {
                 }}
               />
               <span className="font-display text-lg uppercase tracking-wide text-white">
-                Stella Sports Academy
+                Steller Sports Academy
               </span>
             </Link>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/60">
@@ -50,7 +50,7 @@ export function Footer() {
                 {site.email && (
                   <a
                     href={`mailto:${site.email}`}
-                    aria-label="Email Stella Sports Academy"
+                    aria-label="Email Steller Sports Academy"
                     className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/80 transition-colors hover:bg-red-600 hover:text-white"
                   >
                     <Mail className="h-4 w-4" />

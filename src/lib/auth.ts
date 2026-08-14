@@ -1,7 +1,7 @@
 import { SignJWT, jwtVerify } from "jose";
 import bcrypt from "bcryptjs";
 
-export const SESSION_COOKIE = "stella_admin_session";
+export const SESSION_COOKIE = "steller_admin_session";
 const SESSION_DURATION_SECONDS = 60 * 60 * 8; // 8 hours
 
 function getSecretKey() {

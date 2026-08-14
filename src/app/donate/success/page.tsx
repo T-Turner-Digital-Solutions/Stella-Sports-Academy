@@ -45,7 +45,7 @@ export default async function DonateSuccessPage({
         <h1 className="font-display mt-6 text-3xl uppercase tracking-wide text-ink sm:text-4xl">
           Thank You for Supporting
           <br />
-          Stella Sports Academy
+          Steller Sports Academy
         </h1>
 
         {amountCents !== null ? (

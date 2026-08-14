@@ -20,7 +20,7 @@ export default function ImpactPage() {
       <PageHero
         eyebrow="Our Impact"
         title="The Difference We're Making"
-        description="Stella reports real, verified figures only — never estimates. As programs grow, this page grows with them."
+        description="Steller reports real, verified figures only — never estimates. As programs grow, this page grows with them."
       />
 
       <section className="bg-white py-20 sm:py-28">

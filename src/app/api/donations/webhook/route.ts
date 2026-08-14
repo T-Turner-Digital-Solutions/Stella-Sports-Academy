@@ -38,19 +38,19 @@ export async function POST(request: Request) {
     const session = event.data.object;
     const amount = session.amount_total ?? 0;
     const email = session.customer_details?.email ?? session.customer_email ?? "";
-    const donorName = (session.metadata?.donorName as string) || "A Stella supporter";
+    const donorName = (session.metadata?.donorName as string) || "A Steller supporter";
     const designation = (session.metadata?.designation as string) || "General Fund";
 
     await sendAdminNotification(
-      "New Stella donation received",
+      "New Steller donation received",
       `<p><strong>${escapeHtml(donorName)}</strong> gave ${formatCurrency(amount)} to ${escapeHtml(designation)}.</p>`
     );
 
     if (email) {
       await sendConfirmationEmail(
         email,
-        "Thank you for your donation to Stella Sports Academy",
-        `<p>Thank you for your gift of ${formatCurrency(amount)} to Stella Sports Academy.</p>
+        "Thank you for your donation to Steller Sports Academy",
+        `<p>Thank you for your gift of ${formatCurrency(amount)} to Steller Sports Academy.</p>
          <p>Reference: ${escapeHtml(session.id)}</p>`
       );
     }
