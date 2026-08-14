@@ -3,15 +3,15 @@ import { cn } from "@/lib/utils";
 export function Badge({
   children,
   className,
-  tone = "maroon",
+  tone = "red",
 }: {
   children: React.ReactNode;
   className?: string;
-  tone?: "maroon" | "gold" | "ink" | "neutral";
+  tone?: "red" | "white" | "ink" | "neutral";
 }) {
   const tones = {
-    maroon: "bg-maroon-100 text-maroon-700",
-    gold: "bg-gold-100 text-gold-700",
+    red: "bg-red-100 text-red-700",
+    white: "bg-white text-ink",
     ink: "bg-ink text-white",
     neutral: "bg-paper-dim text-ink/70",
   };

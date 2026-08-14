@@ -17,7 +17,7 @@ export default function RefundPolicyPage() {
         <p>
           If you made a donation in error — such as a duplicate transaction or incorrect amount —
           please contact us within 30 days of the donation through our{" "}
-          <a href="/contact" className="text-maroon-700 underline">
+          <a href="/contact" className="text-red-700 underline">
             Contact page
           </a>
           , selecting &ldquo;Donation Question&rdquo; as the inquiry type. Include the donation

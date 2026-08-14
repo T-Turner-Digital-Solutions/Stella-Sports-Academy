@@ -37,7 +37,7 @@ export default function AccessibilityPage() {
         <h2>Feedback</h2>
         <p>
           If you encounter an accessibility barrier on this site, please let us know through our{" "}
-          <a href="/contact" className="text-maroon-700 underline">
+          <a href="/contact" className="text-red-700 underline">
             Contact page
           </a>{" "}
           so we can address it.

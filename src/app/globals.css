@@ -1,22 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  /* Brand palette — sourced from Stella Sports Academy's corporate mark */
-  --color-ink: #121013;          /* near-black */
-  --color-ink-soft: #221c1f;
-  --color-maroon-900: #3d0f1b;
-  --color-maroon-800: #551625;
-  --color-maroon-700: #6e1c30;   /* primary CTA burgundy */
-  --color-maroon-600: #85233a;
-  --color-maroon-100: #f6e9ec;
-  --color-gold-700: #a97a1f;
-  --color-gold-600: #c9962c;     /* primary gold accent */
-  --color-gold-500: #d9ac48;
-  --color-gold-400: #e2bd6c;
-  --color-gold-300: #ecd291;
-  --color-gold-100: #faf1dc;
-  --color-paper: #faf8f5;        /* light neutral background */
-  --color-paper-dim: #f2eee7;
+  /* Brand palette — strictly Red / Black / White, no other hues */
+  --color-ink: #0a0a0a;          /* near-black */
+  --color-ink-soft: #1a1a1a;
+  --color-red-900: #2b0607;
+  --color-red-800: #4a0a0c;
+  --color-red-700: #b3111a;      /* primary CTA red */
+  --color-red-600: #d41922;      /* hover red */
+  --color-red-500: #e5333c;
+  --color-red-400: #ee6169;
+  --color-red-300: #f49aa0;
+  --color-red-100: #fbe6e7;      /* light red tint for badges/tints */
+  --color-paper: #fafafa;        /* light neutral background */
+  --color-paper-dim: #efefef;
   --color-white: #ffffff;
 
   --background: var(--color-white);
@@ -26,17 +23,14 @@
 @theme inline {
   --color-ink: var(--color-ink);
   --color-ink-soft: var(--color-ink-soft);
-  --color-maroon-900: var(--color-maroon-900);
-  --color-maroon-800: var(--color-maroon-800);
-  --color-maroon-700: var(--color-maroon-700);
-  --color-maroon-600: var(--color-maroon-600);
-  --color-maroon-100: var(--color-maroon-100);
-  --color-gold-700: var(--color-gold-700);
-  --color-gold-600: var(--color-gold-600);
-  --color-gold-500: var(--color-gold-500);
-  --color-gold-400: var(--color-gold-400);
-  --color-gold-300: var(--color-gold-300);
-  --color-gold-100: var(--color-gold-100);
+  --color-red-900: var(--color-red-900);
+  --color-red-800: var(--color-red-800);
+  --color-red-700: var(--color-red-700);
+  --color-red-600: var(--color-red-600);
+  --color-red-500: var(--color-red-500);
+  --color-red-400: var(--color-red-400);
+  --color-red-300: var(--color-red-300);
+  --color-red-100: var(--color-red-100);
   --color-paper: var(--color-paper);
   --color-paper-dim: var(--color-paper-dim);
 
@@ -92,11 +86,11 @@ body {
 }
 
 ::selection {
-  background: var(--color-gold-300);
+  background: var(--color-red-300);
   color: var(--color-ink);
 }
 
 :focus-visible {
-  outline: 3px solid var(--color-gold-600);
+  outline: 3px solid var(--color-red-600);
   outline-offset: 2px;
 }

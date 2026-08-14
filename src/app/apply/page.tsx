@@ -22,7 +22,7 @@ export default function ApplyPage() {
       <section className="bg-white py-20 sm:py-24">
         <Container className="max-w-3xl">
           <div className="mb-10 flex items-start gap-3 rounded-2xl border border-ink/10 bg-paper px-5 py-4 text-sm text-ink/65">
-            <ShieldCheck className="mt-0.5 h-5 w-5 flex-shrink-0 text-maroon-700" />
+            <ShieldCheck className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-700" />
             <p>
               This application is confidential. Information submitted here is never displayed
               publicly and is reviewed only by authorized Stella program staff.

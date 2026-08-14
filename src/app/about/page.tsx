@@ -26,8 +26,8 @@ export default function AboutPage() {
       <section className="bg-white py-20 sm:py-28">
         <Container className="grid gap-8 md:grid-cols-2">
           <div className="rounded-2xl border border-ink/10 bg-paper p-8 sm:p-10">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-maroon-100">
-              <Compass className="h-6 w-6 text-maroon-700" />
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+              <Compass className="h-6 w-6 text-red-700" />
             </span>
             <h2 className="font-display mt-6 text-2xl uppercase tracking-wide text-ink">Our Mission</h2>
             <p className="mt-4 text-base leading-relaxed text-ink/70">
@@ -38,8 +38,8 @@ export default function AboutPage() {
             </p>
           </div>
           <div className="rounded-2xl border border-ink/10 bg-paper p-8 sm:p-10">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-maroon-100">
-              <Eye className="h-6 w-6 text-maroon-700" />
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+              <Eye className="h-6 w-6 text-red-700" />
             </span>
             <h2 className="font-display mt-6 text-2xl uppercase tracking-wide text-ink">Our Vision</h2>
             <p className="mt-4 text-base leading-relaxed text-ink/70">
@@ -54,7 +54,7 @@ export default function AboutPage() {
       {/* OUR STORY */}
       <section className="bg-paper py-20 sm:py-28">
         <Container className="grid gap-12 lg:grid-cols-[1fr_1.3fr] lg:items-center">
-          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-maroon-700 lg:hidden">
+          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-700 lg:hidden">
             <BookOpen className="h-6 w-6 text-white" />
           </span>
           <SectionHeading eyebrow="Where It Began" title="Our Story" />
@@ -80,13 +80,13 @@ export default function AboutPage() {
           <SectionHeading eyebrow="Founder's Message" title="Founder Story" />
           <div className="mt-10 grid gap-10 rounded-3xl border border-ink/10 bg-paper p-8 sm:p-10 lg:grid-cols-[280px_1fr] lg:p-12">
             <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
-              <div className="flex h-40 w-40 items-center justify-center rounded-2xl bg-gradient-to-br from-maroon-700 to-maroon-900 text-4xl font-bold text-gold-300">
+              <div className="flex h-40 w-40 items-center justify-center rounded-2xl bg-gradient-to-br from-red-700 to-red-900 text-4xl font-bold text-white">
                 JW
               </div>
               <p className="font-display mt-5 text-xl uppercase tracking-wide text-ink">
                 {founder.name}
               </p>
-              <p className="mt-1 text-sm font-semibold text-maroon-700">{founder.title}</p>
+              <p className="mt-1 text-sm font-semibold text-red-700">{founder.title}</p>
             </div>
             <div className="flex flex-col justify-center gap-4 text-base leading-relaxed text-ink/70">
               <p>
@@ -122,7 +122,7 @@ export default function AboutPage() {
             Ready to help build the next generation of champions?
           </h2>
           <div className="flex flex-wrap justify-center gap-4">
-            <Button href="/donate" variant="gold" size="lg">
+            <Button href="/donate" variant="white" size="lg">
               Donate Now
             </Button>
             <Button href="/get-involved" variant="outline-light" size="lg">

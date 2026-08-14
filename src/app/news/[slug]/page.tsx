@@ -35,7 +35,7 @@ export default async function NewsPostPage({
       <PageHero eyebrow={formatDate(post.date)} title={post.title} description={post.excerpt} />
       <section className="bg-white py-16 sm:py-24">
         <Container className="max-w-2xl">
-          <Badge tone="maroon" className="mb-6">
+          <Badge tone="red" className="mb-6">
             {post.category}
           </Badge>
           <div className="flex flex-col gap-4 text-base leading-relaxed text-ink/70">

@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import type { ComponentProps } from "react";
 
 const inputClasses =
-  "w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/35 transition-colors focus:border-maroon-700 focus:outline-none focus:ring-2 focus:ring-maroon-700/15";
+  "w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/35 transition-colors focus:border-red-700 focus:outline-none focus:ring-2 focus:ring-red-700/15";
 
 export function Field({
   label,
@@ -24,12 +24,12 @@ export function Field({
   return (
     <div className={cn("flex flex-col gap-1.5", className)}>
       <label htmlFor={htmlFor} className="text-sm font-semibold text-ink">
-        {label} {required && <span className="text-maroon-700">*</span>}
+        {label} {required && <span className="text-red-700">*</span>}
       </label>
       {children}
       {hint && !error && <p className="text-xs text-ink/50">{hint}</p>}
       {error && (
-        <p className="text-xs font-medium text-maroon-700" role="alert">
+        <p className="text-xs font-medium text-red-700" role="alert">
           {error}
         </p>
       )}
@@ -68,7 +68,7 @@ export function CheckboxField({
         <input
           id={id}
           type="checkbox"
-          className="mt-1 h-4 w-4 flex-shrink-0 rounded border-ink/30 text-maroon-700 focus:ring-maroon-700/30"
+          className="mt-1 h-4 w-4 flex-shrink-0 rounded border-ink/30 text-red-700 focus:ring-red-700/30"
           {...props}
         />
         <label htmlFor={id} className="text-sm leading-relaxed text-ink/75">
@@ -76,7 +76,7 @@ export function CheckboxField({
         </label>
       </div>
       {error && (
-        <p className="text-xs font-medium text-maroon-700" role="alert">
+        <p className="text-xs font-medium text-red-700" role="alert">
           {error}
         </p>
       )}
@@ -109,12 +109,12 @@ export function CheckboxGroup({
             <label
               key={option}
               htmlFor={id}
-              className="flex cursor-pointer items-center gap-2.5 rounded-xl border border-ink/15 px-3.5 py-2.5 text-sm text-ink/80 transition-colors has-checked:border-maroon-700 has-checked:bg-maroon-100 has-checked:text-maroon-700"
+              className="flex cursor-pointer items-center gap-2.5 rounded-xl border border-ink/15 px-3.5 py-2.5 text-sm text-ink/80 transition-colors has-checked:border-red-700 has-checked:bg-red-100 has-checked:text-red-700"
             >
               <input
                 id={id}
                 type="checkbox"
-                className="h-4 w-4 rounded border-ink/30 text-maroon-700 focus:ring-maroon-700/30"
+                className="h-4 w-4 rounded border-ink/30 text-red-700 focus:ring-red-700/30"
                 checked={selected.includes(option)}
                 onChange={() => onToggle(option)}
               />
@@ -124,7 +124,7 @@ export function CheckboxGroup({
         })}
       </div>
       {error && (
-        <p className="text-xs font-medium text-maroon-700" role="alert">
+        <p className="text-xs font-medium text-red-700" role="alert">
           {error}
         </p>
       )}

@@ -34,11 +34,11 @@ export default function TermsPage() {
         <h2>Donations</h2>
         <p>
           Donations made through this site are subject to our{" "}
-          <a href="/donation-policy" className="text-maroon-700 underline">
+          <a href="/donation-policy" className="text-red-700 underline">
             Donation Policy
           </a>{" "}
           and{" "}
-          <a href="/refund-policy" className="text-maroon-700 underline">
+          <a href="/refund-policy" className="text-red-700 underline">
             Refund Policy
           </a>
           .
@@ -70,7 +70,7 @@ export default function TermsPage() {
         <h2>Contact Us</h2>
         <p>
           Questions about these terms can be sent through our{" "}
-          <a href="/contact" className="text-maroon-700 underline">
+          <a href="/contact" className="text-red-700 underline">
             Contact page
           </a>
           .

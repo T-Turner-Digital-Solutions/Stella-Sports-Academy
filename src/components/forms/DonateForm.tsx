@@ -84,7 +84,7 @@ export function DonateForm({
               onClick={() => setFrequency(f)}
               className={cn(
                 "rounded-full px-5 py-2 text-sm font-semibold transition-colors",
-                frequency === f ? "bg-maroon-700 text-white" : "text-ink/60 hover:text-ink"
+                frequency === f ? "bg-red-700 text-white" : "text-ink/60 hover:text-ink"
               )}
             >
               {f === "one-time" ? "One-Time" : "Monthly"}
@@ -104,8 +104,8 @@ export function DonateForm({
               className={cn(
                 "rounded-xl border px-3 py-3 text-sm font-semibold transition-colors",
                 amount === preset && !customAmount
-                  ? "border-maroon-700 bg-maroon-100 text-maroon-700"
-                  : "border-ink/15 text-ink/70 hover:border-maroon-700/40"
+                  ? "border-red-700 bg-red-100 text-red-700"
+                  : "border-ink/15 text-ink/70 hover:border-red-700/40"
               )}
             >
               ${preset}

@@ -13,7 +13,7 @@ export function ImpactStatCard({ stat, light = false }: { stat: ImpactStat; ligh
       <p
         className={cn(
           "font-display text-4xl tabular-nums sm:text-5xl",
-          light ? "text-gold-300" : "text-maroon-700"
+          light ? "text-white" : "text-red-700"
         )}
       >
         {stat.value !== null ? (

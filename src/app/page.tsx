@@ -30,7 +30,7 @@ export default function HomePage() {
     <>
       {/* HERO */}
       <section className="relative overflow-hidden bg-ink">
-        <div className="absolute inset-0 bg-gradient-to-br from-maroon-900 via-ink to-ink" />
+        <div className="absolute inset-0 bg-gradient-to-br from-red-900 via-ink to-ink" />
         <div
           className="absolute inset-0 opacity-[0.07]"
           style={{
@@ -50,13 +50,13 @@ export default function HomePage() {
 
         <Container className="relative flex min-h-[88vh] flex-col justify-center py-28 sm:py-32">
           <div className="max-w-3xl animate-fade-up">
-            <Badge tone="gold" className="mb-6">
+            <Badge tone="white" className="mb-6">
               {site.orgType}
             </Badge>
             <h1 className="font-display text-5xl uppercase leading-[0.98] tracking-wide text-white sm:text-6xl lg:text-7xl">
               Stella Sports Academy
             </h1>
-            <p className="font-display mt-5 text-2xl uppercase leading-tight tracking-wide text-gold-400 sm:text-3xl">
+            <p className="font-display mt-5 text-2xl uppercase leading-tight tracking-wide text-white sm:text-3xl">
               Empowering Young Athletes.
               <br />
               Building Champions for Life.
@@ -66,7 +66,7 @@ export default function HomePage() {
               confidence they need to succeed on the field, in the classroom, and throughout life.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
-              <Button href="/donate" variant="gold" size="lg">
+              <Button href="/donate" variant="white" size="lg">
                 Donate Now
               </Button>
               <Button href="/programs" variant="outline-light" size="lg">
@@ -146,7 +146,7 @@ export default function HomePage() {
 
       {/* IMPACT STATS */}
       <section className="relative overflow-hidden bg-ink py-20 sm:py-28">
-        <div className="absolute inset-0 bg-gradient-to-br from-maroon-900/60 via-ink to-ink" />
+        <div className="absolute inset-0 bg-gradient-to-br from-red-900/60 via-ink to-ink" />
         <Container className="relative">
           <SectionHeading
             eyebrow="Our Impact"
@@ -190,7 +190,7 @@ export default function HomePage() {
                 key={barrier}
                 className="flex items-center gap-3 rounded-xl border border-ink/10 bg-paper px-4 py-4 text-sm font-medium text-ink/75"
               >
-                <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-maroon-100 text-maroon-700">
+                <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-red-100 text-red-700">
                   <ShieldAlert className="h-4 w-4" />
                 </span>
                 {barrier}
@@ -209,7 +209,7 @@ export default function HomePage() {
               <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                 {successStories.map((story) => (
                   <div key={story.slug} className="rounded-2xl bg-white p-6 shadow-sm">
-                    <Quote className="h-6 w-6 text-gold-600" />
+                    <Quote className="h-6 w-6 text-red-700" />
                     <p className="mt-4 text-sm leading-relaxed text-ink/75">&ldquo;{story.quote}&rdquo;</p>
                     <p className="mt-4 text-sm font-semibold text-ink">{story.name}</p>
                   </div>
@@ -227,10 +227,10 @@ export default function HomePage() {
       </section>
 
       {/* SPONSOR CTA */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-maroon-800 to-maroon-900 py-20 sm:py-24">
+      <section className="relative overflow-hidden bg-gradient-to-br from-red-800 to-red-900 py-20 sm:py-24">
         <Container className="relative flex flex-col items-center gap-6 text-center">
           <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/10">
-            <Sparkles className="h-7 w-7 text-gold-400" />
+            <Sparkles className="h-7 w-7 text-white" />
           </span>
           <h2 className="font-display max-w-2xl text-3xl uppercase leading-tight tracking-wide text-white sm:text-4xl">
             Become a Stella Sponsor
@@ -239,7 +239,7 @@ export default function HomePage() {
             Individuals and businesses can help support athletes and programs through
             sponsorship — fueling training, equipment, academics, and mentorship.
           </p>
-          <Button href="/get-involved/corporate-sponsorship" variant="gold" size="lg">
+          <Button href="/get-involved/corporate-sponsorship" variant="white" size="lg">
             Explore Sponsorship Opportunities
           </Button>
         </Container>
@@ -249,8 +249,8 @@ export default function HomePage() {
       <section className="bg-white py-20 sm:py-28">
         <Container className="grid gap-12 lg:grid-cols-2 lg:items-center">
           <div>
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-maroon-100">
-              <HeartHandshake className="h-6 w-6 text-maroon-700" />
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+              <HeartHandshake className="h-6 w-6 text-red-700" />
             </span>
             <SectionHeading
               className="mt-5"
@@ -259,7 +259,7 @@ export default function HomePage() {
               description="Get program updates, campaign news, and ways to get involved sent straight to your inbox."
             />
             <div className="mt-6 flex items-center gap-2 text-sm text-ink/55">
-              <GraduationCap className="h-4 w-4 text-maroon-700" />
+              <GraduationCap className="h-4 w-4 text-red-700" />
               No spam — just Stella updates.
             </div>
           </div>

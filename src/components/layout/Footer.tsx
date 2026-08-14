@@ -44,7 +44,7 @@ export function Footer() {
                   <a
                     href={`mailto:${site.email}`}
                     aria-label="Email Stella Sports Academy"
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/80 transition-colors hover:bg-gold-600 hover:text-ink"
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/80 transition-colors hover:bg-red-600 hover:text-white"
                   >
                     <Mail className="h-4 w-4" />
                   </a>
@@ -56,7 +56,7 @@ export function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={label}
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/80 transition-colors hover:bg-gold-600 hover:text-ink"
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/80 transition-colors hover:bg-red-600 hover:text-white"
                   >
                     <Icon className="h-4 w-4" />
                   </a>
@@ -94,7 +94,7 @@ function FooterColumn({
       <ul className="mt-4 space-y-2.5">
         {links.map((link) => (
           <li key={link.href}>
-            <Link href={link.href} className="text-sm text-white/65 transition-colors hover:text-gold-300">
+            <Link href={link.href} className="text-sm text-white/65 transition-colors hover:text-white">
               {link.label}
             </Link>
           </li>

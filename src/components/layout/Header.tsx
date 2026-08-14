@@ -62,7 +62,7 @@ export function Header() {
                 href={item.href}
                 className={cn(
                   "flex items-center gap-1 rounded-full px-4 py-2 text-sm font-semibold text-ink transition-colors hover:bg-paper-dim",
-                  pathname === item.href && "text-maroon-700"
+                  pathname === item.href && "text-red-700"
                 )}
               >
                 {item.label}
@@ -84,7 +84,7 @@ export function Header() {
                     <Link
                       key={child.href}
                       href={child.href}
-                      className="block rounded-xl px-4 py-2.5 text-sm font-medium text-ink/80 transition-colors hover:bg-paper-dim hover:text-maroon-700"
+                      className="block rounded-xl px-4 py-2.5 text-sm font-medium text-ink/80 transition-colors hover:bg-paper-dim hover:text-red-700"
                     >
                       {child.label}
                       {child.description && (

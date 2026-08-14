@@ -70,8 +70,8 @@ function InfoRow({
 }) {
   return (
     <div className="flex gap-4 rounded-2xl border border-ink/10 bg-paper p-5">
-      <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-maroon-100">
-        <Icon className="h-5 w-5 text-maroon-700" />
+      <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-red-100">
+        <Icon className="h-5 w-5 text-red-700" />
       </span>
       <div>
         <p className="font-semibold text-ink">{title}</p>
