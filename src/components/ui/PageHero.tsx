@@ -15,7 +15,14 @@ export function PageHero({
       <div className="absolute inset-0 bg-gradient-to-br from-ink-soft via-ink to-ink" />
       <div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/2 hidden h-[120%] w-auto -translate-x-1/2 -translate-y-1/2 bg-red-700 opacity-[0.08] sm:block"
+        className="pointer-events-none absolute left-[62%] top-1/2 hidden h-[170%] w-[170%] -translate-x-1/2 -translate-y-1/2 sm:block"
+        style={{
+          background: "radial-gradient(circle, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.12) 45%, transparent 72%)",
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-[62%] top-1/2 hidden h-[120%] w-auto -translate-x-1/2 -translate-y-1/2 bg-red-700 opacity-[0.1] sm:block"
         style={{
           aspectRatio: "590 / 746",
           WebkitMaskImage: "url(/brand/stella-mark.png)",
