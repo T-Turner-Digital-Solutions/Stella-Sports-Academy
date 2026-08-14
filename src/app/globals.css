@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+:root {
+  /* Brand palette — sourced from Stella Sports Academy's corporate mark */
+  --color-ink: #121013;          /* near-black */
+  --color-ink-soft: #221c1f;
+  --color-maroon-900: #3d0f1b;
+  --color-maroon-800: #551625;
+  --color-maroon-700: #6e1c30;   /* primary CTA burgundy */
+  --color-maroon-600: #85233a;
+  --color-maroon-100: #f6e9ec;
+  --color-gold-700: #a97a1f;
+  --color-gold-600: #c9962c;     /* primary gold accent */
+  --color-gold-500: #d9ac48;
+  --color-gold-400: #e2bd6c;
+  --color-gold-300: #ecd291;
+  --color-gold-100: #faf1dc;
+  --color-paper: #faf8f5;        /* light neutral background */
+  --color-paper-dim: #f2eee7;
+  --color-white: #ffffff;
+
+  --background: var(--color-white);
+  --foreground: var(--color-ink);
+}
+
+@theme inline {
+  --color-ink: var(--color-ink);
+  --color-ink-soft: var(--color-ink-soft);
+  --color-maroon-900: var(--color-maroon-900);
+  --color-maroon-800: var(--color-maroon-800);
+  --color-maroon-700: var(--color-maroon-700);
+  --color-maroon-600: var(--color-maroon-600);
+  --color-maroon-100: var(--color-maroon-100);
+  --color-gold-700: var(--color-gold-700);
+  --color-gold-600: var(--color-gold-600);
+  --color-gold-500: var(--color-gold-500);
+  --color-gold-400: var(--color-gold-400);
+  --color-gold-300: var(--color-gold-300);
+  --color-gold-100: var(--color-gold-100);
+  --color-paper: var(--color-paper);
+  --color-paper-dim: var(--color-paper-dim);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --font-display: var(--font-anton);
+  --font-sans: var(--font-inter);
+
+  --animate-fade-up: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-fade-in: fade-in 0.6s ease-out both;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+::selection {
+  background: var(--color-gold-300);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-gold-600);
+  outline-offset: 2px;
+}
