@@ -30,7 +30,7 @@ export default function HomePage() {
     <>
       {/* HERO */}
       <section className="relative overflow-hidden bg-ink">
-        <div className="absolute inset-0 bg-gradient-to-br from-red-900 via-ink to-ink" />
+        <div className="absolute inset-0 bg-gradient-to-br from-ink-soft via-ink to-ink" />
         <div
           className="absolute inset-0 opacity-[0.07]"
           style={{
