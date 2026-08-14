@@ -22,11 +22,11 @@ export function PageHero({
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute left-[62%] top-1/2 hidden h-[120%] w-auto -translate-x-1/2 -translate-y-1/2 bg-red-700 opacity-[0.1] sm:block"
+        className="pointer-events-none absolute left-[62%] top-1/2 hidden w-[48%] -translate-x-1/2 -translate-y-1/2 bg-red-700 opacity-[0.12] sm:block"
         style={{
-          aspectRatio: "590 / 746",
-          WebkitMaskImage: "url(/brand/stella-mark.png)",
-          maskImage: "url(/brand/stella-mark.png)",
+          aspectRatio: "1080 / 572",
+          WebkitMaskImage: "url(/brand/stella-emblem-2-mask.png)",
+          maskImage: "url(/brand/stella-emblem-2-mask.png)",
           WebkitMaskSize: "contain",
           maskSize: "contain",
           WebkitMaskRepeat: "no-repeat",
