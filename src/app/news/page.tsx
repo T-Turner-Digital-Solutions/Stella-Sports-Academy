@@ -33,7 +33,7 @@ export default function NewsPage() {
                   href={`/news/${post.slug}`}
                   className="flex flex-col gap-3 rounded-2xl border border-ink/10 bg-paper p-6 transition-shadow hover:shadow-lg"
                 >
-                  <Badge tone="maroon">{post.category}</Badge>
+                  <Badge tone="red">{post.category}</Badge>
                   <h2 className="font-display text-lg uppercase tracking-wide text-ink">{post.title}</h2>
                   <p className="text-sm text-ink/60">{post.excerpt}</p>
                   <p className="mt-auto text-xs text-ink/40">{formatDate(post.date)}</p>

@@ -37,8 +37,8 @@ export default function ImpactPage() {
       <section className="bg-paper py-20 sm:py-28">
         <Container className="grid gap-8 sm:grid-cols-2">
           <div className="rounded-2xl border border-ink/10 bg-white p-8">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-maroon-100">
-              <GraduationCap className="h-6 w-6 text-maroon-700" />
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+              <GraduationCap className="h-6 w-6 text-red-700" />
             </span>
             <h2 className="font-display mt-6 text-xl uppercase tracking-wide text-ink">College Placements & Scholarships</h2>
             <div className="mt-5">
@@ -50,8 +50,8 @@ export default function ImpactPage() {
             </div>
           </div>
           <div className="rounded-2xl border border-ink/10 bg-white p-8">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-maroon-100">
-              <Users2 className="h-6 w-6 text-maroon-700" />
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+              <Users2 className="h-6 w-6 text-red-700" />
             </span>
             <h2 className="font-display mt-6 text-xl uppercase tracking-wide text-ink">Program Outcomes</h2>
             <div className="mt-5">
@@ -73,7 +73,7 @@ export default function ImpactPage() {
               <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                 {successStories.map((story) => (
                   <div key={story.slug} className="rounded-2xl border border-ink/10 bg-paper p-6">
-                    <Quote className="h-6 w-6 text-gold-600" />
+                    <Quote className="h-6 w-6 text-red-700" />
                     <p className="mt-4 text-sm leading-relaxed text-ink/75">&ldquo;{story.quote}&rdquo;</p>
                     <p className="mt-4 text-sm font-semibold text-ink">{story.name}</p>
                     <p className="text-xs text-ink/50">{story.category}</p>
@@ -96,7 +96,7 @@ export default function ImpactPage() {
           <h2 className="font-display max-w-xl text-2xl uppercase tracking-wide text-white sm:text-3xl">
             Help us grow this page with real impact
           </h2>
-          <Button href="/donate" variant="gold" size="lg">
+          <Button href="/donate" variant="white" size="lg">
             Donate Now
           </Button>
         </Container>

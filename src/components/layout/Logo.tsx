@@ -24,7 +24,7 @@ export function Logo({ light = false, className }: { light?: boolean; className?
         )}
       >
         Stella
-        <span className={light ? "text-gold-300" : "text-maroon-700"}> Sports</span>
+        <span className={light ? "text-white" : "text-red-700"}> Sports</span>
         <br className="hidden sm:block" />
         <span className="hidden sm:inline"> Academy</span>
       </span>

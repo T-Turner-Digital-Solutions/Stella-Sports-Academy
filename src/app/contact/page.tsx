@@ -30,20 +30,20 @@ export default async function ContactPage({
           <div className="flex flex-col gap-6">
             {site.email && (
               <div className="flex items-start gap-4 rounded-2xl border border-ink/10 bg-paper p-5">
-                <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-maroon-100">
-                  <Mail className="h-5 w-5 text-maroon-700" />
+                <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-red-100">
+                  <Mail className="h-5 w-5 text-red-700" />
                 </span>
                 <div>
                   <p className="font-semibold text-ink">Email</p>
-                  <a href={`mailto:${site.email}`} className="text-sm text-maroon-700 hover:underline">
+                  <a href={`mailto:${site.email}`} className="text-sm text-red-700 hover:underline">
                     {site.email}
                   </a>
                 </div>
               </div>
             )}
             <div className="flex items-start gap-4 rounded-2xl border border-ink/10 bg-paper p-5">
-              <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-maroon-100">
-                <ShieldAlert className="h-5 w-5 text-maroon-700" />
+              <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-red-100">
+                <ShieldAlert className="h-5 w-5 text-red-700" />
               </span>
               <div>
                 <p className="font-semibold text-ink">Protected Submission</p>

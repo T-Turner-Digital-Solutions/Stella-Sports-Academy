@@ -37,7 +37,7 @@ export default function SponsorAthletePage() {
             <ul className="mt-8 flex flex-col gap-3">
               {supports.map((item) => (
                 <li key={item} className="flex items-start gap-3 rounded-xl border border-ink/10 bg-paper px-4 py-3.5 text-sm text-ink/75">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-maroon-700" />
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-700" />
                   {item}
                 </li>
               ))}

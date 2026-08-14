@@ -44,7 +44,7 @@ export default async function CampaignDetailPage({
       <section className="bg-white py-16 sm:py-24">
         <Container className="grid gap-12 lg:grid-cols-[1.4fr_1fr]">
           <div className="flex flex-col gap-8">
-            <div className="relative flex h-56 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-maroon-800 via-maroon-700 to-ink sm:h-72">
+            <div className="relative flex h-56 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-red-800 via-red-700 to-ink sm:h-72">
               <div
                 className="absolute inset-0 opacity-20"
                 style={{
@@ -70,7 +70,7 @@ export default async function CampaignDetailPage({
                   <ul className="space-y-4">
                     {campaign.updates.map((update) => (
                       <li key={update.title} className="rounded-xl border border-ink/10 bg-paper p-5">
-                        <p className="text-xs font-semibold uppercase tracking-wide text-maroon-700">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-red-700">
                           {formatDate(update.date)}
                         </p>
                         <p className="mt-1 font-semibold text-ink">{update.title}</p>
@@ -101,7 +101,7 @@ export default async function CampaignDetailPage({
           </div>
 
           <aside className="h-fit rounded-2xl border border-ink/10 bg-paper p-7 lg:sticky lg:top-28">
-            <Badge tone={campaign.status === "active" ? "gold" : "neutral"}>
+            <Badge tone={campaign.status === "active" ? "red" : "neutral"}>
               {campaign.status === "active" ? "Active Campaign" : "Planned"}
             </Badge>
 

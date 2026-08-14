@@ -71,7 +71,7 @@ export function NewsletterForm() {
         checked={consent}
         onChange={(e) => setConsent(e.target.checked)}
       />
-      <Button type="submit" variant="gold" disabled={state.status === "submitting"} className="self-start">
+      <Button type="submit" variant="primary" disabled={state.status === "submitting"} className="self-start">
         {state.status === "submitting" ? "Signing up…" : "Join the List"}
       </Button>
       <FormStatus state={state} />

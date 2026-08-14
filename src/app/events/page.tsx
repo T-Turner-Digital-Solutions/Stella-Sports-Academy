@@ -33,7 +33,7 @@ export default function EventsPage() {
                   href={`/events/${event.slug}`}
                   className="flex flex-col gap-3 rounded-2xl border border-ink/10 bg-paper p-6 transition-shadow hover:shadow-lg"
                 >
-                  <Badge tone="gold">{event.type}</Badge>
+                  <Badge tone="red">{event.type}</Badge>
                   <h2 className="font-display text-lg uppercase tracking-wide text-ink">{event.title}</h2>
                   <div className="flex flex-col gap-1.5 text-sm text-ink/60">
                     <span className="flex items-center gap-2">

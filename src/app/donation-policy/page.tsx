@@ -59,7 +59,7 @@ export default function DonationPolicyPage() {
 
       <p className="text-xs italic text-ink/45">
         See also our{" "}
-        <a href="/refund-policy" className="text-maroon-700 underline">
+        <a href="/refund-policy" className="text-red-700 underline">
           Refund Policy
         </a>
         . This policy is a general template and has not yet been reviewed by legal counsel.

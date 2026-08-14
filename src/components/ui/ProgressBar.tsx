@@ -21,7 +21,7 @@ export function ProgressBar({
       aria-valuemax={100}
     >
       <div
-        className="h-full rounded-full bg-gradient-to-r from-gold-600 to-gold-500 transition-[width] duration-700 ease-out"
+        className="h-full rounded-full bg-gradient-to-r from-red-700 to-red-500 transition-[width] duration-700 ease-out"
         style={{ width: `${clamped}%` }}
       />
     </div>

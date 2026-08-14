@@ -41,16 +41,16 @@ export default async function EventDetailPage({
             <p>{event.description}</p>
           </div>
           <aside className="h-fit rounded-2xl border border-ink/10 bg-paper p-6">
-            <Badge tone="gold">{event.type}</Badge>
+            <Badge tone="red">{event.type}</Badge>
             <div className="mt-5 flex flex-col gap-3 text-sm text-ink/70">
               <span className="flex items-center gap-2">
-                <CalendarDays className="h-4 w-4 text-maroon-700" /> {formatDate(event.date)}
+                <CalendarDays className="h-4 w-4 text-red-700" /> {formatDate(event.date)}
               </span>
               <span className="flex items-center gap-2">
-                <Clock className="h-4 w-4 text-maroon-700" /> {event.time}
+                <Clock className="h-4 w-4 text-red-700" /> {event.time}
               </span>
               <span className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-maroon-700" /> {event.location}
+                <MapPin className="h-4 w-4 text-red-700" /> {event.location}
               </span>
             </div>
             <div className="mt-6 flex flex-col gap-3">

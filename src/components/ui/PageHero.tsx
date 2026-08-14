@@ -12,7 +12,7 @@ export function PageHero({
 }) {
   return (
     <section className="relative overflow-hidden bg-ink py-20 sm:py-28">
-      <div className="absolute inset-0 bg-gradient-to-br from-maroon-900/70 via-ink to-ink" />
+      <div className="absolute inset-0 bg-gradient-to-br from-red-900/70 via-ink to-ink" />
       <div
         className="absolute inset-0 opacity-[0.06]"
         style={{
@@ -23,7 +23,7 @@ export function PageHero({
       />
       <Container className="relative">
         {eyebrow && (
-          <Badge tone="gold" className="mb-5">
+          <Badge tone="white" className="mb-5">
             {eyebrow}
           </Badge>
         )}

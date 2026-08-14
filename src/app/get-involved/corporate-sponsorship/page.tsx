@@ -31,7 +31,7 @@ export default function CorporateSponsorshipPage() {
                 key={tier.name}
                 className={cn(
                   "flex flex-col gap-4 rounded-2xl border p-6",
-                  tier.featured ? "border-maroon-700 bg-maroon-100 shadow-lg" : "border-ink/10 bg-paper"
+                  tier.featured ? "border-red-700 bg-red-100 shadow-lg" : "border-ink/10 bg-paper"
                 )}
               >
                 <p className="font-display text-lg uppercase tracking-wide text-ink">{tier.name}</p>
@@ -39,7 +39,7 @@ export default function CorporateSponsorshipPage() {
                 <ul className="mt-2 flex flex-col gap-2">
                   {tier.benefits.map((benefit) => (
                     <li key={benefit} className="flex items-start gap-2 text-xs text-ink/70">
-                      <Check className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-maroon-700" />
+                      <Check className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-red-700" />
                       {benefit}
                     </li>
                   ))}

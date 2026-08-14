@@ -35,21 +35,21 @@ export default function TransparencyPage() {
       <section className="bg-white py-20 sm:py-24">
         <Container className="grid gap-6 sm:grid-cols-2">
           <div className="rounded-2xl border border-ink/10 bg-paper p-8">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-maroon-100">
-              <ShieldCheck className="h-6 w-6 text-maroon-700" />
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+              <ShieldCheck className="h-6 w-6 text-red-700" />
             </span>
             <h2 className="font-display mt-6 text-xl uppercase tracking-wide text-ink">501(c)(3) Status</h2>
             <p className="mt-3 text-sm leading-relaxed text-ink/65">
               {site.name} is recognized by the IRS as a {site.orgType}. Donations are tax-deductible
               to the extent allowed by law.
             </p>
-            <Badge tone="maroon" className="mt-4">
+            <Badge tone="red" className="mt-4">
               EIN {site.ein}
             </Badge>
           </div>
           <div className="rounded-2xl border border-ink/10 bg-paper p-8">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-maroon-100">
-              <Landmark className="h-6 w-6 text-maroon-700" />
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+              <Landmark className="h-6 w-6 text-red-700" />
             </span>
             <h2 className="font-display mt-6 text-xl uppercase tracking-wide text-ink">Governance</h2>
             <p className="mt-3 text-sm leading-relaxed text-ink/65">
@@ -67,7 +67,7 @@ export default function TransparencyPage() {
             {leadership.map((leader) => (
               <div key={leader.name} className="rounded-xl border border-ink/10 bg-white px-5 py-4">
                 <p className="font-semibold text-ink">{leader.name}</p>
-                <p className="text-sm text-maroon-700">{leader.roleLabel}</p>
+                <p className="text-sm text-red-700">{leader.roleLabel}</p>
               </div>
             ))}
           </div>
@@ -90,9 +90,9 @@ export default function TransparencyPage() {
                     href={doc.fileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 rounded-xl border border-ink/10 bg-paper px-5 py-4 text-sm font-medium text-ink transition-colors hover:border-maroon-700/40"
+                    className="flex items-center gap-3 rounded-xl border border-ink/10 bg-paper px-5 py-4 text-sm font-medium text-ink transition-colors hover:border-red-700/40"
                   >
-                    <FileText className="h-5 w-5 flex-shrink-0 text-maroon-700" />
+                    <FileText className="h-5 w-5 flex-shrink-0 text-red-700" />
                     {doc.title}
                   </a>
                 ))}
@@ -118,7 +118,7 @@ export default function TransparencyPage() {
       <section className="bg-paper py-16">
         <Container className="flex flex-col items-center gap-4 text-center">
           <p className="text-sm text-ink/60">Looking for board meeting records?</p>
-          <Link href="/transparency/meeting-minutes" className="font-semibold text-maroon-700 hover:underline">
+          <Link href="/transparency/meeting-minutes" className="font-semibold text-red-700 hover:underline">
             View Public Meeting Minutes →
           </Link>
         </Container>

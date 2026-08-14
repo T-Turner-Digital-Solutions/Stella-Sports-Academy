@@ -11,7 +11,7 @@ export function CampaignCard({ campaign }: { campaign: Campaign }) {
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-      <div className="relative flex h-40 items-center justify-center overflow-hidden bg-gradient-to-br from-maroon-800 via-maroon-700 to-ink">
+      <div className="relative flex h-40 items-center justify-center overflow-hidden bg-gradient-to-br from-red-800 via-red-700 to-ink">
         <div
           className="absolute inset-0 opacity-20"
           style={{
@@ -22,7 +22,7 @@ export function CampaignCard({ campaign }: { campaign: Campaign }) {
         <span className="font-display relative text-2xl uppercase tracking-wide text-white/90">
           {campaign.title}
         </span>
-        <Badge tone="gold" className="absolute right-3 top-3">
+        <Badge tone="white" className="absolute right-3 top-3">
           {campaign.status === "active" ? "Active" : "Planned"}
         </Badge>
       </div>
@@ -30,7 +30,7 @@ export function CampaignCard({ campaign }: { campaign: Campaign }) {
       <div className="flex flex-1 flex-col gap-4 p-6">
         <div>
           <h3 className="font-display text-xl uppercase tracking-wide text-ink">
-            <Link href={`/campaigns/${campaign.slug}`} className="hover:text-maroon-700">
+            <Link href={`/campaigns/${campaign.slug}`} className="hover:text-red-700">
               {campaign.title}
             </Link>
           </h3>

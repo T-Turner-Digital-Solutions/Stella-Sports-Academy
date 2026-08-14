@@ -42,8 +42,8 @@ export default async function ProgramDetailPage({
       <section className="bg-white py-20 sm:py-28">
         <Container className="grid gap-12 lg:grid-cols-[1fr_1.4fr]">
           <div>
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-maroon-100">
-              <Icon className="h-8 w-8 text-maroon-700" strokeWidth={1.75} />
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-red-100">
+              <Icon className="h-8 w-8 text-red-700" strokeWidth={1.75} />
             </div>
             <SectionHeading className="mt-6" title="What's Included" />
             <div className="mt-8 flex flex-col gap-3">
@@ -62,7 +62,7 @@ export default async function ProgramDetailPage({
                 key={offering}
                 className="flex items-start gap-3 rounded-xl border border-ink/10 bg-paper px-4 py-3.5 text-sm text-ink/75"
               >
-                <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-maroon-700" />
+                <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-700" />
                 {offering}
               </li>
             ))}

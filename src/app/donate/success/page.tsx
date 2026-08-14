@@ -39,8 +39,8 @@ export default async function DonateSuccessPage({
   return (
     <section className="bg-white py-24 sm:py-32">
       <Container className="max-w-xl text-center">
-        <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
-          <CheckCircle2 className="h-8 w-8 text-emerald-600" />
+        <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-ink">
+          <CheckCircle2 className="h-8 w-8 text-white" />
         </span>
         <h1 className="font-display mt-6 text-3xl uppercase tracking-wide text-ink sm:text-4xl">
           Thank You for Supporting
