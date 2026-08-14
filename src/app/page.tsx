@@ -32,14 +32,6 @@ export default function HomePage() {
       <section className="relative overflow-hidden bg-ink">
         <div className="absolute inset-0 bg-gradient-to-br from-ink-soft via-ink to-ink" />
         <div
-          className="absolute inset-0 opacity-[0.07]"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(115deg, transparent, transparent 60px, rgba(255,255,255,0.6) 60px, rgba(255,255,255,0.6) 62px)",
-          }}
-          aria-hidden
-        />
-        <div
           className="pointer-events-none absolute inset-0 opacity-25"
           style={{
             maskImage: "linear-gradient(to left, black 40%, transparent 95%)",
