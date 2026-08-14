@@ -39,14 +39,23 @@ export default function HomePage() {
           }}
           aria-hidden
         />
-        <Image
-          src="/brand/stella-mark.png"
-          alt=""
-          width={900}
-          height={1140}
+        <div
+          className="pointer-events-none absolute inset-0 opacity-25"
+          style={{
+            maskImage: "linear-gradient(to left, black 40%, transparent 95%)",
+            WebkitMaskImage: "linear-gradient(to left, black 40%, transparent 95%)",
+          }}
           aria-hidden
-          className="pointer-events-none absolute -right-40 top-1/2 hidden h-[130%] w-auto -translate-y-1/2 opacity-[0.07] sm:block lg:opacity-[0.09]"
-        />
+        >
+          <Image
+            src="/hero/athletes-hero.jpg"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center"
+          />
+        </div>
 
         <Container className="relative flex min-h-[88vh] flex-col justify-center py-28 sm:py-32">
           <div className="max-w-3xl animate-fade-up">
