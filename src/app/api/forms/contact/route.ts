@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { contactSchema } from "@/lib/validation";
 import { sendAdminNotification, sendConfirmationEmail, escapeHtml } from "@/lib/email";
 import { firstFieldErrors } from "@/lib/forms-server";
+import { insertContactSubmission } from "@/lib/submissions";
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
@@ -19,6 +20,18 @@ export async function POST(request: Request) {
   }
 
   const c = parsed.data;
+
+  try {
+    await insertContactSubmission({
+      name: c.name,
+      email: c.email,
+      phone: c.phone,
+      inquiryType: c.inquiryType,
+      message: c.message,
+    });
+  } catch (error) {
+    console.error("[db:insert-contact-submission-failed]", error);
+  }
 
   await sendAdminNotification(
     `New contact form: ${c.inquiryType}`,

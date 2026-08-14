@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -9,13 +8,20 @@ export function Logo({ light = false, className }: { light?: boolean; className?
       className={cn("group flex items-center gap-3", className)}
       aria-label="Stella Sports Academy — Home"
     >
-      <Image
-        src="/brand/stella-mark.png"
-        alt=""
-        width={44}
-        height={56}
-        priority
-        className="h-11 w-auto drop-shadow-sm transition-transform duration-200 group-hover:scale-105"
+      <span
+        aria-hidden
+        className="h-11 w-auto flex-shrink-0 bg-red-700 drop-shadow-sm transition-transform duration-200 group-hover:scale-105"
+        style={{
+          aspectRatio: "590 / 746",
+          WebkitMaskImage: "url(/brand/stella-mark.png)",
+          maskImage: "url(/brand/stella-mark.png)",
+          WebkitMaskSize: "contain",
+          maskSize: "contain",
+          WebkitMaskRepeat: "no-repeat",
+          maskRepeat: "no-repeat",
+          WebkitMaskPosition: "center",
+          maskPosition: "center",
+        }}
       />
       <span
         className={cn(

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { volunteerSchema } from "@/lib/validation";
 import { sendAdminNotification, sendConfirmationEmail, escapeHtml } from "@/lib/email";
 import { firstFieldErrors } from "@/lib/forms-server";
+import { insertVolunteerApplication } from "@/lib/submissions";
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
@@ -19,6 +20,20 @@ export async function POST(request: Request) {
   }
 
   const v = parsed.data;
+
+  try {
+    await insertVolunteerApplication({
+      name: v.name,
+      email: v.email,
+      phone: v.phone,
+      areaOfInterest: v.areaOfInterest,
+      experience: v.experience,
+      availability: v.availability,
+      message: v.message,
+    });
+  } catch (error) {
+    console.error("[db:insert-volunteer-application-failed]", error);
+  }
 
   await sendAdminNotification(
     "New Stella volunteer application",

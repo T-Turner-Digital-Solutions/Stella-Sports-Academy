@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Mail } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { site, footerNav } from "@/content/site";
@@ -24,12 +23,20 @@ export function Footer() {
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
             <Link href="/" className="flex items-center gap-3">
-              <Image
-                src="/brand/stella-mark.png"
-                alt=""
-                width={40}
-                height={50}
-                className="h-10 w-auto"
+              <span
+                aria-hidden
+                className="h-10 w-auto flex-shrink-0 bg-red-700"
+                style={{
+                  aspectRatio: "590 / 746",
+                  WebkitMaskImage: "url(/brand/stella-mark.png)",
+                  maskImage: "url(/brand/stella-mark.png)",
+                  WebkitMaskSize: "contain",
+                  maskSize: "contain",
+                  WebkitMaskRepeat: "no-repeat",
+                  maskRepeat: "no-repeat",
+                  WebkitMaskPosition: "center",
+                  maskPosition: "center",
+                }}
               />
               <span className="font-display text-lg uppercase tracking-wide text-white">
                 Stella Sports Academy

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { corporateSponsorshipSchema } from "@/lib/validation";
 import { sendAdminNotification, sendConfirmationEmail, escapeHtml } from "@/lib/email";
 import { firstFieldErrors } from "@/lib/forms-server";
+import { insertSponsorshipInquiry } from "@/lib/submissions";
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
@@ -19,6 +20,19 @@ export async function POST(request: Request) {
   }
 
   const s = parsed.data;
+
+  try {
+    await insertSponsorshipInquiry({
+      companyName: s.companyName,
+      contactName: s.contactName,
+      email: s.email,
+      phone: s.phone,
+      interestedTier: s.interestedTier,
+      message: s.message,
+    });
+  } catch (error) {
+    console.error("[db:insert-sponsorship-inquiry-failed]", error);
+  }
 
   await sendAdminNotification(
     "New corporate sponsorship inquiry",
