@@ -47,7 +47,7 @@ export async function POST(request: Request) {
   }
 
   await sendAdminNotification(
-    "New Steller Athlete Application",
+    "New Stellar Athlete Application",
     `
       <h2>New Athlete Application</h2>
       <p><strong>Athlete:</strong> ${escapeHtml(a.athleteFirstName)} ${escapeHtml(a.athleteLastName)}</p>
@@ -68,10 +68,10 @@ export async function POST(request: Request) {
 
   await sendConfirmationEmail(
     a.parentEmail,
-    "We received your Steller Sports Academy application",
+    "We received your Stellar Sports Academy application",
     `<p>Hi ${escapeHtml(a.parentName)},</p>
-     <p>Thank you for applying to Steller Sports Academy on behalf of ${escapeHtml(a.athleteFirstName)}. Our team will review the application and follow up by email or phone.</p>
-     <p>— Steller Sports Academy</p>`
+     <p>Thank you for applying to Stellar Sports Academy on behalf of ${escapeHtml(a.athleteFirstName)}. Our team will review the application and follow up by email or phone.</p>
+     <p>— Stellar Sports Academy</p>`
   );
 
   return NextResponse.json({

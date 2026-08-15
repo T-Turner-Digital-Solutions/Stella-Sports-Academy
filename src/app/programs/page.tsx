@@ -18,7 +18,7 @@ export default function ProgramsPage() {
       <PageHero
         eyebrow="What We Offer"
         title="Our Programs"
-        description="Steller supports young athletes across four connected areas — because success on the field depends on support everywhere else, too."
+        description="Stellar supports young athletes across four connected areas — because success on the field depends on support everywhere else, too."
       />
 
       <section className="bg-white py-20 sm:py-28">
@@ -35,7 +35,7 @@ export default function ProgramsPage() {
         <Container className="flex flex-col items-center gap-6 text-center">
           <SectionHeading
             eyebrow="Ready to Join?"
-            title="Apply to Join Steller"
+            title="Apply to Join Stellar"
             description="Athlete applications are reviewed by our team, with program placement based on need and availability."
             align="center"
           />

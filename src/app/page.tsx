@@ -55,7 +55,7 @@ export default function HomePage() {
               {site.orgType}
             </Badge>
             <h1 className="font-display text-5xl uppercase leading-[0.98] tracking-wide text-white sm:text-6xl lg:text-7xl">
-              Steller Sports Academy
+              Stellar Sports Academy
             </h1>
             <p className="font-display mt-5 text-2xl uppercase leading-tight tracking-wide text-white sm:text-3xl">
               Empowering Young Athletes.
@@ -82,15 +82,15 @@ export default function HomePage() {
       <section className="bg-white py-20 sm:py-28">
         <Container>
           <div className="mx-auto max-w-3xl text-center">
-            <SectionHeading eyebrow="Our Mission" title="Why Steller Exists" align="center" />
+            <SectionHeading eyebrow="Our Mission" title="Why Stellar Exists" align="center" />
             <p className="mt-6 text-lg leading-relaxed text-ink/70">
-              Steller Sports Academy exists to empower young athletes through comprehensive
+              Stellar Sports Academy exists to empower young athletes through comprehensive
               athletic training, educational support, mentorship, and life-skills development —
               helping them gain access to the resources, support, and guidance needed to succeed
               in sports, academics, careers, and life.
             </p>
             <Button href="/about" variant="secondary" size="md" className="mt-8">
-              Learn About Steller
+              Learn About Stellar
               <ArrowRight className="h-4 w-4" />
             </Button>
           </div>
@@ -152,7 +152,7 @@ export default function HomePage() {
           <SectionHeading
             eyebrow="Our Impact"
             title="Growing Every Season"
-            description="These figures update as Steller confirms new milestones — we'd rather show real progress than invented numbers."
+            description="These figures update as Stellar confirms new milestones — we'd rather show real progress than invented numbers."
             align="center"
             light
             className="mx-auto"
@@ -170,17 +170,17 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* WHY STELLER MATTERS */}
+      {/* WHY STELLAR MATTERS */}
       <section className="bg-white py-20 sm:py-28">
         <Container className="grid gap-14 lg:grid-cols-2 lg:items-center">
           <div>
             <SectionHeading
               eyebrow="The Opportunity Gap"
-              title="Why Steller Matters"
+              title="Why Stellar Matters"
               description="Many young athletes face real financial barriers that keep them from the resources their potential deserves."
             />
             <p className="mt-6 text-base leading-relaxed text-ink/70">
-              Steller Sports Academy exists to help close that gap — connecting young athletes with
+              Stellar Sports Academy exists to help close that gap — connecting young athletes with
               the training, support, and guidance they need, regardless of their family&rsquo;s ability
               to pay.
             </p>
@@ -220,7 +220,7 @@ export default function HomePage() {
               <EmptyState
                 icon={Quote}
                 title="Stories Coming Soon"
-                description="As athletes, parents, and coaches share their Steller journey, their stories will appear here — reviewed and approved by our team."
+                description="As athletes, parents, and coaches share their Stellar journey, their stories will appear here — reviewed and approved by our team."
               />
             )}
           </div>
@@ -234,7 +234,7 @@ export default function HomePage() {
             <Sparkles className="h-7 w-7 text-white" />
           </span>
           <h2 className="font-display max-w-2xl text-3xl uppercase leading-tight tracking-wide text-white sm:text-4xl">
-            Become a Steller Sponsor
+            Become a Stellar Sponsor
           </h2>
           <p className="max-w-xl text-base leading-relaxed text-white/75">
             Individuals and businesses can help support athletes and programs through
@@ -256,12 +256,12 @@ export default function HomePage() {
             <SectionHeading
               className="mt-5"
               eyebrow="Stay Connected"
-              title="Join the Steller Community"
+              title="Join the Stellar Community"
               description="Get program updates, campaign news, and ways to get involved sent straight to your inbox."
             />
             <div className="mt-6 flex items-center gap-2 text-sm text-ink/55">
               <GraduationCap className="h-4 w-4 text-red-700" />
-              No spam — just Steller updates.
+              No spam — just Stellar updates.
             </div>
           </div>
           <div className="rounded-2xl border border-ink/10 bg-paper p-7 sm:p-8">

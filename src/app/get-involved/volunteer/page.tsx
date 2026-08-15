@@ -14,8 +14,8 @@ export default function VolunteerPage() {
     <>
       <PageHero
         eyebrow="Get Involved"
-        title="Volunteer With Steller"
-        description="From coaching to tutoring to event support, Steller runs on volunteers who show up for young athletes."
+        title="Volunteer With Stellar"
+        description="From coaching to tutoring to event support, Stellar runs on volunteers who show up for young athletes."
       />
 
       <section className="bg-white py-20 sm:py-24">

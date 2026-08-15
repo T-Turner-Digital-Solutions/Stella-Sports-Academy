@@ -5,7 +5,7 @@ export const newsletterSchema = z.object({
   lastName: z.string().trim().min(1, "Last name is required").max(100),
   email: z.string().trim().email("Enter a valid email address").max(200),
   consent: z.literal(true, {
-    error: "Please confirm you'd like to receive communications from Steller",
+    error: "Please confirm you'd like to receive communications from Stellar",
   }),
   website: z.string().max(0).optional(), // honeypot
 });

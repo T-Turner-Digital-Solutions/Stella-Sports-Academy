@@ -8,9 +8,9 @@ export default function PrivacyPage() {
   return (
     <LegalLayout title="Privacy Policy" lastUpdated="Effective upon launch">
       <p>
-        {site.name} (&ldquo;Steller,&rdquo; &ldquo;we,&rdquo; &ldquo;us&rdquo;) respects your
+        {site.name} (&ldquo;Stellar,&rdquo; &ldquo;we,&rdquo; &ldquo;us&rdquo;) respects your
         privacy. This policy explains what information we collect through this website, how we
-        use it, and the choices you have. This policy applies to stellersportsacademy.org and
+        use it, and the choices you have. This policy applies to stellarsportsacademy.org and
         related forms and donation pages.
       </p>
 
@@ -43,14 +43,14 @@ export default function PrivacyPage() {
         <p>
           Athlete applications may include information about minors, submitted by a parent or
           guardian. This information is kept confidential, is never published publicly, and is
-          accessible only to authorized Steller program staff.
+          accessible only to authorized Stellar program staff.
         </p>
       </div>
 
       <div>
         <h2>Payment Information</h2>
         <p>
-          Donations are processed by Stripe, a PCI-compliant payment processor. Steller does not
+          Donations are processed by Stripe, a PCI-compliant payment processor. Stellar does not
           store full credit card numbers on its servers.
         </p>
       </div>
@@ -58,7 +58,7 @@ export default function PrivacyPage() {
       <div>
         <h2>Information Sharing</h2>
         <p>
-          Steller does not sell personal information. We may share information with service
+          Stellar does not sell personal information. We may share information with service
           providers who help us operate this website (such as our payment processor and email
           delivery provider), or when required by law.
         </p>
@@ -85,7 +85,7 @@ export default function PrivacyPage() {
       </div>
 
       <p className="text-xs italic text-ink/45">
-        This policy is a general template and has not yet been reviewed by legal counsel. Steller
+        This policy is a general template and has not yet been reviewed by legal counsel. Stellar
         Sports Academy should have this policy reviewed by an attorney before relying on it.
       </p>
     </LegalLayout>

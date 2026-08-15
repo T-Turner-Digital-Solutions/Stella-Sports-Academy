@@ -24,7 +24,7 @@ export const programs: Program[] = [
       "Skills training, strength and conditioning, and performance development across multiple sports.",
     icon: Dumbbell,
     heroDescription:
-      "Steller athletes train with a focus on fundamentals, physical development, and injury prevention — building the athletic foundation that carries into every sport and every stage of competition.",
+      "Stellar athletes train with a focus on fundamentals, physical development, and injury prevention — building the athletic foundation that carries into every sport and every stage of competition.",
     offerings: [
       "Baseball skills development",
       "Football skills development",
@@ -43,7 +43,7 @@ export const programs: Program[] = [
       "Accountability, tutoring support, and college and career readiness so athletes succeed in the classroom.",
     icon: GraduationCap,
     heroDescription:
-      "Athletic success and academic success go hand in hand. Steller keeps athletes accountable in the classroom while preparing them for the next step — college, career, and beyond.",
+      "Athletic success and academic success go hand in hand. Stellar keeps athletes accountable in the classroom while preparing them for the next step — college, career, and beyond.",
     offerings: [
       "Academic accountability",
       "Progress monitoring",
@@ -65,7 +65,7 @@ export const programs: Program[] = [
       "Character, communication, financial literacy, and resilience — the skills that outlast a season.",
     icon: Compass,
     heroDescription:
-      "Sports are the platform — life is the goal. Steller builds the character, decision-making, and resilience young athletes carry with them long after their playing days.",
+      "Sports are the platform — life is the goal. Stellar builds the character, decision-making, and resilience young athletes carry with them long after their playing days.",
     offerings: [
       "Character development",
       "Leadership skills",
@@ -88,7 +88,7 @@ export const programs: Program[] = [
       "One-on-one connections with coaches, trainers, former athletes, and community leaders.",
     icon: Handshake,
     heroDescription:
-      "Every athlete benefits from someone in their corner. Steller connects young athletes with mentors who guide, encourage, and open doors — on the field and off.",
+      "Every athlete benefits from someone in their corner. Stellar connects young athletes with mentors who guide, encourage, and open doors — on the field and off.",
     offerings: [
       "Coaches",
       "Trainers",

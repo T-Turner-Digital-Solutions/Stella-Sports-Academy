@@ -16,7 +16,7 @@ export async function POST(request: Request) {
   }
 
   if (parsed.data.website) {
-    return NextResponse.json({ message: "Thank you for your interest in sponsoring Steller." });
+    return NextResponse.json({ message: "Thank you for your interest in sponsoring Stellar." });
   }
 
   const s = parsed.data;
@@ -49,8 +49,8 @@ export async function POST(request: Request) {
 
   await sendConfirmationEmail(
     s.email,
-    "We received your Steller sponsorship inquiry",
-    `<p>Hi ${escapeHtml(s.contactName)},</p><p>Thank you for your interest in becoming a Steller Sports Academy sponsor. Our team will follow up soon.</p>`
+    "We received your Stellar sponsorship inquiry",
+    `<p>Hi ${escapeHtml(s.contactName)},</p><p>Thank you for your interest in becoming a Stellar Sports Academy sponsor. Our team will follow up soon.</p>`
   );
 
   return NextResponse.json({ message: "Thank you! Your sponsorship inquiry has been received." });

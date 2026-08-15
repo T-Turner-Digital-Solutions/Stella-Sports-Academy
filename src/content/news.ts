@@ -21,7 +21,7 @@ export type NewsPost = {
 // the admin dashboard (Phase 2).
 export const newsPosts: NewsPost[] = [];
 
-export type StellerEvent = {
+export type StellarEvent = {
   slug: string;
   title: string;
   type:
@@ -40,4 +40,4 @@ export type StellerEvent = {
 };
 
 // Intentionally empty until real events are scheduled and confirmed.
-export const events: StellerEvent[] = [];
+export const events: StellarEvent[] = [];

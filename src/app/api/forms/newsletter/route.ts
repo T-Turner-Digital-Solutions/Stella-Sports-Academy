@@ -25,9 +25,9 @@ export async function POST(request: Request) {
   const { firstName, lastName, email } = parsed.data;
 
   await sendAdminNotification(
-    "New Steller Sports Academy email signup",
+    "New Stellar Sports Academy email signup",
     `<p><strong>${escapeHtml(firstName)} ${escapeHtml(lastName)}</strong> (${escapeHtml(email)}) joined the email list.</p>`
   );
 
-  return NextResponse.json({ message: "Thanks for signing up! Watch your inbox for updates from Steller." });
+  return NextResponse.json({ message: "Thanks for signing up! Watch your inbox for updates from Stellar." });
 }

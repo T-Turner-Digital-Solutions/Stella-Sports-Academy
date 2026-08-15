@@ -6,7 +6,7 @@ export function Logo({ light = false, className }: { light?: boolean; className?
     <Link
       href="/"
       className={cn("group flex items-center gap-3", className)}
-      aria-label="Steller Sports Academy — Home"
+      aria-label="Stellar Sports Academy — Home"
     >
       <span
         aria-hidden
@@ -29,7 +29,7 @@ export function Logo({ light = false, className }: { light?: boolean; className?
           light ? "text-white" : "text-ink"
         )}
       >
-        Steller
+        Stellar
         <span className={light ? "text-white" : "text-red-700"}> Sports</span>
         <br className="hidden sm:block" />
         <span className="hidden sm:inline"> Academy</span>

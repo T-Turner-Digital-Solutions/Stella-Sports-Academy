@@ -17,7 +17,7 @@ export default function CorporateSponsorshipPage() {
   return (
     <>
       <PageHero
-        eyebrow="Partner With Steller"
+        eyebrow="Partner With Stellar"
         title="Corporate Sponsorship"
         description="Align your business with a mission that builds champions on the field, in the classroom, and in life."
       />

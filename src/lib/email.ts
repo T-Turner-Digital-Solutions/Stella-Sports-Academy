@@ -1,6 +1,6 @@
 import { Resend } from "resend";
 
-const FROM_ADDRESS = process.env.EMAIL_FROM || "Steller Sports Academy <onboarding@resend.dev>";
+const FROM_ADDRESS = process.env.EMAIL_FROM || "Stellar Sports Academy <onboarding@resend.dev>";
 const ADMIN_EMAIL = process.env.ADMIN_NOTIFY_EMAIL;
 
 let resendClient: Resend | null = null;

@@ -27,7 +27,7 @@ export default function SponsorAthletePage() {
       <PageHero
         eyebrow="Give Directly"
         title="Sponsor an Athlete"
-        description="Your sponsorship gives a young athlete direct access to training, academics, and mentorship — the full Steller experience."
+        description="Your sponsorship gives a young athlete direct access to training, academics, and mentorship — the full Stellar experience."
       />
 
       <section className="bg-white py-20 sm:py-28">
@@ -43,7 +43,7 @@ export default function SponsorAthletePage() {
               ))}
             </ul>
             <p className="mt-6 text-sm leading-relaxed text-ink/55">
-              Steller never publishes private information about the young athletes it serves.
+              Stellar never publishes private information about the young athletes it serves.
               Sponsorship connects you to the mission — not to identifiable personal details about
               a specific minor.
             </p>

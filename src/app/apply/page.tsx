@@ -14,9 +14,9 @@ export default function ApplyPage() {
   return (
     <>
       <PageHero
-        eyebrow="Join Steller"
+        eyebrow="Join Stellar"
         title="Athlete Application"
-        description="Complete this secure application to apply for Steller's programs. A parent or guardian must complete this form for any applicant under 18."
+        description="Complete this secure application to apply for Stellar's programs. A parent or guardian must complete this form for any applicant under 18."
       />
 
       <section className="bg-white py-20 sm:py-24">
@@ -25,7 +25,7 @@ export default function ApplyPage() {
             <ShieldCheck className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-700" />
             <p>
               This application is confidential. Information submitted here is never displayed
-              publicly and is reviewed only by authorized Steller program staff.
+              publicly and is reviewed only by authorized Stellar program staff.
             </p>
           </div>
           <AthleteApplicationForm />

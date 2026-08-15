@@ -113,7 +113,7 @@ export function VolunteerForm() {
         checked={consent}
         onChange={(e) => setConsent(e.target.checked)}
         error={fieldErrors.consent}
-        label="I consent to Steller Sports Academy contacting me about volunteer opportunities."
+        label="I consent to Stellar Sports Academy contacting me about volunteer opportunities."
       />
 
       <Button type="submit" size="lg" disabled={state.status === "submitting"} className="self-start">

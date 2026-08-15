@@ -20,7 +20,7 @@ export default function NewsPage() {
       <PageHero
         eyebrow="Stay Updated"
         title="News & Updates"
-        description="Athlete achievements, program announcements, partnerships, and more from Steller Sports Academy."
+        description="Athlete achievements, program announcements, partnerships, and more from Stellar Sports Academy."
       />
 
       <section className="bg-white py-20 sm:py-28">
@@ -44,7 +44,7 @@ export default function NewsPage() {
             <EmptyState
               icon={Newspaper}
               title="No News Posted Yet"
-              description="Program announcements and athlete achievements will appear here as Steller shares them."
+              description="Program announcements and athlete achievements will appear here as Stellar shares them."
             />
           )}
         </Container>
