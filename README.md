@@ -9,10 +9,11 @@ This repository is the organization's public website, built with Next.js.
 ## Status
 
 This build covers the **public-facing marketing site** (all informational pages, the donation
-flow, and every public form) plus an **admin review section** (`/admin`) for athlete
-applications, volunteer sign-ups, sponsorship inquiries, and contact submissions. It does
-**not** yet include a board portal, donor accounts, or content-management for the marketing
-pages themselves — those remain out of scope. See
+flow, and every public form) plus an **admin section** (`/admin`) with multi-user board member
+accounts for reviewing athlete applications, volunteer sign-ups, sponsorship inquiries, contact
+submissions, and donations — donors also receive an automatic PDF tax receipt by email. It does
+**not** yet include a public board portal, donor self-serve accounts, or content-management for
+the marketing pages themselves — those remain out of scope. See
 [What's Not Built Yet](#whats-not-built-yet) below.
 
 ## Getting Started
@@ -35,8 +36,9 @@ npm run lint     # eslint
 - **Zod** for form validation (client + server)
 - **Stripe** for donation checkout (env-gated — see below)
 - **Resend** for transactional email (env-gated — see below)
-- **PostgreSQL** (via `pg`) for form-submission storage, **bcryptjs** + **jose** for admin auth
-  (env-gated — see [Admin Section](#admin-section))
+- **PostgreSQL** (via `pg`) for form-submission and donation storage, **bcryptjs** + **jose** for
+  admin auth (env-gated — see [Admin Section](#admin-section))
+- **pdf-lib** to generate donation tax receipts
 - **lucide-react** for icons, **Framer Motion** for the impact-counter animation
 
 ## Environment Variables
@@ -71,11 +73,20 @@ Edit these files directly and redeploy.
 
 `/donate` creates a Stripe Checkout session (one-time or monthly) via
 `POST /api/donations/checkout`. Configure `STRIPE_SECRET_KEY` to activate it, and point a Stripe
-webhook at `/api/donations/webhook` (set `STRIPE_WEBHOOK_SECRET`) to get donor/admin email
-receipts on `checkout.session.completed`.
+webhook at `/api/donations/webhook` (set `STRIPE_WEBHOOK_SECRET`) to process
+`checkout.session.completed`.
 
-**Not yet persisted to a database** — donations are handled entirely by Stripe; there is no local
-record of a gift beyond the email receipt. See [What's Not Built Yet](#whats-not-built-yet) below.
+On a completed checkout, the webhook (when `DATABASE_URL` is set):
+
+- Persists the gift to the `donations` table — donor name/email, amount, designation, and
+  one-time vs. monthly are all reviewable at `/admin/donations` (admin-only, never shown
+  publicly — see [Admin Section](#admin-section))
+- Emails the donor a PDF tax receipt (org name, EIN, date, amount, designation, and the standard
+  "no goods or services were provided" language) generated from `src/lib/receipt.ts`, alongside
+  an admin notification email
+
+Without `DATABASE_URL`, the gift still goes through Stripe and the receipt email still sends —
+it just isn't recorded in `/admin/donations`.
 
 ## Forms
 
@@ -92,10 +103,16 @@ Athlete application data is never displayed publicly anywhere on the site.
 
 ## Admin Section
 
-`/admin` is a password-protected area for reviewing everything submitted through the public
-forms: athlete applications, volunteer sign-ups, corporate sponsorship inquiries, and contact
-messages. It is a single-admin-account system (no user management, roles, or self-serve signup) —
-matching the scope of what was asked for.
+`/admin` is a password-protected area for the board to review everything submitted through the
+public forms — athlete applications, volunteer sign-ups, corporate sponsorship inquiries, contact
+messages — plus donations. Donor names and gift amounts are **admin-only**; they're never shown
+on any public page, matching the privacy commitments on `/privacy` and the campaign pages.
+
+Board members each get their own account with one of two roles:
+
+- **Owner** — everything a member can do, plus inviting and deactivating other board members
+  (`/admin/team`)
+- **Member** — can review submissions and donations, but can't manage other accounts
 
 ### 1. Provision a Postgres database
 
@@ -106,19 +123,21 @@ string, run the schema once:
 psql "$DATABASE_URL" -f src/lib/schema.sql
 ```
 
-This creates the `pgcrypto` extension and four tables (`athlete_applications`,
-`volunteer_applications`, `corporate_sponsorship_inquiries`, `contact_submissions`). It's safe to
-re-run — every statement is idempotent.
+This creates the `pgcrypto` extension and six tables (`athlete_applications`,
+`volunteer_applications`, `corporate_sponsorship_inquiries`, `contact_submissions`,
+`admin_users`, `donations`). It's safe to re-run — every statement is idempotent.
 
-### 2. Generate admin credentials
+### 2. Generate the first (owner) account's credentials
 
-Generate a bcrypt hash for your admin password (never store the plain password):
+Every account after the first is created by an owner sending an invite from `/admin/team` — no
+manual steps required. The very first account, though, needs to be bootstrapped from env vars.
+Generate a bcrypt hash for that owner's password (never store the plain password):
 
 ```bash
 node -e "require('bcryptjs').hash('yourpassword', 10).then(console.log)"
 ```
 
-Generate a random session signing secret:
+Generate a random session signing secret (used for every account's session, not just the first):
 
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
@@ -140,12 +159,19 @@ will silently corrupt an unescaped hash — you'll get 401s on every login attem
 message. This does **not** apply to variables entered directly into Netlify's dashboard, only to
 literal `.env`/`.env.local` files.
 
-### 4. Sign in
+### 4. Sign in and invite the rest of the board
 
-Visit `/admin/login`. Without all three of `ADMIN_EMAIL` / `ADMIN_PASSWORD_HASH` /
-`SESSION_SECRET` set, login honestly returns a 501 explaining it isn't configured yet, rather than
+Visit `/admin/login` and sign in with `ADMIN_EMAIL` / the password you hashed in step 2 — this
+first sign-in creates the "owner" account in `admin_users` and is the only time the env-var
+credentials are used (once `admin_users` has any row, this bootstrap path is disabled). From
+there, go to `/admin/team` to invite every other board member by name, email, and role — each
+invite emails a one-time link (valid 7 days) for them to set their own password.
+
+Without all three of `ADMIN_EMAIL` / `ADMIN_PASSWORD_HASH` / `SESSION_SECRET` set (and no database
+configured), login honestly returns a 501 explaining it isn't configured yet, rather than
 pretending to work. Without `DATABASE_URL` set, the dashboard and list pages render an empty state
-explaining the database isn't configured, rather than an error.
+explaining the database isn't configured, rather than an error — and board member accounts can't
+be created at all, since there's nowhere to store them.
 
 Sessions are signed JWTs in an `httpOnly` cookie, valid for 8 hours.
 
@@ -154,14 +180,15 @@ Sessions are signed JWTs in an `httpOnly` cookie, valid for 8 hours.
 The original spec for this project describes a full nonprofit operations platform. This build is
 the public website plus form-submission review. Deliberately out of scope for this pass:
 
-- **Donations table** — Stripe handles the charge and email receipt, but there's no local record
-  of gifts (see [Donations](#donations) above)
-- **Board portal** (`/board`) — meeting minutes, resolutions, document vault, compliance calendar
-- **Donor/supporter accounts** — giving history, saved payment methods, receipt downloads
+- **Public board portal** (`/board`) — meeting minutes, resolutions, document vault, compliance
+  calendar (separate from the `/admin` section board members already have)
+- **Donor self-serve accounts** — giving history, saved payment methods, re-downloading past
+  receipts (today, the PDF receipt only goes out once, by email, right after the gift)
 - **Content management** — marketing copy is still edited in `src/content/*.ts` and redeployed,
   not editable from `/admin`
-- **PDF generation** for meeting minutes and documents
-- **Audit logging**
+- **PDF generation** for meeting minutes and documents (donation receipts are already PDFs — see
+  [Donations](#donations) above)
+- **Audit logging** of who reviewed/changed what in `/admin`
 - Real photography (all imagery is currently CSS/brand-mark based — no stock or placeholder
   photos were sourced, since none were provided as authentic organizational photography)
 

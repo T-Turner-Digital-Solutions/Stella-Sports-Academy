@@ -39,7 +39,12 @@ export async function sendAdminNotification(subject: string, html: string) {
   }
 }
 
-export async function sendConfirmationEmail(to: string, subject: string, html: string) {
+export async function sendConfirmationEmail(
+  to: string,
+  subject: string,
+  html: string,
+  attachments?: { filename: string; content: Buffer }[]
+) {
   const client = getClient();
 
   if (!client) {
@@ -48,7 +53,7 @@ export async function sendConfirmationEmail(to: string, subject: string, html: s
   }
 
   try {
-    await client.emails.send({ from: FROM_ADDRESS, to, subject, html });
+    await client.emails.send({ from: FROM_ADDRESS, to, subject, html, attachments });
     return { delivered: true as const };
   } catch (error) {
     console.error("[email:send-failed]", error);

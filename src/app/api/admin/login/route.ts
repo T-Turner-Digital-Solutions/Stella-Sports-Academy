@@ -30,12 +30,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Enter a valid email and password." }, { status: 400 });
   }
 
-  const valid = await verifyAdminCredentials(parsed.data.email, parsed.data.password);
-  if (!valid) {
+  const session = await verifyAdminCredentials(parsed.data.email, parsed.data.password);
+  if (!session) {
     return NextResponse.json({ message: "Incorrect email or password." }, { status: 401 });
   }
 
-  const token = await createSessionToken(parsed.data.email);
+  const token = await createSessionToken(session);
   const response = NextResponse.json({ message: "Signed in." });
   response.cookies.set(SESSION_COOKIE, token, sessionCookieOptions);
   return response;
