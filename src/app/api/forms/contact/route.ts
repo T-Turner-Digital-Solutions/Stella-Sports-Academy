@@ -48,8 +48,8 @@ export async function POST(request: Request) {
 
   await sendConfirmationEmail(
     c.email,
-    "We received your message — Steller Sports Academy",
-    `<p>Hi ${escapeHtml(c.name)},</p><p>Thanks for reaching out to Steller Sports Academy. Our team will respond soon.</p>`
+    "We received your message — Stellar Sports Academy",
+    `<p>Hi ${escapeHtml(c.name)},</p><p>Thanks for reaching out to Stellar Sports Academy. Our team will respond soon.</p>`
   );
 
   return NextResponse.json({ message: "Thanks for reaching out — we'll be in touch soon." });

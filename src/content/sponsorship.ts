@@ -13,7 +13,7 @@ export const sponsorshipTiers: SponsorshipTier[] = [
   },
   {
     name: "Bronze Sponsor",
-    tagline: "Growing your visibility while supporting Steller athletes",
+    tagline: "Growing your visibility while supporting Stellar athletes",
     benefits: [
       "Website recognition",
       "Social media recognition",
@@ -22,7 +22,7 @@ export const sponsorshipTiers: SponsorshipTier[] = [
   },
   {
     name: "Silver Sponsor",
-    tagline: "Meaningful, visible support across Steller's programs",
+    tagline: "Meaningful, visible support across Stellar's programs",
     benefits: [
       "Website recognition",
       "Social media recognition",
@@ -44,7 +44,7 @@ export const sponsorshipTiers: SponsorshipTier[] = [
   },
   {
     name: "Champion Sponsor",
-    tagline: "Steller's highest level of corporate partnership",
+    tagline: "Stellar's highest level of corporate partnership",
     benefits: [
       "Website recognition",
       "Social media recognition",

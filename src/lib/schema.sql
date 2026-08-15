@@ -1,4 +1,4 @@
--- Steller Sports Academy — admin review database schema.
+-- Stellar Sports Academy — admin review database schema.
 -- Run this once against your Postgres database (see README "Admin Section"
 -- for setup). Safe to re-run — every statement is idempotent.
 

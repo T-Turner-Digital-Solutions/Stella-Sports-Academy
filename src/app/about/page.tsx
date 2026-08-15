@@ -17,7 +17,7 @@ export default function AboutPage() {
   return (
     <>
       <PageHero
-        eyebrow="About Steller"
+        eyebrow="About Stellar"
         title="Who We Are"
         description={site.description}
       />
@@ -31,7 +31,7 @@ export default function AboutPage() {
             </span>
             <h2 className="font-display mt-6 text-2xl uppercase tracking-wide text-ink">Our Mission</h2>
             <p className="mt-4 text-base leading-relaxed text-ink/70">
-              Steller Sports Academy exists to empower young athletes through comprehensive
+              Stellar Sports Academy exists to empower young athletes through comprehensive
               athletic training, educational support, mentorship, and life-skills development.
               We&rsquo;re focused on helping young athletes gain access to the resources, support, and
               guidance needed to succeed in sports, academics, careers, and life.
@@ -43,7 +43,7 @@ export default function AboutPage() {
             </span>
             <h2 className="font-display mt-6 text-2xl uppercase tracking-wide text-ink">Our Vision</h2>
             <p className="mt-4 text-base leading-relaxed text-ink/70">
-              Steller Sports Academy envisions a future where every young athlete has the
+              Stellar Sports Academy envisions a future where every young athlete has the
               resources, support, and guidance necessary to succeed in sports, education, career
               pursuits, and life.
             </p>
@@ -60,13 +60,13 @@ export default function AboutPage() {
           <SectionHeading eyebrow="Where It Began" title="Our Story" />
           <div className="space-y-4 text-base leading-relaxed text-ink/70">
             <p>
-              Steller Sports Academy was founded on a simple belief: talent is everywhere, but
+              Stellar Sports Academy was founded on a simple belief: talent is everywhere, but
               opportunity isn&rsquo;t. Too many young athletes — especially those from underserved
               communities — are held back not by ability, but by access to quality coaching,
               academic support, and mentorship.
             </p>
             <p>
-              Steller was created to close that gap directly, combining athletic development with
+              Stellar was created to close that gap directly, combining athletic development with
               academics, mentorship, and life-skills training so athletes are supported as whole
               people, not just competitors.
             </p>
@@ -90,7 +90,7 @@ export default function AboutPage() {
             </div>
             <div className="flex flex-col justify-center gap-4 text-base leading-relaxed text-ink/70">
               <p>
-                Steller Sports Academy was founded to give young athletes the same access to
+                Stellar Sports Academy was founded to give young athletes the same access to
                 training, academic support, and mentorship that too many communities go without —
                 and to make sure sports become a launchpad for life, not just a season.
               </p>

@@ -1,6 +1,6 @@
-# Steller Sports Academy
+# Stellar Sports Academy
 
-Steller Sports Academy is a nonprofit empowering young athletes through athletic training,
+Stellar Sports Academy is a nonprofit empowering young athletes through athletic training,
 academic support, mentorship, leadership development, and life skills. We help youth build
 confidence, discipline, and opportunity—on the field, in the classroom, and in life.
 
@@ -128,7 +128,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 ```
 DATABASE_URL=postgres://...
-ADMIN_EMAIL=you@stellersportsacademy.org
+ADMIN_EMAIL=you@stellarsportsacademy.org
 ADMIN_PASSWORD_HASH=<the bcrypt hash from step 2>
 SESSION_SECRET=<the random secret from step 2>
 ```
@@ -179,6 +179,6 @@ portal, donor-account auth strategy) that should be made deliberately, not defau
 
 ## Brand Assets
 
-The Steller star mark was cropped from the organization's corporate record book cover
+The Stellar star mark was cropped from the organization's corporate record book cover
 (`public/brand/stella-mark.png`), since no standalone transparent-background logo file was
 available. Replace `public/brand/*.png` with official logo files when available.

@@ -29,7 +29,7 @@ export default function TransparencyPage() {
       <PageHero
         eyebrow="Trust & Accountability"
         title="Transparency"
-        description="Steller Sports Academy is committed to operating openly. This page shares our nonprofit status, governance, and public records."
+        description="Stellar Sports Academy is committed to operating openly. This page shares our nonprofit status, governance, and public records."
       />
 
       <section className="bg-white py-20 sm:py-24">
@@ -53,7 +53,7 @@ export default function TransparencyPage() {
             </span>
             <h2 className="font-display mt-6 text-xl uppercase tracking-wide text-ink">Governance</h2>
             <p className="mt-3 text-sm leading-relaxed text-ink/65">
-              Steller is governed by a volunteer Board of Directors that meets regularly to guide
+              Stellar is governed by a volunteer Board of Directors that meets regularly to guide
               strategy, review finances, and uphold our mission and bylaws.
             </p>
           </div>
