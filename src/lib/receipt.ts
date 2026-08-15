@@ -6,33 +6,21 @@ import { site } from "@/content/site";
 const RED = rgb(0.831, 0, 0); // #d40000 — brand red
 const INK = rgb(0.11, 0.11, 0.11);
 const INK_SOFT = rgb(0.4, 0.4, 0.4);
-const WHITE = rgb(1, 1, 1);
 const PAGE_W = 612; // US Letter, points
 const PAGE_H = 792;
-const MARGIN = 44;
+const MARGIN = 60;
+const CONTENT_W = PAGE_W - MARGIN * 2;
 
-/**
- * Contact details as they appear on the organization's own branded receipt
- * template (supplied directly by the client) — not placeholder data.
- */
-const ORG = {
-  legalName: "Stellar Sports Academy, Inc.",
-  addressLines: ["P.O. Box 411", "Alabaster, AL 35007"],
-  phone: "(205) 908-1254",
-  website: "www.stellarsportsacademy.org",
-  email: "info@stellarsportsacademy.org",
-};
+const ORG_LEGAL_NAME = "Stellar Sports Academy, Inc.";
+const TAGLINE = "Empowering Young Athletes. Building Champions for Life.";
+const GOODS_SERVICES_STATEMENT = "No goods or services were provided in exchange for this contribution.";
 
 export type DonationReceiptData = {
   receiptNumber: string;
   donationDate: string;
   donorName: string;
-  donorEmail: string;
   amountLabel: string;
   designation: string;
-  paymentMethod: string;
-  transactionId: string;
-  monthly: boolean;
 };
 
 function wrapText(text: string, font: PDFFont, size: number, maxWidth: number): string[] {
@@ -52,248 +40,140 @@ function wrapText(text: string, font: PDFFont, size: number, maxWidth: number): 
   return lines;
 }
 
-function centeredText(
-  page: PDFPage,
-  text: string,
-  y: number,
-  font: PDFFont,
-  size: number,
-  color = INK
-) {
+function centeredText(page: PDFPage, text: string, y: number, font: PDFFont, size: number, color = INK) {
   const width = font.widthOfTextAtSize(text, size);
   page.drawText(text, { x: (PAGE_W - width) / 2, y, size, font, color });
 }
 
+/**
+ * Generates the donor-facing tax receipt as a single-page PDF letter,
+ * matching the exact wording supplied by the organization. A faded copy of
+ * the brand mark sits behind the text as a watermark.
+ */
 export async function generateDonationReceiptPdf(data: DonationReceiptData): Promise<Uint8Array> {
   const pdfDoc = await PDFDocument.create();
-  pdfDoc.setTitle(`${site.name} Donation Receipt`);
+  pdfDoc.setTitle(`${ORG_LEGAL_NAME} Donation Receipt`);
   const page = pdfDoc.addPage([PAGE_W, PAGE_H]);
 
   const bold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const regular = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const italic = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
 
+  // Watermark — faded brand mark centered behind the letter.
   const logoBytes = await readFile(path.join(process.cwd(), "public/brand/stella-mark-red.png"));
   const logoImage = await pdfDoc.embedPng(logoBytes);
-  const logoHeight = 56;
-  const logoWidth = logoImage.width * (logoHeight / logoImage.height);
+  const watermarkHeight = 420;
+  const watermarkWidth = logoImage.width * (watermarkHeight / logoImage.height);
+  page.drawImage(logoImage, {
+    x: (PAGE_W - watermarkWidth) / 2,
+    y: (PAGE_H - watermarkHeight) / 2,
+    width: watermarkWidth,
+    height: watermarkHeight,
+    opacity: 0.06,
+  });
 
   let y = PAGE_H - MARGIN;
 
-  // --- Header: logo + org name ---
-  page.drawImage(logoImage, { x: MARGIN, y: y - logoHeight, width: logoWidth, height: logoHeight });
-
-  const titleX = MARGIN + logoWidth + 16;
-  const titleY = y - 24;
-  page.drawText("STELLAR", { x: titleX, y: titleY, size: 24, font: bold, color: INK });
-  const stellarWidth = bold.widthOfTextAtSize("STELLAR ", 24);
-  page.drawText("SPORTS ACADEMY", { x: titleX + stellarWidth, y: titleY, size: 24, font: bold, color: RED });
-  page.drawText("EMPOWERING YOUNG ATHLETES. BUILDING CHAMPIONS FOR LIFE.", {
-    x: titleX,
-    y: titleY - 16,
-    size: 7.5,
-    font: bold,
-    color: INK_SOFT,
-  });
-
-  y -= logoHeight + 16;
-
-  centeredText(page, "501(c)(3) Nonprofit Organization", y, regular, 10);
-  y -= 15;
-  centeredText(page, `Federal EIN: ${site.ein}`, y, bold, 11, RED);
+  // --- Letterhead ---
+  centeredText(page, "STELLAR SPORTS ACADEMY, INC.", y, bold, 19, INK);
+  y -= 18;
+  centeredText(page, TAGLINE, y, italic, 10, INK_SOFT);
+  y -= 22;
+  centeredText(page, `EIN: ${site.ein}`, y, bold, 10.5, RED);
   y -= 14;
+  centeredText(page, "501(c)(3) Nonprofit Organization", y, regular, 10, INK_SOFT);
+  y -= 16;
 
   page.drawLine({ start: { x: MARGIN, y }, end: { x: PAGE_W - MARGIN, y }, thickness: 1.5, color: RED });
-  y -= 28;
+  y -= 30;
 
-  // --- Two columns: thank-you letter (left) / receipt box (right) ---
-  const colGap = 22;
-  const leftColWidth = (PAGE_W - MARGIN * 2 - colGap) * 0.56;
-  const rightColWidth = PAGE_W - MARGIN * 2 - colGap - leftColWidth;
-  const rightColX = MARGIN + leftColWidth + colGap;
-  const colTop = y;
+  centeredText(page, "THANK YOU FOR YOUR GENEROUS SUPPORT", y, bold, 14, RED);
+  y -= 30;
 
-  let leftY = colTop;
-  page.drawText("Thank You", { x: MARGIN, y: leftY, size: 22, font: bold, color: RED });
-  leftY -= 18;
-  page.drawText("FOR YOUR GENEROUS SUPPORT!", { x: MARGIN, y: leftY, size: 10.5, font: bold, color: INK });
-  leftY -= 26;
+  // --- Receipt fields ---
+  const fields: [string, string][] = [
+    ["Donation Receipt #", data.receiptNumber],
+    ["Donation Date", data.donationDate],
+    ["Donor Name", data.donorName],
+    ["Donation Amount", data.amountLabel],
+    ["Donation Designation", data.designation],
+  ];
+  for (const [label, value] of fields) {
+    page.drawText(`${label}:`, { x: MARGIN, y, size: 10.5, font: bold, color: INK });
+    const labelWidth = bold.widthOfTextAtSize(`${label}: `, 10.5);
+    page.drawText(value, { x: MARGIN + labelWidth, y, size: 10.5, font: regular, color: INK });
+    y -= 17;
+  }
+  y -= 14;
 
-  page.drawText(`Dear ${data.donorName},`, { x: MARGIN, y: leftY, size: 10, font: regular, color: INK });
-  leftY -= 20;
+  page.drawText(`Dear ${data.donorName},`, { x: MARGIN, y, size: 10.5, font: regular, color: INK });
+  y -= 20;
 
   const paragraphs = [
-    `On behalf of ${ORG.legalName}, thank you for your generous contribution to support young athletes and our mission.`,
-    "Your support helps us provide athletic training, academic support, mentorship, leadership development, and life-skills programs that empower young people to reach their full potential — on the field, in the classroom, and in life.",
-    "Together, we are building a stronger future for our athletes and our community.",
+    `On behalf of ${ORG_LEGAL_NAME}, thank you for your generous contribution of ${data.amountLabel}.`,
+    "Your support helps us continue our mission of empowering young athletes through athletic development, educational support, mentorship, leadership development, and life-skills programs that prepare young people for success on the field, in the classroom, and in life.",
+    `Every contribution helps Stellar Sports Academy create opportunities for young athletes and provide the resources, guidance, and support they need to reach their full potential.`,
   ];
   for (const paragraph of paragraphs) {
-    for (const line of wrapText(paragraph, regular, 10, leftColWidth)) {
-      page.drawText(line, { x: MARGIN, y: leftY, size: 10, font: regular, color: INK });
-      leftY -= 14;
+    for (const line of wrapText(paragraph, regular, 10.5, CONTENT_W)) {
+      page.drawText(line, { x: MARGIN, y, size: 10.5, font: regular, color: INK });
+      y -= 15;
     }
-    leftY -= 8;
+    y -= 8;
   }
 
-  leftY -= 8;
-  page.drawText("With sincere appreciation,", { x: MARGIN, y: leftY, size: 11, font: italic, color: RED });
-  leftY -= 16;
-  page.drawText(ORG.legalName, { x: MARGIN, y: leftY, size: 11, font: bold, color: INK });
-  const leftColBottom = leftY - 10;
+  y -= 6;
+  centeredText(page, "FOR YOUR TAX RECORDS", y, bold, 12, RED);
+  y -= 22;
 
-  // Receipt box (right column)
-  const headerH = 28;
-  const boxPad = 14;
-  const rowFields: [string, string][] = [
-    ["Receipt Number", data.receiptNumber],
-    ["Donation Date", data.donationDate],
+  const taxParagraph =
+    `${ORG_LEGAL_NAME} is recognized as a tax-exempt organization under Section 501(c)(3) of the Internal Revenue Code.`;
+  for (const line of wrapText(taxParagraph, regular, 10, CONTENT_W)) {
+    page.drawText(line, { x: MARGIN, y, size: 10, font: regular, color: INK });
+    y -= 14;
+  }
+  y -= 8;
+
+  const taxFields: [string, string][] = [
+    ["Federal EIN", site.ein],
+    ["Contribution Amount", data.amountLabel],
+    ["Contribution Date", data.donationDate],
   ];
-  const rowFields2: [string, string][] = [
-    ["Designation / Fund", data.designation],
-    ["Payment Method", data.paymentMethod],
-    ["Transaction ID", data.transactionId],
-  ];
-
-  let fieldY = colTop - headerH - 22;
-  for (const [label, value] of rowFields) {
-    page.drawText(`${label.toUpperCase()}`, { x: rightColX + boxPad, y: fieldY, size: 8, font: bold, color: INK_SOFT });
-    fieldY -= 13;
-    page.drawText(value, { x: rightColX + boxPad, y: fieldY, size: 10.5, font: regular, color: INK });
-    fieldY -= 20;
+  for (const [label, value] of taxFields) {
+    page.drawText(`${label}:`, { x: MARGIN, y, size: 10, font: bold, color: INK });
+    const labelWidth = bold.widthOfTextAtSize(`${label}: `, 10);
+    page.drawText(value, { x: MARGIN + labelWidth, y, size: 10, font: regular, color: INK });
+    y -= 15;
   }
-  page.drawText("DONOR", { x: rightColX + boxPad, y: fieldY, size: 8, font: bold, color: INK_SOFT });
-  fieldY -= 13;
-  page.drawText(data.donorName, { x: rightColX + boxPad, y: fieldY, size: 10.5, font: regular, color: INK });
-  fieldY -= 13;
-  page.drawText(data.donorEmail, { x: rightColX + boxPad, y: fieldY, size: 9, font: regular, color: INK_SOFT });
-  fieldY -= 24;
+  y -= 6;
 
-  page.drawText(
-    data.monthly ? "DONATION AMOUNT (MONTHLY)" : "DONATION AMOUNT",
-    { x: rightColX + boxPad, y: fieldY, size: 9, font: bold, color: RED }
-  );
-  fieldY -= 24;
-  page.drawRectangle({
-    x: rightColX + boxPad,
-    y: fieldY - 6,
-    width: rightColWidth - boxPad * 2,
-    height: 28,
-    borderColor: RED,
-    borderWidth: 1.5,
-    color: WHITE,
-  });
-  page.drawText(data.amountLabel, { x: rightColX + boxPad + 10, y: fieldY + 2, size: 15, font: bold, color: INK });
-  fieldY -= 44;
+  page.drawText(GOODS_SERVICES_STATEMENT, { x: MARGIN, y, size: 10, font: italic, color: INK });
+  y -= 24;
 
-  for (const [label, value] of rowFields2) {
-    page.drawText(label.toUpperCase(), { x: rightColX + boxPad, y: fieldY, size: 8, font: bold, color: INK_SOFT });
-    fieldY -= 12;
-    const lines = wrapText(value, regular, 9.5, rightColWidth - boxPad * 2);
-    for (const line of lines) {
-      page.drawText(line, { x: rightColX + boxPad, y: fieldY, size: 9.5, font: regular, color: INK });
-      fieldY -= 12;
-    }
-    fieldY -= 8;
+  const disclaimer =
+    "Please retain this acknowledgment with your tax records. The deductibility of charitable contributions depends on individual circumstances, and donors should consult their tax professional regarding their specific situation.";
+  for (const line of wrapText(disclaimer, regular, 9, CONTENT_W)) {
+    page.drawText(line, { x: MARGIN, y, size: 9, font: regular, color: INK_SOFT });
+    y -= 13;
   }
+  y -= 16;
 
-  const boxBottom = fieldY - 4;
-  const boxHeight = colTop - boxBottom;
-  page.drawRectangle({
-    x: rightColX,
-    y: boxBottom,
-    width: rightColWidth,
-    height: boxHeight,
-    borderColor: RED,
-    borderWidth: 1.5,
-  });
-  page.drawRectangle({
-    x: rightColX,
-    y: colTop - headerH,
-    width: rightColWidth,
-    height: headerH,
-    color: RED,
-  });
-  page.drawText("DONATION RECEIPT", {
-    x: rightColX + boxPad,
-    y: colTop - headerH + 9,
-    size: 11.5,
-    font: bold,
-    color: WHITE,
-  });
-
-  y = Math.min(leftColBottom, boxBottom) - 22;
-
-  // --- Bottom boxes: tax records / mission ---
-  const bottomColWidth = (PAGE_W - MARGIN * 2 - colGap) / 2;
-  const taxLines = [
-    `${ORG.legalName} is recognized as a tax-exempt organization under Section 501(c)(3) of the`,
-    "Internal Revenue Code.",
-    "",
-    `Federal EIN: ${site.ein}`,
-    "",
-    `No goods or services were provided by ${ORG.legalName} in exchange for this contribution.`,
-  ];
-  let taxY = y;
-  page.drawText("FOR YOUR TAX RECORDS", { x: MARGIN, y: taxY, size: 10.5, font: bold, color: RED });
-  taxY -= 16;
-  for (const line of taxLines) {
-    if (line === "") {
-      taxY -= 6;
-      continue;
-    }
-    const isEin = line.startsWith("Federal EIN");
-    for (const wrapped of wrapText(line, regular, 8.5, bottomColWidth - 8)) {
-      page.drawText(wrapped, {
-        x: MARGIN,
-        y: taxY,
-        size: isEin ? 9.5 : 8.5,
-        font: isEin ? bold : regular,
-        color: isEin ? INK : INK_SOFT,
-      });
-      taxY -= 11;
-    }
+  for (const line of wrapText(
+    "Thank you for believing in our athletes, our mission, and the future we are building together.",
+    regular,
+    10.5,
+    CONTENT_W
+  )) {
+    page.drawText(line, { x: MARGIN, y, size: 10.5, font: regular, color: INK });
+    y -= 15;
   }
+  y -= 14;
 
-  const missionColX = MARGIN + bottomColWidth + colGap;
-  let missionY = y;
-  page.drawText("OUR MISSION", { x: missionColX, y: missionY, size: 10.5, font: bold, color: RED });
-  missionY -= 16;
-  for (const line of wrapText(site.description, regular, 8.5, bottomColWidth - 8)) {
-    page.drawText(line, { x: missionColX, y: missionY, size: 8.5, font: regular, color: INK_SOFT });
-    missionY -= 11;
-  }
-  missionY -= 6;
-  page.drawText("Thank you for making an impact!", { x: missionColX, y: missionY, size: 9.5, font: italic, color: RED });
-
-  const disclaimerLines = [
-    "Please retain this acknowledgement for your tax records. The deductibility of charitable",
-    "contributions depends on individual circumstances. Please consult your tax professional",
-    "regarding your specific situation.",
-  ];
-  let disclaimerY = Math.min(taxY, missionY) - 24;
-  for (const line of disclaimerLines) {
-    centeredText(page, line, disclaimerY, regular, 8, INK_SOFT);
-    disclaimerY -= 11;
-  }
-
-  // --- Footer ---
-  const footerH = 54;
-  page.drawRectangle({ x: 0, y: 0, width: PAGE_W, height: footerH, color: RED });
-  centeredText(page, "THANK YOU FOR BELIEVING IN OUR ATHLETES AND OUR MISSION.", footerH - 16, bold, 9, WHITE);
-
-  const footerCols = [
-    [ORG.legalName, ...ORG.addressLines],
-    [ORG.website, ORG.email],
-    [ORG.phone, "Empowering Young Athletes."],
-  ];
-  const footerColWidth = (PAGE_W - MARGIN * 2) / 3;
-  footerCols.forEach((lines, i) => {
-    let fy = footerH - 30;
-    for (const line of lines) {
-      page.drawText(line, { x: MARGIN + i * footerColWidth, y: fy, size: 8, font: regular, color: WHITE });
-      fy -= 10;
-    }
-  });
+  page.drawText("With sincere appreciation,", { x: MARGIN, y, size: 10.5, font: italic, color: RED });
+  y -= 18;
+  page.drawText(ORG_LEGAL_NAME, { x: MARGIN, y, size: 11, font: bold, color: INK });
+  y -= 14;
+  page.drawText(TAGLINE, { x: MARGIN, y, size: 9, font: italic, color: INK_SOFT });
 
   return pdfDoc.save();
 }

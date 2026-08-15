@@ -81,12 +81,8 @@ export async function POST(request: Request) {
           receiptNumber,
           donationDate: receiptDate,
           donorName,
-          donorEmail: email,
           amountLabel: formatCurrency(amount),
           designation: designationLabel,
-          paymentMethod: "Card",
-          transactionId: session.id,
-          monthly: frequency === "monthly",
         });
         attachments = [
           { filename: `Stellar-Sports-Academy-Receipt-${receiptNumber}.pdf`, content: Buffer.from(pdfBytes) },
@@ -97,20 +93,27 @@ export async function POST(request: Request) {
 
       const result = await sendConfirmationEmail(
         email,
-        `Thank you for your donation to ${site.name}`,
+        "Thank you for your generous support",
         `<p>Dear ${escapeHtml(donorName)},</p>
-         <p>Thank you for your generous gift of ${formatCurrency(amount)} to ${escapeHtml(site.name)}${
-           frequency === "monthly" ? " as a recurring monthly gift" : ""
-         }, designated to ${escapeHtml(designationLabel)}.</p>
-         <p>Your official donation receipt is attached as a PDF — please keep it for your tax records.</p>
-         <p><strong>Donation Summary</strong><br/>
-         Date: ${receiptDate}<br/>
-         Amount: ${formatCurrency(amount)}<br/>
-         Designation: ${escapeHtml(designationLabel)}<br/>
-         Reference: ${escapeHtml(session.id)}</p>
-         <p>${escapeHtml(site.name)} is a ${escapeHtml(site.orgType)}. Federal Tax ID (EIN): ${site.ein}.
-         No goods or services were provided in exchange for this contribution.</p>
-         <p>With gratitude,<br/>${escapeHtml(site.name)}</p>`,
+         <p>On behalf of Stellar Sports Academy, Inc., thank you for your generous contribution of
+         ${formatCurrency(amount)}${frequency === "monthly" ? " as a recurring monthly gift" : ""}.</p>
+         <p>Your support helps us continue our mission of empowering young athletes through athletic
+         development, educational support, mentorship, leadership development, and life-skills
+         programs that prepare young people for success on the field, in the classroom, and in life.</p>
+         <p>Every contribution helps Stellar Sports Academy create opportunities for young athletes
+         and provide the resources, guidance, and support they need to reach their full potential.</p>
+         <p><strong>Donation Receipt #:</strong> ${escapeHtml(receiptNumber)}<br/>
+         <strong>Donation Date:</strong> ${receiptDate}<br/>
+         <strong>Donation Amount:</strong> ${formatCurrency(amount)}<br/>
+         <strong>Donation Designation:</strong> ${escapeHtml(designationLabel)}</p>
+         <p>Your official tax receipt is attached as a PDF — please retain it with your tax records.
+         Stellar Sports Academy, Inc. is recognized as a tax-exempt organization under Section
+         501(c)(3) of the Internal Revenue Code. Federal EIN: ${site.ein}. No goods or services were
+         provided in exchange for this contribution.</p>
+         <p>Thank you for believing in our athletes, our mission, and the future we are building
+         together.</p>
+         <p>With sincere appreciation,<br/>Stellar Sports Academy, Inc.<br/>
+         <em>Empowering Young Athletes. Building Champions for Life.</em></p>`,
         attachments
       );
 
