@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { contactSchema } from "@/lib/validation";
 import { sendAdminNotification, sendConfirmationEmail, escapeHtml } from "@/lib/email";
 import { firstFieldErrors } from "@/lib/forms-server";
+import { insertContactSubmission } from "@/lib/submissions";
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
@@ -20,6 +21,18 @@ export async function POST(request: Request) {
 
   const c = parsed.data;
 
+  try {
+    await insertContactSubmission({
+      name: c.name,
+      email: c.email,
+      phone: c.phone,
+      inquiryType: c.inquiryType,
+      message: c.message,
+    });
+  } catch (error) {
+    console.error("[db:insert-contact-submission-failed]", error);
+  }
+
   await sendAdminNotification(
     `New contact form: ${c.inquiryType}`,
     `
@@ -35,8 +48,8 @@ export async function POST(request: Request) {
 
   await sendConfirmationEmail(
     c.email,
-    "We received your message — Stella Sports Academy",
-    `<p>Hi ${escapeHtml(c.name)},</p><p>Thanks for reaching out to Stella Sports Academy. Our team will respond soon.</p>`
+    "We received your message — Steller Sports Academy",
+    `<p>Hi ${escapeHtml(c.name)},</p><p>Thanks for reaching out to Steller Sports Academy. Our team will respond soon.</p>`
   );
 
   return NextResponse.json({ message: "Thanks for reaching out — we'll be in touch soon." });

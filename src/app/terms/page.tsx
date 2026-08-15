@@ -24,7 +24,7 @@ export default function TermsPage() {
       <div>
         <h2>Content</h2>
         <p>
-          All content on this site — including text, graphics, and the Stella Sports Academy
+          All content on this site — including text, graphics, and the Steller Sports Academy
           logo — is the property of {site.name} unless otherwise noted, and may not be used
           without permission.
         </p>
@@ -78,7 +78,7 @@ export default function TermsPage() {
       </div>
 
       <p className="text-xs italic text-ink/45">
-        This policy is a general template and has not yet been reviewed by legal counsel. Stella
+        This policy is a general template and has not yet been reviewed by legal counsel. Steller
         Sports Academy should have this policy reviewed by an attorney before relying on it.
       </p>
     </LegalLayout>

@@ -66,7 +66,7 @@ export function NewsletterForm() {
       />
       <CheckboxField
         id="newsletter-consent"
-        label="I'd like to receive email updates from Stella Sports Academy."
+        label="I'd like to receive email updates from Steller Sports Academy."
         required
         checked={consent}
         onChange={(e) => setConsent(e.target.checked)}

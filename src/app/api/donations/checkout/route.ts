@@ -47,7 +47,7 @@ export async function POST(request: Request) {
             currency: "usd",
             unit_amount: amountCents,
             product_data: {
-              name: `Stella Sports Academy Donation — ${designationLabel}`,
+              name: `Steller Sports Academy Donation — ${designationLabel}`,
             },
             ...(frequency === "monthly" ? { recurring: { interval: "month" as const } } : {}),
           },

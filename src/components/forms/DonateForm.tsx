@@ -174,7 +174,7 @@ export function DonateForm({
       </Button>
 
       <p className="text-xs text-ink/45">
-        Payment is processed securely by Stripe. Stella never stores your card details.
+        Payment is processed securely by Stripe. Steller never stores your card details.
       </p>
 
       <FormStatus state={state} />

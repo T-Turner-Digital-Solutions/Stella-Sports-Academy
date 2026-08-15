@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { volunteerSchema } from "@/lib/validation";
 import { sendAdminNotification, sendConfirmationEmail, escapeHtml } from "@/lib/email";
 import { firstFieldErrors } from "@/lib/forms-server";
+import { insertVolunteerApplication } from "@/lib/submissions";
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
@@ -15,13 +16,27 @@ export async function POST(request: Request) {
   }
 
   if (parsed.data.website) {
-    return NextResponse.json({ message: "Thank you for volunteering with Stella." });
+    return NextResponse.json({ message: "Thank you for volunteering with Steller." });
   }
 
   const v = parsed.data;
 
+  try {
+    await insertVolunteerApplication({
+      name: v.name,
+      email: v.email,
+      phone: v.phone,
+      areaOfInterest: v.areaOfInterest,
+      experience: v.experience,
+      availability: v.availability,
+      message: v.message,
+    });
+  } catch (error) {
+    console.error("[db:insert-volunteer-application-failed]", error);
+  }
+
   await sendAdminNotification(
-    "New Stella volunteer application",
+    "New Steller volunteer application",
     `
       <h2>New Volunteer Application</h2>
       <p><strong>Name:</strong> ${escapeHtml(v.name)}</p>
@@ -36,8 +51,8 @@ export async function POST(request: Request) {
 
   await sendConfirmationEmail(
     v.email,
-    "We received your Stella volunteer application",
-    `<p>Hi ${escapeHtml(v.name)},</p><p>Thank you for your interest in volunteering with Stella Sports Academy. Our team will follow up soon.</p>`
+    "We received your Steller volunteer application",
+    `<p>Hi ${escapeHtml(v.name)},</p><p>Thank you for your interest in volunteering with Steller Sports Academy. Our team will follow up soon.</p>`
   );
 
   return NextResponse.json({ message: "Thank you! Your volunteer application has been received." });

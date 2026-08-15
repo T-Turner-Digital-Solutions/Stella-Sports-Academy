@@ -42,7 +42,7 @@ export const campaigns: Campaign[] = [
     summary:
       "Cover the cost of training, equipment, academic support, and mentorship for a young athlete who couldn't otherwise afford it.",
     story: [
-      "Many of the young athletes Stella works with face real financial barriers to quality coaching, equipment, and academic support. Sponsoring an athlete helps close that gap directly.",
+      "Many of the young athletes Steller works with face real financial barriers to quality coaching, equipment, and academic support. Sponsoring an athlete helps close that gap directly.",
       "Your sponsorship goes toward training, equipment, academic resources, and mentorship — the full picture of what it takes for a young athlete to succeed on the field and in the classroom.",
     ],
     goalCents: null,
@@ -55,12 +55,12 @@ export const campaigns: Campaign[] = [
   {
     slug: "equipment-fund",
     designation: "equipment-fund",
-    title: "Stella Equipment Fund",
+    title: "Steller Equipment Fund",
     summary:
-      "Help provide the training gear, uniforms, and safety equipment Stella athletes need to train and compete safely.",
+      "Help provide the training gear, uniforms, and safety equipment Steller athletes need to train and compete safely.",
     story: [
       "Quality equipment isn't optional — it's part of how we keep athletes safe and give them the tools to develop properly.",
-      "The Equipment Fund supports everything from training gear to safety equipment across Stella's athletic programs.",
+      "The Equipment Fund supports everything from training gear to safety equipment across Steller's athletic programs.",
     ],
     goalCents: null,
     raisedCents: 0,

@@ -35,7 +35,7 @@ export default function CampaignsPage() {
         <Container>
           <SectionHeading eyebrow="Looking Ahead" title="More Campaigns Coming" />
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink/60">
-            Stella is preparing additional campaigns as programs grow. These will launch with
+            Steller is preparing additional campaigns as programs grow. These will launch with
             real goals and updates as they become active.
           </p>
           <div className="mt-6 flex flex-wrap gap-2.5">

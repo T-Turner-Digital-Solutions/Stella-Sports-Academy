@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { athleteApplicationSchema } from "@/lib/validation";
 import { sendAdminNotification, sendConfirmationEmail, escapeHtml } from "@/lib/email";
 import { firstFieldErrors } from "@/lib/forms-server";
+import { insertAthleteApplication } from "@/lib/submissions";
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
@@ -20,12 +21,33 @@ export async function POST(request: Request) {
 
   const a = parsed.data;
 
-  // NOTE: Phase 1 has no database or admin portal yet, so this application is
-  // relayed only via private email to the organization's admin inbox — never
-  // written anywhere public. Athlete data (including date of birth) never
-  // appears in any client-visible response or on any public page.
+  // Persisted to the private admin review database (see /admin/applications)
+  // in addition to the email relay below. Never written anywhere public —
+  // athlete data (including date of birth) never appears in any
+  // client-visible response or on any public page.
+  try {
+    await insertAthleteApplication({
+      athleteFirstName: a.athleteFirstName,
+      athleteLastName: a.athleteLastName,
+      dateOfBirth: a.dateOfBirth,
+      school: a.school,
+      grade: a.grade,
+      sport: a.sport,
+      position: a.position,
+      currentTeam: a.currentTeam,
+      parentName: a.parentName,
+      parentEmail: a.parentEmail,
+      parentPhone: a.parentPhone,
+      programInterest: a.programInterest,
+      financialAssistance: a.financialAssistance === "yes",
+      additionalInfo: a.additionalInfo,
+    });
+  } catch (error) {
+    console.error("[db:insert-athlete-application-failed]", error);
+  }
+
   await sendAdminNotification(
-    "New Stella Athlete Application",
+    "New Steller Athlete Application",
     `
       <h2>New Athlete Application</h2>
       <p><strong>Athlete:</strong> ${escapeHtml(a.athleteFirstName)} ${escapeHtml(a.athleteLastName)}</p>
@@ -46,10 +68,10 @@ export async function POST(request: Request) {
 
   await sendConfirmationEmail(
     a.parentEmail,
-    "We received your Stella Sports Academy application",
+    "We received your Steller Sports Academy application",
     `<p>Hi ${escapeHtml(a.parentName)},</p>
-     <p>Thank you for applying to Stella Sports Academy on behalf of ${escapeHtml(a.athleteFirstName)}. Our team will review the application and follow up by email or phone.</p>
-     <p>— Stella Sports Academy</p>`
+     <p>Thank you for applying to Steller Sports Academy on behalf of ${escapeHtml(a.athleteFirstName)}. Our team will review the application and follow up by email or phone.</p>
+     <p>— Steller Sports Academy</p>`
   );
 
   return NextResponse.json({

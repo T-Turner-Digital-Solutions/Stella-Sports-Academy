@@ -19,13 +19,13 @@ const paths = [
   },
   {
     title: "Corporate Sponsorship",
-    description: "Partner with Stella and reach the community while supporting youth development.",
+    description: "Partner with Steller and reach the community while supporting youth development.",
     href: "/get-involved/corporate-sponsorship",
     icon: Building2,
   },
   {
     title: "Volunteer",
-    description: "Coach, mentor, tutor, or support Stella events and operations.",
+    description: "Coach, mentor, tutor, or support Steller events and operations.",
     href: "/get-involved/volunteer",
     icon: Users,
   },
@@ -43,7 +43,7 @@ export default function GetInvolvedPage() {
       <PageHero
         eyebrow="Join the Mission"
         title="Get Involved"
-        description="There are many ways to support Stella's athletes — find the one that fits you."
+        description="There are many ways to support Steller's athletes — find the one that fits you."
       />
 
       <section className="bg-white py-20 sm:py-28">

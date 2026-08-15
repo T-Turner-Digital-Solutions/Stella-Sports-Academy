@@ -2,12 +2,12 @@
 // unverified is hard-coded into the public site. Set these in .env.local
 // (see README) before launch — the fallbacks below are placeholders only.
 export const site = {
-  name: "Stella Sports Academy",
-  shortName: "Stella",
+  name: "Steller Sports Academy",
+  shortName: "Steller",
   orgType: "501(c)(3) Nonprofit Organization",
   tagline: "Empowering Young Athletes. Building Champions for Life.",
   description:
-    "Stella Sports Academy is a nonprofit empowering young athletes through athletic training, academic support, mentorship, leadership development, and life skills. We help youth build confidence, discipline, and opportunity—on the field, in the classroom, and in life.",
+    "Steller Sports Academy is a nonprofit empowering young athletes through athletic training, academic support, mentorship, leadership development, and life skills. We help youth build confidence, discipline, and opportunity—on the field, in the classroom, and in life.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.example.org",
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "",
   phone: process.env.NEXT_PUBLIC_CONTACT_PHONE || "",
@@ -38,7 +38,7 @@ export const primaryNav: NavItem[] = [
       { label: "Academic Support", href: "/programs/academic-support" },
       { label: "Life Skills & Personal Development", href: "/programs/life-skills" },
       { label: "Mentorship", href: "/programs/mentorship" },
-      { label: "Athlete Application", href: "/apply", description: "Apply to join Stella" },
+      { label: "Athlete Application", href: "/apply", description: "Apply to join Steller" },
     ],
   },
   {
@@ -70,7 +70,7 @@ export const primaryNav: NavItem[] = [
 
 export const footerNav = {
   organization: [
-    { label: "About Stella", href: "/about" },
+    { label: "About Steller", href: "/about" },
     { label: "Our Programs", href: "/programs" },
     { label: "Our Impact", href: "/impact" },
     { label: "News", href: "/news" },
