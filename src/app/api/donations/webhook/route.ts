@@ -81,8 +81,11 @@ export async function POST(request: Request) {
           receiptNumber,
           donationDate: receiptDate,
           donorName,
+          donorEmail: email,
           amountLabel: formatCurrency(amount),
           designation: designationLabel,
+          paymentMethod: "Card",
+          transactionId: session.id,
         });
         attachments = [
           { filename: `Stellar-Sports-Academy-Receipt-${receiptNumber}.pdf`, content: Buffer.from(pdfBytes) },
