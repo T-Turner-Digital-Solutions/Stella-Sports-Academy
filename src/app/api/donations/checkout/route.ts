@@ -58,7 +58,11 @@ export async function POST(request: Request) {
       cancel_url: `${origin}/donate`,
       metadata: {
         designation,
-        donorName: anonymous ? "Anonymous" : donorName,
+        // Always the real name, even when `anonymous` is set — that flag
+        // means "don't list me publicly," not "don't put my name on my own
+        // tax receipt." Donor-level detail is admin-only anyway (see
+        // /admin/donations), so there's no public surface to protect here.
+        donorName,
         anonymous: String(anonymous),
         dedication: dedication || "",
       },

@@ -1,9 +1,11 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { UserRound, HeartHandshake, Building2, MessageSquare, ArrowRight } from "lucide-react";
+import { UserRound, HeartHandshake, Building2, MessageSquare, Gift, ArrowRight } from "lucide-react";
 import { isDatabaseConfigured } from "@/lib/db";
 import { getSubmissionCounts } from "@/lib/submissions";
+import { getDonationTotals } from "@/lib/donations";
 import { DbNotConfigured } from "@/components/admin/DbNotConfigured";
+import { formatCurrency } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Dashboard" };
@@ -18,6 +20,7 @@ const cards = [
 export default async function AdminDashboardPage() {
   const dbReady = isDatabaseConfigured();
   const counts = dbReady ? await getSubmissionCounts() : null;
+  const donationTotals = dbReady ? await getDonationTotals() : null;
 
   return (
     <div>
@@ -28,7 +31,43 @@ export default async function AdminDashboardPage() {
         {!dbReady ? (
           <DbNotConfigured />
         ) : (
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <>
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+              <Link
+                href="/admin/donations"
+                className="group flex flex-col gap-2 rounded-2xl border border-ink/10 bg-white p-6 transition-shadow hover:shadow-lg"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-red-100">
+                    <Gift className="h-5 w-5 text-red-700" />
+                  </span>
+                  <span className="flex items-center gap-1.5 text-sm font-semibold text-red-700">
+                    View Donations
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </span>
+                </div>
+                <p className="mt-2 font-display text-3xl text-ink">{formatCurrency(donationTotals?.yearTotalCents ?? 0)}</p>
+                <p className="text-sm font-medium text-ink/60">Raised This Year ({donationTotals?.yearCount ?? 0} gifts)</p>
+              </Link>
+              <Link
+                href="/admin/donations"
+                className="group flex flex-col gap-2 rounded-2xl border border-ink/10 bg-white p-6 transition-shadow hover:shadow-lg"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-red-100">
+                    <Gift className="h-5 w-5 text-red-700" />
+                  </span>
+                  <span className="flex items-center gap-1.5 text-sm font-semibold text-red-700">
+                    View Donations
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </span>
+                </div>
+                <p className="mt-2 font-display text-3xl text-ink">{formatCurrency(donationTotals?.allTimeTotalCents ?? 0)}</p>
+                <p className="text-sm font-medium text-ink/60">Raised All-Time ({donationTotals?.allTimeCount ?? 0} gifts)</p>
+              </Link>
+            </div>
+
+            <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {cards.map((card) => {
               const stat = counts?.[card.key];
               return (
@@ -58,7 +97,8 @@ export default async function AdminDashboardPage() {
                 </Link>
               );
             })}
-          </div>
+            </div>
+          </>
         )}
       </div>
     </div>

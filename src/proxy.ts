@@ -5,18 +5,20 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isLoginPage = pathname === "/admin/login";
+  const isAcceptInvitePage = pathname === "/admin/accept-invite";
   const isLoginApi = pathname === "/api/admin/login";
+  const isAcceptInviteApi = pathname === "/api/admin/accept-invite";
   const isApiRoute = pathname.startsWith("/api/admin/");
 
-  if (isLoginApi) {
+  if (isLoginApi || isAcceptInviteApi) {
     return NextResponse.next();
   }
 
   const token = request.cookies.get(SESSION_COOKIE)?.value;
   const session = token ? await verifySessionToken(token) : null;
 
-  if (isLoginPage) {
-    if (session) {
+  if (isLoginPage || isAcceptInvitePage) {
+    if (session && isLoginPage) {
       return NextResponse.redirect(new URL("/admin", request.url));
     }
     return NextResponse.next();
