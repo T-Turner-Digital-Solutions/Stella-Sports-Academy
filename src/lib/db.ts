@@ -8,7 +8,12 @@ export function isDatabaseConfigured() {
 
 /** Returns null when DATABASE_URL isn't configured — callers must handle
  * that gracefully (e.g. skip persistence, or show a clear setup message in
- * the admin UI) rather than pretending data exists. */
+ * the admin UI) rather than pretending data exists.
+ *
+ * DATABASE_URL points at Stellar's Supabase project (transaction pooler
+ * connection string) as of 2026-11-13. Rotating the value requires a fresh
+ * deploy before it takes effect — Netlify Functions read env vars at
+ * deploy time, not per-request. */
 export function getDb(): Pool | null {
   if (!process.env.DATABASE_URL) return null;
   if (!pool) {
