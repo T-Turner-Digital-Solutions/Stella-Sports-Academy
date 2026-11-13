@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { EventPopupModal } from "@/components/layout/EventPopupModal";
 
 /** The admin section has its own layout/chrome (see src/app/admin/layout.tsx
  * and src/app/admin/(dashboard)/layout.tsx) — skip the public nav/footer
@@ -17,6 +18,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
 
   return (
     <>
+      <EventPopupModal />
       <Header />
       <main id="main-content" className="flex-1">
         {children}
