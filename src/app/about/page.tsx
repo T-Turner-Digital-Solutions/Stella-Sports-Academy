@@ -79,7 +79,7 @@ export default function AboutPage() {
       </section>
 
       {/* OUR STORY */}
-      <section className="bg-white py-20 sm:py-28">
+      <section className="bg-white py-10 sm:py-14">
         <Container>
           <div className="mx-auto max-w-3xl text-center">
             <SectionHeading eyebrow="Where It Began" title="Our Story" align="center" />
