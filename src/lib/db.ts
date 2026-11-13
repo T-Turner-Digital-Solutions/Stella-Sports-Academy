@@ -10,10 +10,12 @@ export function isDatabaseConfigured() {
  * that gracefully (e.g. skip persistence, or show a clear setup message in
  * the admin UI) rather than pretending data exists.
  *
- * DATABASE_URL points at Stellar's Supabase project (transaction pooler
- * connection string) as of 2026-11-13. Rotating the value requires a fresh
- * deploy before it takes effect — Netlify Functions read env vars at
- * deploy time, not per-request. */
+ * DATABASE_URL points at Stellar's Supabase project via the transaction
+ * pooler connection string (aws-0-<region>.pooler.supabase.com — not the
+ * db.<ref>.supabase.co direct-connection host, which needs IPv6 and isn't
+ * reachable from Netlify Functions) as of 2026-11-13. Rotating the value
+ * requires a fresh deploy before it takes effect — Netlify Functions read
+ * env vars at deploy time, not per-request. */
 export function getDb(): Pool | null {
   if (!process.env.DATABASE_URL) return null;
   if (!pool) {
