@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ShieldCheck } from "lucide-react";
 import { Field, TextInput } from "@/components/forms/fields";
@@ -74,6 +75,11 @@ export function LoginForm({
         </Button>
         <FormStatus state={state} />
       </form>
+      <p className="mt-4 text-center text-sm text-ink/60">
+        <Link href="/admin/forgot-password" className="font-semibold text-red-700 hover:underline">
+          Forgot your password?
+        </Link>
+      </p>
     </div>
   );
 }
