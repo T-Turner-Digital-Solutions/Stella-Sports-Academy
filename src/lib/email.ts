@@ -1,5 +1,9 @@
 import { Resend } from "resend";
 
+// Production has RESEND_API_KEY (Stellar's own Resend account, domain
+// verified) and EMAIL_FROM="Stellar Sports Academy <info@stellar-sportsacademy.com>"
+// set as of 2026-11-13 — see Netlify site environment variables. Both are
+// server-only: this module is never imported from client components.
 const FROM_ADDRESS = process.env.EMAIL_FROM || "Stellar Sports Academy <onboarding@resend.dev>";
 const ADMIN_EMAIL = process.env.ADMIN_NOTIFY_EMAIL;
 
