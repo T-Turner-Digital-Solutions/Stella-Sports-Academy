@@ -22,3 +22,18 @@
   # outright rather than chasing the exact newer 20.x patch that's still
   # new enough.
   NODE_VERSION = "22"
+
+  # Netlify's secret scanner fails the build whenever a configured secret's
+  # value shows up anywhere under the build directory — including files that
+  # never ship. After ZEFFY_API_KEY was added as a site env var, it started
+  # appearing inside Turbopack's persistent build-cache shards
+  # (.next/cache/turbopack/**/*.sst), which Next.js/Turbopack writes purely
+  # to speed up incremental rebuilds. Verified locally (comparing this
+  # directory against the plugin's actual packaged output — .netlify/static,
+  # .netlify/functions-internal, .netlify/edge-functions) that .next/cache is
+  # never copied into the static CDN assets, the serverless function bundle,
+  # or the edge function bundle, so this file is never shipped or reachable
+  # by anyone outside this build container. Omitting only this path (not the
+  # key, and not scanning as a whole) keeps the scanner fully active for
+  # every file that actually gets deployed.
+  SECRETS_SCAN_OMIT_PATHS = "**/.next/cache/**"
