@@ -8,20 +8,12 @@ export function Logo({ light = false, className }: { light?: boolean; className?
       className={cn("group flex items-center gap-3", className)}
       aria-label="Stellar Sports Academy — Home"
     >
-      <span
+      <img
+        src="/brand/stella-mark.png"
+        alt=""
         aria-hidden
-        className="h-11 w-auto flex-shrink-0 bg-red-700 drop-shadow-sm transition-transform duration-200 group-hover:scale-105"
-        style={{
-          aspectRatio: "590 / 746",
-          WebkitMaskImage: "url(/brand/stella-mark.png)",
-          maskImage: "url(/brand/stella-mark.png)",
-          WebkitMaskSize: "contain",
-          maskSize: "contain",
-          WebkitMaskRepeat: "no-repeat",
-          maskRepeat: "no-repeat",
-          WebkitMaskPosition: "center",
-          maskPosition: "center",
-        }}
+        className="h-11 w-auto flex-shrink-0 drop-shadow-sm transition-transform duration-200 group-hover:scale-105"
+        style={{ aspectRatio: "1514 / 730" }}
       />
       <span
         className={cn(
