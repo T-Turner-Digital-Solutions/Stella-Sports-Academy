@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { Compass, Eye, BookOpen, HeartHandshake, Users } from "lucide-react";
+import { BookOpen, HeartHandshake, Users } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { PageHero } from "@/components/ui/PageHero";
@@ -81,35 +81,6 @@ export default function AboutPage() {
         </Container>
       </section>
 
-      {/* MISSION / VISION */}
-      <section className="bg-white py-20 sm:py-28">
-        <Container className="grid gap-8 md:grid-cols-2">
-          <div className="rounded-2xl border border-ink/10 bg-paper p-8 sm:p-10">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
-              <Compass className="h-6 w-6 text-red-700" />
-            </span>
-            <h2 className="font-display mt-6 text-2xl uppercase tracking-wide text-ink">Our Mission</h2>
-            <p className="mt-4 text-base leading-relaxed text-ink/70">
-              Stellar Sports Academy exists to empower young athletes through comprehensive
-              athletic training, educational support, mentorship, and life-skills development.
-              We&rsquo;re focused on helping young athletes gain access to the resources, support, and
-              guidance needed to succeed in sports, academics, careers, and life.
-            </p>
-          </div>
-          <div className="rounded-2xl border border-ink/10 bg-paper p-8 sm:p-10">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
-              <Eye className="h-6 w-6 text-red-700" />
-            </span>
-            <h2 className="font-display mt-6 text-2xl uppercase tracking-wide text-ink">Our Vision</h2>
-            <p className="mt-4 text-base leading-relaxed text-ink/70">
-              Stellar Sports Academy envisions a future where every young athlete has the
-              resources, support, and guidance necessary to succeed in sports, education, career
-              pursuits, and life.
-            </p>
-          </div>
-        </Container>
-      </section>
-
       {/* OUR STORY */}
       <section className="bg-paper py-20 sm:py-28">
         <Container className="grid gap-12 lg:grid-cols-[1fr_1.3fr] lg:items-center">
@@ -161,6 +132,14 @@ export default function AboutPage() {
               <LeaderCard key={leader.name} leader={leader} />
             ))}
           </div>
+          <Image
+            src="/brand/stella-mark.png"
+            alt=""
+            aria-hidden
+            width={160}
+            height={77}
+            className="mx-auto mt-12 h-auto w-28 opacity-80"
+          />
         </Container>
       </section>
 
