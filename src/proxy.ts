@@ -9,10 +9,14 @@ export async function proxy(request: NextRequest) {
   const isAcceptInvitePage = pathname === "/admin/accept-invite";
   const isLoginApi = pathname === "/api/admin/login";
   const isAcceptInviteApi = pathname === "/api/admin/accept-invite";
+  // Has its own auth check (owner session OR a DB_SETUP_SECRET header) — it
+  // needs to run even when nobody has a valid session yet, e.g. right after
+  // DATABASE_URL is first connected or rotated.
+  const isDbSetupApi = pathname === "/api/admin/db-setup";
   const isApiRoute = pathname.startsWith("/api/admin/");
   const defaultArea = isBoardArea ? "/board" : "/admin";
 
-  if (isLoginApi || isAcceptInviteApi) {
+  if (isLoginApi || isAcceptInviteApi || isDbSetupApi) {
     return NextResponse.next();
   }
 
