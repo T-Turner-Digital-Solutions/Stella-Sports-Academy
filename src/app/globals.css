@@ -1,17 +1,24 @@
 @import "tailwindcss";
 
 :root {
-  /* Brand palette — strictly Ferrari Red / Grey / White, no other hues (no gold) */
+  /* Brand palette — Stellar Blue / Grey / White, no red anywhere.
+     NOTE: these custom properties still use Tailwind's "red" scale names
+     (--color-red-700, bg-red-700, etc. throughout the codebase) because
+     Tailwind v4 generates utility classes straight from these token names.
+     Renaming them to "blue" would mean renaming every bg-red-700 and
+     text-red-700 class across every component, which is unnecessary risk
+     for a value-only rebrand. The values below are sampled directly from
+     the new logo. */
   --color-ink: #333333;          /* charcoal grey — replaces black */
   --color-ink-soft: #4a4a4a;     /* lighter grey for hover states */
-  --color-red-900: #4a0000;
-  --color-red-800: #7a0000;
-  --color-red-700: #d40000;      /* Ferrari Red (Rosso Corsa) — primary CTA */
-  --color-red-600: #e8221a;      /* hover red */
-  --color-red-500: #f04a3d;
-  --color-red-400: #f57c72;
-  --color-red-300: #f9aca5;
-  --color-red-100: #fde6e4;      /* light red tint for badges/tints */
+  --color-red-900: #00243d;
+  --color-red-800: #003a63;
+  --color-red-700: #0066a8;      /* Stellar Blue — primary CTA */
+  --color-red-600: #007dc2;      /* hover blue */
+  --color-red-500: #0098dd;
+  --color-red-400: #4bc3ef;
+  --color-red-300: #8fdcf5;
+  --color-red-100: #e2f6fd;      /* light blue tint for badges/tints */
   --color-paper: #f7f7f7;        /* light grey background */
   --color-paper-dim: #ececec;
   --color-white: #ffffff;

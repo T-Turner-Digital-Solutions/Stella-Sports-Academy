@@ -2,16 +2,18 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, UserRound, HeartHandshake, Building2, MessageSquare } from "lucide-react";
+import { LayoutDashboard, UserRound, HeartHandshake, Building2, MessageSquare, Gift, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LogoutButton } from "@/components/admin/LogoutButton";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { href: "/admin/donations", label: "Donations", icon: Gift },
   { href: "/admin/applications", label: "Athlete Applications", icon: UserRound },
   { href: "/admin/volunteers", label: "Volunteers", icon: HeartHandshake },
   { href: "/admin/sponsorships", label: "Sponsorships", icon: Building2 },
   { href: "/admin/contact", label: "Contact Submissions", icon: MessageSquare },
+  { href: "/admin/team", label: "Board Members", icon: Users },
 ];
 
 export function AdminSidebar() {

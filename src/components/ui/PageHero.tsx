@@ -24,7 +24,7 @@ export function PageHero({
         aria-hidden
         className="pointer-events-none absolute left-[62%] top-1/2 hidden w-[48%] -translate-x-1/2 -translate-y-1/2 bg-red-700 opacity-[0.12] sm:block"
         style={{
-          aspectRatio: "1080 / 572",
+          aspectRatio: "1514 / 730",
           WebkitMaskImage: "url(/brand/stella-emblem-2-mask.png)",
           maskImage: "url(/brand/stella-emblem-2-mask.png)",
           WebkitMaskSize: "contain",

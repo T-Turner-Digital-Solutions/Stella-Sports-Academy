@@ -71,3 +71,41 @@ CREATE TABLE IF NOT EXISTS contact_submissions (
   inquiry_type        TEXT NOT NULL,
   message             TEXT NOT NULL
 );
+
+-- Board member / admin accounts. The first account is bootstrapped from the
+-- ADMIN_EMAIL / ADMIN_PASSWORD_HASH env vars the first time someone signs in
+-- (see README "Admin Section") — every account after that is created by an
+-- "owner" sending an invite from /admin/team, which emails a one-time link
+-- for the invitee to set their own password.
+CREATE TABLE IF NOT EXISTS admin_users (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  email               TEXT UNIQUE NOT NULL,
+  name                TEXT NOT NULL,
+  role                TEXT NOT NULL DEFAULT 'member' CHECK (role IN ('owner', 'member')),
+  password_hash       TEXT,
+  invite_token        TEXT UNIQUE,
+  invite_expires_at   TIMESTAMPTZ,
+  active              BOOLEAN NOT NULL DEFAULT true,
+  last_login_at       TIMESTAMPTZ
+);
+
+-- One row per completed Stripe Checkout session (one-time or the first
+-- payment of a recurring gift). Donor-level detail here is admin-only —
+-- never displayed publicly — matching the privacy commitments on /privacy
+-- and the campaign pages.
+CREATE TABLE IF NOT EXISTS donations (
+  id                        UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at                TIMESTAMPTZ NOT NULL DEFAULT now(),
+  stripe_session_id         TEXT UNIQUE NOT NULL,
+  stripe_payment_intent_id  TEXT,
+
+  donor_name                TEXT NOT NULL,
+  donor_email               TEXT,
+  amount_cents              INTEGER NOT NULL,
+  currency                  TEXT NOT NULL DEFAULT 'usd',
+  frequency                 TEXT NOT NULL CHECK (frequency IN ('one-time', 'monthly')),
+  designation               TEXT NOT NULL,
+  anonymous                 BOOLEAN NOT NULL DEFAULT false,
+  receipt_emailed_at        TIMESTAMPTZ
+);
