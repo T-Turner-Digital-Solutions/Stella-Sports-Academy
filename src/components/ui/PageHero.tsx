@@ -51,7 +51,7 @@ export function PageHero({
       </svg>
       <div
         aria-hidden
-        className="pointer-events-none absolute right-[-8%] top-1/2 hidden w-[42%] -translate-y-1/2 sm:block"
+        className="pointer-events-none absolute right-6 top-1/2 hidden w-[22%] max-w-[260px] -translate-y-1/2 sm:block"
       >
         <Image
           src="/brand/stella-mark.png"
