@@ -12,4 +12,13 @@
   package = "@netlify/plugin-nextjs"
 
 [build.environment]
-  NODE_VERSION = "20"
+  # @netlify/plugin-nextjs (currently resolving to v5.16.6, "Next.js Runtime")
+  # pulls in dependencies (chokidar@5, readdirp@5) that require Node >=20.19.0.
+  # Netlify's "20" alias resolved to an older 20.x patch, which made every
+  # production/preview build fail with a bare "exit code 2" — reproduced
+  # locally by running the actual @netlify/build + @netlify/plugin-nextjs
+  # pipeline (not just `next build`, which succeeded on its own either way)
+  # under Node 20.18.1 vs 22. Bumping to 22 clears the incompatibility
+  # outright rather than chasing the exact newer 20.x patch that's still
+  # new enough.
+  NODE_VERSION = "22"
