@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import { ShieldCheck, Repeat, HeartHandshake } from "lucide-react";
+import { ShieldCheck, Repeat, HeartHandshake, ExternalLink } from "lucide-react";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container } from "@/components/ui/Container";
-import { DonateForm } from "@/components/forms/DonateForm";
+import { Button } from "@/components/ui/Button";
 import { site } from "@/content/site";
+import { donationDesignations } from "@/content/donation";
+import { ZEFFY_GENERAL_DONATION_URL } from "@/content/zeffy";
 
 export const metadata: Metadata = {
   title: "Donate",
@@ -15,8 +17,8 @@ export default async function DonatePage({
 }: {
   searchParams: Promise<{ designation?: string; amount?: string; frequency?: string }>;
 }) {
-  const { designation, amount, frequency } = await searchParams;
-  const parsedAmount = amount ? Number(amount) : undefined;
+  const { designation } = await searchParams;
+  const designationLabel = donationDesignations.find((d) => d.value === designation)?.label;
 
   return (
     <>
@@ -31,27 +33,45 @@ export default async function DonatePage({
           <div className="flex flex-col gap-6">
             <InfoRow
               icon={ShieldCheck}
-              title="Secure & PCI-Compliant"
-              description="Payments are processed through Stripe. Stellar never sees or stores your card information."
+              title="Secure Giving via Zeffy"
+              description="Payments are processed securely through Zeffy, a platform built for nonprofits — Stellar never sees or stores your card information."
             />
             <InfoRow
               icon={Repeat}
               title="Give Monthly"
-              description="Join the Stellar Champions Club — recurring donors who provide steady, dependable support all year."
+              description="Join the Stellar Champions Club — recurring donors who provide steady, dependable support all year. Choose Monthly on the giving page."
             />
             <InfoRow
               icon={HeartHandshake}
               title="100% Goes to the Mission"
-              description="Every designation funds real program needs — training, academics, equipment, and mentorship."
+              description="Zeffy charges nonprofits nothing to fundraise, so the full amount of your gift goes directly to Stellar's programs."
             />
           </div>
 
-          <div className="rounded-2xl border border-ink/10 bg-paper p-7 sm:p-9">
-            <DonateForm
-              initialDesignation={designation}
-              initialAmount={Number.isFinite(parsedAmount) ? parsedAmount : undefined}
-              initialFrequency={frequency === "monthly" ? "monthly" : undefined}
-            />
+          <div className="flex flex-col gap-6 rounded-2xl border border-ink/10 bg-paper p-7 sm:p-9">
+            <div>
+              <p className="font-display text-xl uppercase tracking-wide text-ink">Make a Gift</p>
+              <p className="mt-2 text-sm leading-relaxed text-ink/60">
+                You&rsquo;ll choose your amount and frequency, and complete your gift securely on
+                Stellar&rsquo;s Zeffy giving page — it only takes a minute.
+              </p>
+            </div>
+
+            {designationLabel && (
+              <div className="rounded-xl border border-red-700/20 bg-red-100 px-4 py-3 text-sm text-ink/80">
+                Supporting <strong>{designationLabel}</strong>? Please mention it in the message
+                field on the giving page so we can direct your gift accordingly.
+              </div>
+            )}
+
+            <Button href={ZEFFY_GENERAL_DONATION_URL} size="lg" className="self-start">
+              Give Now via Zeffy
+              <ExternalLink className="h-4 w-4" />
+            </Button>
+
+            <p className="text-xs text-ink/45">
+              You&rsquo;ll receive a tax receipt directly from Zeffy for your records.
+            </p>
           </div>
         </Container>
       </section>

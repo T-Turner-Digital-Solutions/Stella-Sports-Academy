@@ -1,5 +1,3 @@
-import { cookies } from "next/headers";
-import { SignJWT, jwtVerify } from "jose";
 import bcrypt from "bcryptjs";
 import { isDatabaseConfigured } from "@/lib/db";
 import {
@@ -7,24 +5,22 @@ import {
   findAdminUserByEmail,
   getAdminUserCount,
   touchLastLogin,
-  type AdminRole,
 } from "@/lib/admin-users";
+import {
+  SESSION_COOKIE,
+  createSessionToken,
+  verifySessionToken,
+  getCurrentAdminSession,
+  sessionCookieOptions,
+  type AdminSession,
+} from "@/lib/session";
 
-export const SESSION_COOKIE = "stellar_admin_session";
-const SESSION_DURATION_SECONDS = 60 * 60 * 8; // 8 hours
-
-export type AdminSession = {
-  id: string;
-  email: string;
-  name: string;
-  role: AdminRole;
-};
-
-function getSecretKey() {
-  const secret = process.env.SESSION_SECRET;
-  if (!secret) return null;
-  return new TextEncoder().encode(secret);
-}
+// Re-exported for existing call sites (API routes, server components) — all
+// Node-runtime, so depending on this module (and transitively on `pg` via
+// @/lib/db and @/lib/admin-users) is fine there. src/proxy.ts must NOT import
+// from this file — see the comment in @/lib/session for why.
+export { SESSION_COOKIE, createSessionToken, verifySessionToken, getCurrentAdminSession, sessionCookieOptions };
+export type { AdminSession };
 
 /** Login is "configured" once SESSION_SECRET is set and there's at least one
  * way to actually authenticate: either a Postgres-backed admin_users table
@@ -76,53 +72,3 @@ export async function verifyAdminCredentials(email: string, password: string): P
   const valid = await bcrypt.compare(password, envHash);
   return valid ? { id: "env-admin", email: envEmail, name: "Admin", role: "owner" } : null;
 }
-
-export async function createSessionToken(session: AdminSession) {
-  const key = getSecretKey();
-  if (!key) throw new Error("SESSION_SECRET is not configured");
-
-  return new SignJWT({ email: session.email, name: session.name, role: session.role })
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setSubject(session.id)
-    .setExpirationTime(`${SESSION_DURATION_SECONDS}s`)
-    .sign(key);
-}
-
-export async function verifySessionToken(token: string): Promise<AdminSession | null> {
-  const key = getSecretKey();
-  if (!key) return null;
-
-  try {
-    const { payload } = await jwtVerify(token, key);
-    if (typeof payload.sub !== "string" || typeof payload.email !== "string") return null;
-    const role: AdminRole = payload.role === "owner" ? "owner" : "member";
-    return {
-      id: payload.sub,
-      email: payload.email,
-      name: typeof payload.name === "string" ? payload.name : "",
-      role,
-    };
-  } catch {
-    return null;
-  }
-}
-
-/** Reads and verifies the session cookie for the current request. Use in
- * server components/route handlers that need to know who's signed in (e.g.
- * to gate owner-only actions) — proxy.ts already blocks unauthenticated
- * requests from reaching these at all. */
-export async function getCurrentAdminSession(): Promise<AdminSession | null> {
-  const store = await cookies();
-  const token = store.get(SESSION_COOKIE)?.value;
-  if (!token) return null;
-  return verifySessionToken(token);
-}
-
-export const sessionCookieOptions = {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "lax" as const,
-  path: "/",
-  maxAge: SESSION_DURATION_SECONDS,
-};
