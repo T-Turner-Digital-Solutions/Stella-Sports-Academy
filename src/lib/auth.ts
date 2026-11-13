@@ -26,7 +26,9 @@ export type { AdminSession };
  * way to actually authenticate: either a Postgres-backed admin_users table
  * (accounts created via bootstrap + invites), or — with no database — the
  * single ADMIN_EMAIL/ADMIN_PASSWORD_HASH account from before board accounts
- * existed. */
+ * existed. Production's first owner account (Tabitha) is bootstrapped this
+ * way as of 2026-11-13 — see ADMIN_EMAIL/ADMIN_PASSWORD_HASH/SESSION_SECRET
+ * in the Netlify site's environment variables. */
 export function isAuthConfigured() {
   if (!process.env.SESSION_SECRET) return false;
   if (isDatabaseConfigured()) return true;
