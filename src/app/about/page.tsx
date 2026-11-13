@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { Compass, Eye, BookOpen } from "lucide-react";
+import { Compass, Eye, BookOpen, HeartHandshake, Users } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { PageHero } from "@/components/ui/PageHero";
@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { LeaderCard } from "@/components/leadership/LeaderCard";
 import { site } from "@/content/site";
 import { leadership } from "@/content/leadership";
+import { ZEFFY_GENERAL_DONATION_URL } from "@/content/zeffy";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -22,6 +23,63 @@ export default function AboutPage() {
         title="Who We Are"
         description={site.description}
       />
+
+      {/* SUPPORT + MISSION SNAPSHOT */}
+      <section className="bg-paper py-16 sm:py-20">
+        <Container className="grid gap-6 md:grid-cols-2">
+          <div className="rounded-2xl border border-ink/10 bg-white p-8 text-center sm:p-10">
+            <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+              <HeartHandshake className="h-6 w-6 text-red-700" />
+            </span>
+            <h2 className="font-display mt-6 text-xl uppercase tracking-wide text-ink">
+              Support Stellar Sports Academy
+            </h2>
+            <a
+              href={ZEFFY_GENERAL_DONATION_URL}
+              className="mx-auto mt-6 block w-fit rounded-2xl bg-paper p-5"
+            >
+              <Image
+                src="/brand/zeffy-donate-qr.png"
+                alt="QR code to donate to Stellar Sports Academy via Zeffy"
+                width={220}
+                height={220}
+                className="rounded-xl border-2 border-red-700/30"
+              />
+            </a>
+            <p className="mt-4 font-display text-lg uppercase tracking-wide text-ink">Donate Today</p>
+            <p className="mt-1 text-sm text-ink/60">
+              Scan the QR code, or{" "}
+              <a href={ZEFFY_GENERAL_DONATION_URL} className="font-semibold text-red-700 hover:underline">
+                click here
+              </a>
+              , to open Zeffy and make a secure donation.
+            </p>
+          </div>
+
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-ink/10 bg-white p-8 text-center sm:p-10">
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+              <Users className="h-6 w-6 text-red-700" />
+            </span>
+            <h2 className="font-display mt-6 text-xl uppercase tracking-wide text-ink">Our Mission</h2>
+            <Image
+              src="/brand/stella-mark.png"
+              alt=""
+              aria-hidden
+              width={160}
+              height={77}
+              className="mt-6 h-auto w-32"
+            />
+            <p className="font-display mt-4 text-lg italic leading-snug text-red-700">
+              Empowering Young Athletes.
+              <br />
+              Building Champions for Life.
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-ink/60">
+              Providing training, academic support, and mentorship for young athletes.
+            </p>
+          </div>
+        </Container>
+      </section>
 
       {/* MISSION / VISION */}
       <section className="bg-white py-20 sm:py-28">
