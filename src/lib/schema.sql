@@ -94,10 +94,11 @@ CREATE TABLE IF NOT EXISTS admin_users (
   last_login_at       TIMESTAMPTZ
 );
 
--- Board meetings (Zoom). Any signed-in board member/admin account can add or
--- remove a meeting — this is a scheduling convenience, not an access-control
--- surface, so it deliberately doesn't gate by role the way account
--- management (admin_users) does.
+-- Board meetings and events. Any signed-in board member/admin account can
+-- add or remove one — this is a scheduling convenience, not an
+-- access-control surface, so it deliberately doesn't gate by role the way
+-- account management (admin_users) does. zoom_url is optional so this can
+-- also hold in-person events (e.g. a gala) that have no call link.
 CREATE TABLE IF NOT EXISTS board_meetings (
   id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -105,9 +106,12 @@ CREATE TABLE IF NOT EXISTS board_meetings (
 
   title               TEXT NOT NULL,
   scheduled_at        TIMESTAMPTZ NOT NULL,
-  zoom_url            TEXT NOT NULL,
+  zoom_url            TEXT,
   notes               TEXT
 );
+
+-- zoom_url was originally NOT NULL — relax it for existing databases too.
+ALTER TABLE board_meetings ALTER COLUMN zoom_url DROP NOT NULL;
 
 -- One row per completed Stripe Checkout session (one-time or the first
 -- payment of a recurring gift). Donor-level detail here is admin-only —

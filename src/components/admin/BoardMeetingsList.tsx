@@ -40,15 +40,17 @@ export function BoardMeetingsList({ meetings }: { meetings: BoardMeeting[] }) {
             {meeting.notes && <p className="mt-1 text-sm text-ink/50">{meeting.notes}</p>}
           </div>
           <div className="flex items-center gap-2">
-            <a
-              href={meeting.zoom_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 rounded-lg border border-ink/15 px-3 py-2 text-sm font-medium text-ink/70 transition-colors hover:bg-paper"
-            >
-              <ExternalLink className="h-4 w-4" />
-              Zoom Link
-            </a>
+            {meeting.zoom_url && (
+              <a
+                href={meeting.zoom_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 rounded-lg border border-ink/15 px-3 py-2 text-sm font-medium text-ink/70 transition-colors hover:bg-paper"
+              >
+                <ExternalLink className="h-4 w-4" />
+                Link
+              </a>
+            )}
             <button
               type="button"
               onClick={() => handleDelete(meeting.id)}

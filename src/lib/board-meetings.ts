@@ -6,7 +6,7 @@ export type BoardMeeting = {
   created_by: string | null;
   title: string;
   scheduled_at: string;
-  zoom_url: string;
+  zoom_url: string | null;
   notes: string | null;
 };
 
@@ -29,7 +29,7 @@ export async function listAllBoardMeetings() {
 export async function createBoardMeeting(data: {
   title: string;
   scheduledAt: string;
-  zoomUrl: string;
+  zoomUrl?: string;
   notes?: string;
   createdBy: string;
 }) {
@@ -39,7 +39,7 @@ export async function createBoardMeeting(data: {
     `INSERT INTO board_meetings (title, scheduled_at, zoom_url, notes, created_by)
      VALUES ($1, $2, $3, $4, $5)
      RETURNING *`,
-    [data.title, data.scheduledAt, data.zoomUrl, data.notes || null, data.createdBy]
+    [data.title, data.scheduledAt, data.zoomUrl || null, data.notes || null, data.createdBy]
   );
   return result.rows[0] ?? null;
 }
