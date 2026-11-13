@@ -51,7 +51,7 @@ export function PageHero({
       </svg>
       <div
         aria-hidden
-        className="pointer-events-none absolute right-6 top-1/2 hidden w-[22%] max-w-[260px] -translate-y-1/2 sm:block"
+        className="pointer-events-none absolute right-6 top-1/2 hidden w-[22%] max-w-[220px] -translate-y-1/2 flex-col items-center sm:flex"
       >
         <Image
           src="/brand/stella-mark.png"
@@ -60,6 +60,8 @@ export function PageHero({
           height={241}
           className="h-auto w-full drop-shadow-[0_0_50px_rgba(0,152,221,0.6)]"
         />
+        <p className="font-display -mt-2 text-2xl uppercase tracking-[0.12em] text-white">Stellar</p>
+        <p className="font-display text-[0.65rem] uppercase tracking-[0.25em] text-red-500">Sports Academy</p>
       </div>
       <Container className="relative">
         {eyebrow && (

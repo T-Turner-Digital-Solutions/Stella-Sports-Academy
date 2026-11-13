@@ -1,39 +1,53 @@
+import { Users, Award, Trophy, Medal, Crown, type LucideIcon } from "lucide-react";
+
 export type SponsorshipTier = {
   name: string;
+  price: string;
   tagline: string;
   benefits: string[];
+  icon: LucideIcon;
   featured?: boolean;
 };
 
 export const sponsorshipTiers: SponsorshipTier[] = [
   {
-    name: "Community Sponsor",
-    tagline: "Entry-level support for local businesses and individuals",
-    benefits: ["Website recognition", "Social media recognition"],
+    name: "Corporate Partner",
+    price: "$1,000/Year",
+    tagline: "Launch your corporate support for young athletes and programs.",
+    icon: Users,
+    benefits: ["Website recognition", "Social media recognition", "Event recognition"],
   },
   {
-    name: "Bronze Sponsor",
-    tagline: "Growing your visibility while supporting Stellar athletes",
-    benefits: [
-      "Website recognition",
-      "Social media recognition",
-      "Event recognition",
-    ],
-  },
-  {
-    name: "Silver Sponsor",
-    tagline: "Meaningful, visible support across Stellar's programs",
+    name: "Bronze Corporate Sponsor",
+    price: "$2,500/Year",
+    tagline: "Increase your visibility and make a greater impact across our programs.",
+    icon: Award,
     benefits: [
       "Website recognition",
       "Social media recognition",
       "Event recognition",
       "Sponsor logo placement",
+    ],
+  },
+  {
+    name: "Silver Corporate Sponsor",
+    price: "$5,000/Year",
+    tagline: "Provide meaningful, sustained support for athlete development, academics, and mentorship.",
+    icon: Trophy,
+    benefits: [
+      "Website recognition",
+      "Social media recognition",
+      "Event recognition",
+      "Sponsor logo placement",
+      "Program sponsorship",
     ],
     featured: true,
   },
   {
-    name: "Gold Sponsor",
-    tagline: "Program-level partnership with elevated recognition",
+    name: "Gold Corporate Sponsor",
+    price: "$10,000/Year",
+    tagline: "A premier partnership that helps expand programs and create new opportunities.",
+    icon: Medal,
     benefits: [
       "Website recognition",
       "Social media recognition",
@@ -43,15 +57,17 @@ export const sponsorshipTiers: SponsorshipTier[] = [
     ],
   },
   {
-    name: "Champion Sponsor",
-    tagline: "Stellar's highest level of corporate partnership",
+    name: "Champion Corporate Sponsor",
+    price: "$25,000/Year",
+    tagline: "Our highest corporate partnership with maximum visibility, impact, and program leadership.",
+    icon: Crown,
     benefits: [
       "Website recognition",
       "Social media recognition",
       "Event recognition",
-      "Sponsor logo placement",
+      "Premier logo placement",
       "Program sponsorship",
-      "Event sponsorship",
+      "Featured partner recognition",
     ],
   },
 ];
