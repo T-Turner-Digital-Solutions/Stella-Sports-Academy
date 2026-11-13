@@ -6,9 +6,12 @@ import { Trash2, ExternalLink } from "lucide-react";
 import type { BoardMeeting } from "@/lib/board-meetings";
 
 function formatDateTime(iso: string) {
+  // Fixed to the org's home time zone (Birmingham, AL) — see the matching
+  // comment in src/app/board/page.tsx.
   return new Intl.DateTimeFormat("en-US", {
     dateStyle: "medium",
     timeStyle: "short",
+    timeZone: "America/Chicago",
   }).format(new Date(iso));
 }
 

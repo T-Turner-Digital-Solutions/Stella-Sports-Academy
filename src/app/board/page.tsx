@@ -13,9 +13,13 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Board Portal" };
 
 function formatDateTime(iso: string) {
+  // Fixed to the org's home time zone (Birmingham, AL) rather than each
+  // viewer's — and rather than the server's, which on Netlify is UTC and
+  // would otherwise show every meeting shifted by several hours.
   return new Intl.DateTimeFormat("en-US", {
     dateStyle: "medium",
     timeStyle: "short",
+    timeZone: "America/Chicago",
   }).format(new Date(iso));
 }
 
