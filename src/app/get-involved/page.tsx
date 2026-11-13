@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { HeartHandshake, Building2, Users, CalendarDays, ArrowRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container } from "@/components/ui/Container";
@@ -13,27 +13,31 @@ export const metadata: Metadata = {
 const paths = [
   {
     title: "Sponsor an Athlete",
-    description: "Cover training, equipment, academics, and mentorship for a young athlete in need.",
     href: "/get-involved/sponsor-an-athlete",
-    icon: HeartHandshake,
+    image: "/brand/get-involved/sponsor-an-athlete.webp",
+    width: 860,
+    height: 350,
   },
   {
     title: "Corporate Sponsorship",
-    description: "Partner with Stellar and reach the community while supporting youth development.",
     href: "/get-involved/corporate-sponsorship",
-    icon: Building2,
+    image: "/brand/get-involved/corporate-sponsorship.webp",
+    width: 860,
+    height: 350,
   },
   {
     title: "Volunteer",
-    description: "Coach, mentor, tutor, or support Stellar events and operations.",
     href: "/get-involved/volunteer",
-    icon: Users,
+    image: "/brand/get-involved/volunteer.webp",
+    width: 860,
+    height: 355,
   },
   {
     title: "Attend an Event",
-    description: "Join a training camp, clinic, fundraiser, or community event.",
     href: "/events",
-    icon: CalendarDays,
+    image: "/brand/get-involved/attend-an-event.webp",
+    width: 860,
+    height: 355,
   },
 ];
 
@@ -53,19 +57,16 @@ export default function GetInvolvedPage() {
               <Link
                 key={path.href}
                 href={path.href}
-                className="group flex flex-col gap-5 rounded-2xl border border-ink/10 bg-paper p-8 transition-all duration-300 hover:-translate-y-1 hover:border-red-700/30 hover:shadow-lg"
+                className="group overflow-hidden rounded-2xl transition-transform duration-300 hover:-translate-y-1"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-red-100 transition-colors group-hover:bg-red-700">
-                  <path.icon className="h-7 w-7 text-red-700 transition-colors group-hover:text-white" strokeWidth={1.75} />
-                </div>
-                <div>
-                  <h2 className="font-display text-xl uppercase tracking-wide text-ink">{path.title}</h2>
-                  <p className="mt-2 text-sm leading-relaxed text-ink/65">{path.description}</p>
-                </div>
-                <span className="mt-auto flex items-center gap-1.5 text-sm font-semibold text-red-700">
-                  Learn more
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </span>
+                <Image
+                  src={path.image}
+                  alt={path.title}
+                  width={path.width}
+                  height={path.height}
+                  sizes="(min-width: 640px) 50vw, 100vw"
+                  className="h-auto w-full"
+                />
               </Link>
             ))}
           </div>
