@@ -1,18 +1,17 @@
 import Image from "next/image";
-import { ArrowRight, GraduationCap, HeartHandshake, Sparkles, Quote } from "lucide-react";
+import { ArrowRight, GraduationCap, HeartHandshake, Sparkles } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { ImpactStatCard } from "@/components/ui/ImpactStatCard";
-import { EmptyState } from "@/components/ui/EmptyState";
 import { ProgramCard } from "@/components/programs/ProgramCard";
 import { CampaignCard } from "@/components/campaigns/CampaignCard";
 import { NewsletterForm } from "@/components/home/NewsletterForm";
 import { site } from "@/content/site";
 import { programs } from "@/content/programs";
 import { campaigns } from "@/content/campaigns";
-import { impactStats, successStories } from "@/content/impact";
+import { impactStats } from "@/content/impact";
 
 export default function HomePage() {
   return (
@@ -87,14 +86,18 @@ export default function HomePage() {
       </section>
 
       {/* CORE VALUES */}
-      <section className="relative w-full overflow-hidden" style={{ aspectRatio: "2000 / 668" }}>
-        <Image
-          src="/brand/sections/core-values-banner.webp"
-          alt="What we stand for: Core Values — Excellence, Discipline, Education, Character, Community"
-          fill
-          sizes="100vw"
-          className="object-cover object-center"
-        />
+      <section className="bg-white py-12 sm:py-16">
+        <Container>
+          <div className="relative w-full overflow-hidden rounded-2xl" style={{ aspectRatio: "2000 / 668" }}>
+            <Image
+              src="/brand/sections/core-values-banner.webp"
+              alt="What we stand for: Core Values — Excellence, Discipline, Education, Character, Community"
+              fill
+              sizes="(min-width: 1280px) 1280px, 100vw"
+              className="object-cover object-center"
+            />
+          </div>
+        </Container>
       </section>
 
       {/* PROGRAMS PREVIEW */}
@@ -169,38 +172,39 @@ export default function HomePage() {
       </section>
 
       {/* WHY STELLAR MATTERS */}
-      <section className="relative w-full overflow-hidden" style={{ aspectRatio: "2000 / 667" }}>
-        <Image
-          src="/brand/sections/why-stellar-matters-banner.webp"
-          alt="The Opportunity Gap: Why Stellar Matters. Many young athletes face real financial barriers that keep them from the resources their potential deserves. Stellar Sports Academy exists to help close that gap, connecting young athletes with quality coaching, athletic development, academic resources, college recruiting support, mentoring, and leadership opportunities, regardless of their family's ability to pay."
-          fill
-          sizes="100vw"
-          className="object-cover object-center"
-        />
+      <section className="bg-paper py-12 sm:py-16">
+        <Container>
+          <div className="relative w-full overflow-hidden rounded-2xl" style={{ aspectRatio: "2000 / 667" }}>
+            <Image
+              src="/brand/sections/why-stellar-matters-banner.webp"
+              alt="The Opportunity Gap: Why Stellar Matters. Many young athletes face real financial barriers that keep them from the resources their potential deserves. Stellar Sports Academy exists to help close that gap, connecting young athletes with quality coaching, athletic development, academic resources, college recruiting support, mentoring, and leadership opportunities, regardless of their family's ability to pay."
+              fill
+              sizes="(min-width: 1280px) 1280px, 100vw"
+              className="object-cover object-center"
+            />
+          </div>
+        </Container>
       </section>
 
       {/* SUCCESS STORIES */}
       <section className="bg-paper py-20 sm:py-28">
         <Container>
-          <SectionHeading eyebrow="Real Stories" title="Success Stories" align="center" className="mx-auto" />
-          <div className="mt-12">
-            {successStories.length > 0 ? (
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                {successStories.map((story) => (
-                  <div key={story.slug} className="rounded-2xl bg-white p-6 shadow-sm">
-                    <Quote className="h-6 w-6 text-red-700" />
-                    <p className="mt-4 text-sm leading-relaxed text-ink/75">&ldquo;{story.quote}&rdquo;</p>
-                    <p className="mt-4 text-sm font-semibold text-ink">{story.name}</p>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <EmptyState
-                icon={Quote}
-                title="Stories Coming Soon"
-                description="As athletes, parents, and coaches share their Stellar journey, their stories will appear here — reviewed and approved by our team."
+          <SectionHeading eyebrow="Meet Our Founder" title="Get to Know Justin" align="center" className="mx-auto" />
+          <div className="mx-auto mt-12 max-w-3xl">
+            <div className="relative w-full overflow-hidden rounded-xl" style={{ aspectRatio: "16 / 9" }}>
+              <iframe
+                src="https://www.youtube-nocookie.com/embed/cd4GrnD51aE"
+                title="Former Alabama Safety Justin Woodall's Career, Coach Saban's Influence, & AIO Training — The Modest Sports Show"
+                className="absolute inset-0 h-full w-full"
+                loading="lazy"
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
               />
-            )}
+            </div>
+            <p className="mt-3 text-center text-xs text-ink/45">
+              From &ldquo;The Modest Sports Show&rdquo; — Justin&rsquo;s career, Coach Saban&rsquo;s influence,
+              and AIO Training.
+            </p>
           </div>
         </Container>
       </section>
