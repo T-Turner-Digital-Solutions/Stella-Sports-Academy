@@ -1,6 +1,10 @@
 -- Stellar Sports Academy — admin review database schema.
 -- Run this once against your Postgres database (see README "Admin Section"
 -- for setup). Safe to re-run — every statement is idempotent.
+--
+-- Kept in sync by hand with src/lib/schema.ts, which exports this same SQL
+-- as a string for POST /api/admin/db-setup (an in-app alternative to running
+-- this file with psql — useful when nobody has direct database access).
 
 -- Needed for gen_random_uuid() below. Postgres 13+ ships this built in via
 -- this extension; managed providers (Neon, Supabase, RDS) all support it.
