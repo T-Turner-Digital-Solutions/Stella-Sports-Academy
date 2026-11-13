@@ -36,17 +36,17 @@ export default function AboutPage() {
             </h2>
             <a
               href={ZEFFY_GENERAL_DONATION_URL}
-              className="mx-auto mt-6 block w-fit rounded-2xl bg-paper p-5"
+              className="mx-auto mt-5 block w-fit rounded-xl bg-paper p-3"
             >
               <Image
                 src="/brand/zeffy-donate-qr.png"
                 alt="QR code to donate to Stellar Sports Academy via Zeffy"
-                width={220}
-                height={220}
-                className="rounded-xl border-2 border-red-700/30"
+                width={120}
+                height={120}
+                className="rounded-lg border-2 border-red-700/30"
               />
             </a>
-            <p className="mt-4 font-display text-lg uppercase tracking-wide text-ink">Donate Today</p>
+            <p className="mt-3 font-display text-base uppercase tracking-wide text-ink">Donate Today</p>
             <p className="mt-1 text-sm text-ink/60">
               Scan the QR code, or{" "}
               <a href={ZEFFY_GENERAL_DONATION_URL} className="font-semibold text-red-700 hover:underline">

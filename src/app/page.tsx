@@ -3,7 +3,6 @@ import { ArrowRight, GraduationCap, HeartHandshake, Sparkles } from "lucide-reac
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
 import { ImpactStatCard } from "@/components/ui/ImpactStatCard";
 import { ProgramCard } from "@/components/programs/ProgramCard";
 import { CampaignCard } from "@/components/campaigns/CampaignCard";
@@ -17,51 +16,51 @@ export default function HomePage() {
   return (
     <>
       {/* HERO */}
-      <section className="relative overflow-hidden bg-ink">
-        <div className="absolute inset-0 bg-gradient-to-br from-ink-soft via-ink to-ink" />
+      <section className="relative overflow-hidden bg-black">
         <div
-          className="pointer-events-none absolute inset-0 opacity-25"
-          style={{
-            maskImage: "linear-gradient(to left, black 40%, transparent 95%)",
-            WebkitMaskImage: "linear-gradient(to left, black 40%, transparent 95%)",
-          }}
+          className="pointer-events-none absolute -left-40 -top-40 h-[32rem] w-[32rem] rounded-full bg-red-600/30 blur-[120px]"
           aria-hidden
-        >
-          <Image
-            src="/hero/athletes-hero.jpg"
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-center"
-          />
-        </div>
+        />
+        <div
+          className="pointer-events-none absolute -bottom-40 -right-20 h-[32rem] w-[32rem] rounded-full bg-red-600/25 blur-[120px]"
+          aria-hidden
+        />
 
-        <Container className="relative flex min-h-[88vh] flex-col justify-center py-28 sm:py-32">
-          <div className="max-w-3xl animate-fade-up">
-            <Badge tone="white" className="mb-6">
-              {site.orgType}
-            </Badge>
-            <h1 className="font-display text-5xl uppercase leading-[0.98] tracking-wide text-white sm:text-6xl lg:text-7xl">
-              Stellar Sports Academy
+        <Container className="relative grid min-h-[80vh] items-center gap-12 py-24 lg:grid-cols-2 lg:py-28">
+          <div className="animate-fade-up">
+            <div className="flex items-center gap-3">
+              <span className="h-5 w-1 flex-shrink-0 rounded-full bg-red-600" />
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-white">
+                Welcome to {site.name}
+              </p>
+            </div>
+            <h1 className="mt-6 text-5xl font-extrabold leading-[1.05] text-white sm:text-6xl">
+              Empowering Young Athletes. Building Champions for Life.
             </h1>
-            <p className="font-display mt-5 text-2xl uppercase leading-tight tracking-wide text-white sm:text-3xl">
-              Empowering Young Athletes.
-              <br />
-              Building Champions for Life.
-            </p>
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg">
-              Helping young athletes develop the skills, discipline, education, mentorship, and
-              confidence they need to succeed on the field, in the classroom, and throughout life.
+            <p className="mt-6 max-w-lg text-base leading-relaxed text-white/70 sm:text-lg">
+              Providing training, academic support, and mentorship for young athletes.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
-              <Button href="/donate" variant="white" size="lg">
-                Donate Now
+              <Button href="/donate" variant="primary" size="lg">
+                Donate
+                <ArrowRight className="h-4 w-4" />
               </Button>
               <Button href="/programs" variant="outline-light" size="lg">
-                Explore Our Programs
+                Explore Programs
+                <ArrowRight className="h-4 w-4" />
               </Button>
             </div>
+          </div>
+
+          <div className="hidden justify-center lg:flex">
+            <Image
+              src="/brand/stella-mark.png"
+              alt={site.name}
+              width={500}
+              height={241}
+              priority
+              className="h-auto w-full max-w-md drop-shadow-[0_0_40px_rgba(220,38,38,0.35)]"
+            />
           </div>
         </Container>
       </section>
