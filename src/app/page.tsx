@@ -17,14 +17,54 @@ export default function HomePage() {
     <>
       {/* HERO */}
       <section className="relative overflow-hidden bg-black">
-        <div
-          className="pointer-events-none absolute -left-40 -top-40 h-[32rem] w-[32rem] rounded-full bg-red-600/30 blur-[120px]"
+        <svg
+          className="pointer-events-none absolute inset-0 h-full w-full"
+          viewBox="0 0 1600 800"
+          preserveAspectRatio="xMidYMid slice"
+          fill="none"
           aria-hidden
-        />
-        <div
-          className="pointer-events-none absolute -bottom-40 -right-20 h-[32rem] w-[32rem] rounded-full bg-red-600/25 blur-[120px]"
-          aria-hidden
-        />
+        >
+          <defs>
+            <filter id="hero-glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="6" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <linearGradient id="hero-arc-1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#e2f6fd" />
+              <stop offset="35%" stopColor="#4bc3ef" />
+              <stop offset="100%" stopColor="#0066a8" stopOpacity="0" />
+            </linearGradient>
+            <linearGradient id="hero-arc-2" x1="100%" y1="100%" x2="0%" y2="0%">
+              <stop offset="0%" stopColor="#e2f6fd" />
+              <stop offset="35%" stopColor="#4bc3ef" />
+              <stop offset="100%" stopColor="#0066a8" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M 820 -20 C 600 60, 120 90, -60 190"
+            stroke="url(#hero-arc-1)"
+            strokeWidth="3"
+            strokeLinecap="round"
+            filter="url(#hero-glow)"
+          />
+          <path
+            d="M 780 -20 C 1000 10, 1500 60, 1660 90"
+            stroke="url(#hero-arc-2)"
+            strokeWidth="3"
+            strokeLinecap="round"
+            filter="url(#hero-glow)"
+          />
+          <path
+            d="M 780 820 C 1000 740, 1500 690, 1660 660"
+            stroke="url(#hero-arc-2)"
+            strokeWidth="3"
+            strokeLinecap="round"
+            filter="url(#hero-glow)"
+          />
+        </svg>
 
         <Container className="relative grid min-h-[80vh] items-center gap-12 py-24 lg:grid-cols-2 lg:py-28">
           <div className="animate-fade-up">
@@ -45,22 +85,34 @@ export default function HomePage() {
                 Donate
                 <ArrowRight className="h-4 w-4" />
               </Button>
-              <Button href="/programs" variant="outline-light" size="lg">
+              <Button
+                href="/programs"
+                variant="ghost"
+                size="lg"
+                className="border-2 border-red-500 text-white shadow-[0_0_20px_-4px_rgba(0,152,221,0.8)] hover:bg-red-700/10"
+              >
                 Explore Programs
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </div>
           </div>
 
-          <div className="hidden justify-center lg:flex">
+          <div className="hidden flex-col items-center justify-center lg:flex">
             <Image
               src="/brand/stella-mark.png"
-              alt={site.name}
+              alt=""
+              aria-hidden
               width={500}
               height={241}
               priority
-              className="h-auto w-full max-w-md drop-shadow-[0_0_40px_rgba(220,38,38,0.35)]"
+              className="h-auto w-full max-w-md drop-shadow-[0_0_50px_rgba(0,152,221,0.6)]"
             />
+            <p className="font-display -mt-4 text-5xl uppercase tracking-[0.15em] text-white xl:text-6xl">
+              Stellar
+            </p>
+            <p className="font-display text-xl uppercase tracking-[0.3em] text-red-500 xl:text-2xl">
+              Sports Academy
+            </p>
           </div>
         </Container>
       </section>
