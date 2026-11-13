@@ -95,9 +95,28 @@ export default function AboutPage() {
                 and to make sure sports become a launchpad for life, not just a season.
               </p>
               <p className="text-sm italic text-ink/50">
-                Full founder biography and athletic history coming soon — this section will be
-                updated with approved organizational content.
+                Full founder biography coming soon — this section will be updated with approved
+                organizational content.
               </p>
+              <div>
+                <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink/60">
+                  Get to Know Justin
+                </p>
+                <div className="relative w-full overflow-hidden rounded-xl" style={{ aspectRatio: "16 / 9" }}>
+                  <iframe
+                    src="https://www.youtube-nocookie.com/embed/cd4GrnD51aE"
+                    title="Former Alabama Safety Justin Woodall's Career, Coach Saban's Influence, & AIO Training — The Modest Sports Show"
+                    className="absolute inset-0 h-full w-full"
+                    loading="lazy"
+                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  />
+                </div>
+                <p className="mt-2 text-xs text-ink/45">
+                  From &ldquo;The Modest Sports Show&rdquo; — Justin&rsquo;s career, Coach Saban&rsquo;s
+                  influence, and AIO Training.
+                </p>
+              </div>
             </div>
           </div>
         </Container>
