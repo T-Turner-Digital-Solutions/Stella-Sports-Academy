@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CalendarClock, ClipboardList, ExternalLink, KeyRound } from "lucide-react";
+import { CalendarClock, ClipboardList, ExternalLink, FileText, KeyRound } from "lucide-react";
 import { Logo } from "@/components/layout/Logo";
 import { LogoutButton } from "@/components/admin/LogoutButton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Container } from "@/components/ui/Container";
 import { isDatabaseConfigured } from "@/lib/db";
 import { listUpcomingBoardMeetings } from "@/lib/board-meetings";
+import { getCurrentAdminSession } from "@/lib/auth";
+import { listCurrentBoardDocuments, listAcknowledgedDocumentIds } from "@/lib/board-documents";
+import { BoardDocumentsList } from "@/components/board/BoardDocumentsList";
 import { ATHLETICS_TRACKER_URL } from "@/content/board";
 
 export const dynamic = "force-dynamic";
@@ -25,7 +28,11 @@ function formatDateTime(iso: string) {
 
 export default async function BoardPage() {
   const dbReady = isDatabaseConfigured();
+  const session = await getCurrentAdminSession();
   const meetings = dbReady ? await listUpcomingBoardMeetings() : [];
+  const documents = dbReady ? await listCurrentBoardDocuments() : [];
+  const acknowledgedIds = dbReady && session ? await listAcknowledgedDocumentIds(session.id) : [];
+  const pendingCount = documents.filter((d) => !acknowledgedIds.includes(d.id)).length;
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -51,9 +58,13 @@ export default async function BoardPage() {
 
       <main className="flex-1 py-12">
         <Container>
-          <h1 className="font-display text-2xl uppercase tracking-wide text-ink">Board Portal</h1>
+          <h1 className="font-display text-2xl uppercase tracking-wide text-ink">
+            {session?.name ? `Welcome, ${session.name}` : "Board Portal"}
+          </h1>
           <p className="mt-1 text-sm text-ink/60">
-            Private dashboard for Stellar Sports Academy board members.
+            {pendingCount > 0
+              ? `You have ${pendingCount} corporate record${pendingCount === 1 ? "" : "s"} awaiting your acknowledgment.`
+              : "Private dashboard for Stellar Sports Academy board members."}
           </p>
 
           <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-2">
@@ -120,6 +131,28 @@ export default async function BoardPage() {
               </div>
             </section>
           </div>
+
+          {/* CORPORATE RECORDS */}
+          <section className="mt-10">
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-red-100">
+                <FileText className="h-4 w-4 text-red-700" />
+              </span>
+              <h2 className="font-display text-lg uppercase tracking-wide text-ink">Corporate Records</h2>
+            </div>
+
+            <div className="mt-4">
+              {!dbReady || documents.length === 0 ? (
+                <EmptyState
+                  icon={FileText}
+                  title="No Records Yet"
+                  description="Governance documents the owner uploads will appear here for you to view and acknowledge."
+                />
+              ) : (
+                <BoardDocumentsList documents={documents} acknowledgedIds={acknowledgedIds} />
+              )}
+            </div>
+          </section>
         </Container>
       </main>
     </div>

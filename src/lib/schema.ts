@@ -129,4 +129,45 @@ CREATE TABLE IF NOT EXISTS donations (
   anonymous                 BOOLEAN NOT NULL DEFAULT false,
   receipt_emailed_at        TIMESTAMPTZ
 );
+
+-- Corporate Records & Governance. Files live in Netlify Blobs (blob_key),
+-- never served from a public URL — only through the authenticated
+-- /api/board/documents/:id/download route, which checks for a valid
+-- session before streaming. Only an owner can upload/replace/archive; any
+-- active board member can view and acknowledge. Replacing a document
+-- inserts a new row with an incremented version and flips the old row's
+-- is_current to false, so history is kept rather than overwritten.
+CREATE TABLE IF NOT EXISTS board_documents (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  uploaded_by         UUID REFERENCES admin_users(id) ON DELETE SET NULL,
+
+  category            TEXT NOT NULL CHECK (category IN (
+                         'corporate-record-book', 'articles-of-incorporation', 'bylaws',
+                         'ein-letter', 'organizational-minutes', 'board-resolution',
+                         'policy', 'irs-determination-letter', 'other'
+                       )),
+  title               TEXT NOT NULL,
+  description         TEXT,
+
+  blob_key            TEXT NOT NULL,
+  file_name           TEXT NOT NULL,
+  content_type        TEXT NOT NULL,
+  file_size_bytes     INTEGER NOT NULL,
+
+  version             INTEGER NOT NULL DEFAULT 1,
+  is_current          BOOLEAN NOT NULL DEFAULT true,
+  archived            BOOLEAN NOT NULL DEFAULT false
+);
+
+-- One row per board member who has acknowledged a specific document
+-- version — acknowledging a new version does not carry over, since the
+-- whole point is confirming you've seen what's current.
+CREATE TABLE IF NOT EXISTS board_document_acknowledgments (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  document_id         UUID NOT NULL REFERENCES board_documents(id) ON DELETE CASCADE,
+  admin_user_id       UUID NOT NULL REFERENCES admin_users(id) ON DELETE CASCADE,
+  acknowledged_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (document_id, admin_user_id)
+);
 `;

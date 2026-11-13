@@ -15,7 +15,7 @@ export async function proxy(request: NextRequest) {
   // needs to run even when nobody has a valid session yet, e.g. right after
   // DATABASE_URL is first connected or rotated.
   const isDbSetupApi = pathname === "/api/admin/db-setup";
-  const isApiRoute = pathname.startsWith("/api/admin/");
+  const isApiRoute = pathname.startsWith("/api/admin/") || pathname.startsWith("/api/board/");
   const defaultArea = isBoardArea ? "/board" : "/admin";
 
   if (isLoginApi || isAcceptInviteApi || isForgotPasswordApi || isDbSetupApi) {
@@ -45,5 +45,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/board/:path*", "/api/admin/:path*"],
+  matcher: ["/admin/:path*", "/board/:path*", "/api/admin/:path*", "/api/board/:path*"],
 };
