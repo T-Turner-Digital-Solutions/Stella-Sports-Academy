@@ -32,6 +32,9 @@ export default async function BoardPage() {
       <header className="flex items-center justify-between border-b border-ink/10 bg-white px-5 py-4 sm:px-8">
         <Logo />
         <div className="flex items-center gap-4">
+          <Link href="/" className="text-sm font-medium text-ink/60 hover:text-ink">
+            Back to Website
+          </Link>
           <Link
             href="/admin/change-password"
             className="flex items-center gap-1.5 text-sm font-medium text-ink/60 hover:text-ink"
@@ -39,7 +42,10 @@ export default async function BoardPage() {
             <KeyRound className="h-4 w-4" />
             Change Password
           </Link>
-          <LogoutButton redirectTo="/board/login" />
+          <LogoutButton
+            redirectTo="/board/login"
+            className="flex items-center gap-1.5 text-sm font-medium text-ink/60 hover:text-ink"
+          />
         </div>
       </header>
 
