@@ -7,6 +7,12 @@ export type SponsorshipTier = {
   benefits: string[];
   icon: LucideIcon;
   featured?: boolean;
+  /** Zeffy has no public API for pre-filling a donation amount by URL, so a
+   * fixed-amount checkout needs its own hosted Zeffy page per tier, set up
+   * in the organization's Zeffy dashboard. Left undefined until the client
+   * provides that tier's link — the site stays honest about what isn't
+   * wired up yet rather than guessing at a URL that won't work. */
+  zeffyUrl?: string;
 };
 
 export const sponsorshipTiers: SponsorshipTier[] = [

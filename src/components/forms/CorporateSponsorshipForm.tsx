@@ -34,8 +34,13 @@ export function CorporateSponsorshipForm() {
     const result = await postForm("/api/forms/corporate-sponsorship", { ...form, website });
 
     if (result.ok) {
-      setState({ status: "success", message: result.message });
+      const selectedTier = sponsorshipTiers.find((tier) => tier.name === form.interestedTier);
       setForm(initial);
+      if (selectedTier?.zeffyUrl) {
+        window.location.href = selectedTier.zeffyUrl;
+        return;
+      }
+      setState({ status: "success", message: result.message });
     } else {
       setState({ status: "error", message: result.message });
       if (result.fieldErrors) setFieldErrors(result.fieldErrors);
@@ -81,7 +86,7 @@ export function CorporateSponsorshipForm() {
           <option value="">Not sure yet</option>
           {sponsorshipTiers.map((tier) => (
             <option key={tier.name} value={tier.name}>
-              {tier.name}
+              {tier.name} — {tier.price}
             </option>
           ))}
         </Select>
