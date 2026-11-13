@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { GraduationCap, Trophy, Quote, Users2 } from "lucide-react";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container } from "@/components/ui/Container";
@@ -36,34 +37,80 @@ export default function ImpactPage() {
         </Container>
       </section>
 
-      <section className="bg-paper py-20 sm:py-28">
-        <Container className="grid gap-8 sm:grid-cols-2">
-          <div className="rounded-2xl border border-ink/10 bg-white p-8">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
-              <GraduationCap className="h-6 w-6 text-red-700" />
-            </span>
-            <h2 className="font-display mt-6 text-xl uppercase tracking-wide text-ink">College Placements & Scholarships</h2>
-            <div className="mt-5">
-              <EmptyState
-                variant="flat"
-                icon={Trophy}
-                title="Reporting Coming Soon"
-                description="Verified college placement and scholarship outcomes will be published here as they're confirmed."
-              />
-            </div>
+      <section className="relative overflow-hidden bg-paper py-20 sm:py-28">
+        <svg
+          className="pointer-events-none absolute inset-0 h-full w-full"
+          viewBox="0 0 1600 800"
+          preserveAspectRatio="xMidYMid slice"
+          fill="none"
+          aria-hidden
+        >
+          <defs>
+            <linearGradient id="impact-report-arc" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#0066a8" stopOpacity="0" />
+              <stop offset="100%" stopColor="#4bc3ef" stopOpacity="0.5" />
+            </linearGradient>
+          </defs>
+          <path d="M -60 60 C 300 -20, 500 140, 900 40" stroke="url(#impact-report-arc)" strokeWidth="4" strokeLinecap="round" />
+          <path d="M 1660 740 C 1300 820, 1100 660, 700 760" stroke="url(#impact-report-arc)" strokeWidth="4" strokeLinecap="round" />
+        </svg>
+        <Container className="relative">
+          <div className="mx-auto mb-12 flex max-w-xl items-center justify-center gap-5">
+            <span className="h-px flex-1 bg-gradient-to-r from-transparent to-red-400" />
+            <Image src="/brand/stella-lockup.png" alt={`${site.name} logo`} width={1514} height={932} className="h-auto w-32 sm:w-40" />
+            <span className="h-px flex-1 bg-gradient-to-l from-transparent to-red-400" />
           </div>
-          <div className="rounded-2xl border border-ink/10 bg-white p-8">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
-              <Users2 className="h-6 w-6 text-red-700" />
-            </span>
-            <h2 className="font-display mt-6 text-xl uppercase tracking-wide text-ink">Program Outcomes</h2>
-            <div className="mt-5">
-              <EmptyState
-                variant="flat"
-                icon={Users2}
-                title="Reporting Coming Soon"
-                description="Program outcome data — training completion, academic milestones, and more — will appear here as it's tracked."
-              />
+          <div className="grid gap-8 sm:grid-cols-2">
+            <div className="rounded-2xl border border-ink/10 bg-white p-8 shadow-sm">
+              <div className="flex items-center gap-3">
+                <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-red-100">
+                  <GraduationCap className="h-5 w-5 text-red-700" />
+                </span>
+                <h2 className="font-display text-lg uppercase tracking-wide text-ink">College Placements & Scholarships</h2>
+              </div>
+              <span className="mt-3 block h-0.5 w-10 rounded-full bg-red-600" />
+              <div className="relative mt-5 overflow-hidden rounded-xl bg-paper">
+                <div
+                  aria-hidden
+                  className="absolute bottom-0 right-0 h-16 w-24 bg-gradient-to-tl from-red-400/40 to-transparent"
+                  style={{ clipPath: "polygon(100% 100%, 0 100%, 100% 0)" }}
+                />
+                <div className="relative px-6 py-10 text-center">
+                  <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+                    <Trophy className="h-6 w-6 text-red-700" />
+                  </span>
+                  <p className="font-display mt-4 text-base uppercase tracking-wide text-ink">Reporting Coming Soon</p>
+                  <p className="mt-2 text-sm leading-relaxed text-ink/60">
+                    Verified college placement and scholarship outcomes will be published here as they&rsquo;re confirmed.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="rounded-2xl border border-ink/10 bg-white p-8 shadow-sm">
+              <div className="flex items-center gap-3">
+                <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-red-100">
+                  <Users2 className="h-5 w-5 text-red-700" />
+                </span>
+                <h2 className="font-display text-lg uppercase tracking-wide text-ink">Program Outcomes</h2>
+              </div>
+              <span className="mt-3 block h-0.5 w-10 rounded-full bg-red-600" />
+              <div className="relative mt-5 overflow-hidden rounded-xl bg-paper">
+                <div
+                  aria-hidden
+                  className="absolute bottom-0 right-0 h-16 w-24 bg-gradient-to-tl from-red-400/40 to-transparent"
+                  style={{ clipPath: "polygon(100% 100%, 0 100%, 100% 0)" }}
+                />
+                <div className="relative px-6 py-10 text-center">
+                  <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+                    <Trophy className="h-6 w-6 text-red-700" />
+                  </span>
+                  <p className="font-display mt-4 text-base uppercase tracking-wide text-ink">Reporting Coming Soon</p>
+                  <p className="mt-2 text-sm leading-relaxed text-ink/60">
+                    Program outcome data — training completion, academic milestones, and more — will appear here as
+                    it&rsquo;s tracked.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </Container>
