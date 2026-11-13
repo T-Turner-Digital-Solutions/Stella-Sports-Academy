@@ -97,22 +97,15 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="hidden flex-col items-center justify-center lg:flex">
+          <div className="hidden items-center justify-center lg:flex">
             <Image
-              src="/brand/stella-mark.png"
-              alt=""
-              aria-hidden
-              width={500}
-              height={241}
+              src="/brand/stella-lockup.png"
+              alt={`${site.name} logo`}
+              width={1514}
+              height={932}
               priority
-              className="h-auto w-full max-w-md drop-shadow-[0_0_50px_rgba(0,152,221,0.6)]"
+              className="h-auto w-full max-w-lg drop-shadow-[0_0_50px_rgba(0,152,221,0.6)]"
             />
-            <p className="font-display -mt-4 text-5xl uppercase tracking-[0.15em] text-white xl:text-6xl">
-              Stellar
-            </p>
-            <p className="font-display text-xl uppercase tracking-[0.3em] text-red-500 xl:text-2xl">
-              Sports Academy
-            </p>
           </div>
         </Container>
       </section>

@@ -49,32 +49,31 @@ export function PageHero({
           filter="url(#pagehero-glow)"
         />
       </svg>
-      <div
-        aria-hidden
-        className="pointer-events-none absolute right-6 top-1/2 hidden w-[22%] max-w-[260px] -translate-y-1/2 sm:block"
-      >
-        <Image
-          src="/brand/stella-mark.png"
-          alt=""
-          width={500}
-          height={241}
-          className="h-auto w-full drop-shadow-[0_0_50px_rgba(0,152,221,0.6)]"
-        />
-      </div>
-      <Container className="relative">
-        {eyebrow && (
-          <Badge tone="white" className="mb-5">
-            {eyebrow}
-          </Badge>
-        )}
-        <h1 className="font-display max-w-3xl text-4xl uppercase leading-[1.02] tracking-wide text-white sm:text-5xl lg:text-6xl">
-          {title}
-        </h1>
-        {description && (
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg">
-            {description}
-          </p>
-        )}
+      <Container className="relative grid items-center gap-8 lg:grid-cols-[1fr_auto]">
+        <div>
+          {eyebrow && (
+            <Badge tone="white" className="mb-5">
+              {eyebrow}
+            </Badge>
+          )}
+          <h1 className="font-display max-w-3xl text-4xl uppercase leading-[1.02] tracking-wide text-white sm:text-5xl lg:text-6xl">
+            {title}
+          </h1>
+          {description && (
+            <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg">
+              {description}
+            </p>
+          )}
+        </div>
+        <div aria-hidden className="hidden w-56 justify-self-center lg:block lg:justify-self-end">
+          <Image
+            src="/brand/stella-lockup.png"
+            alt=""
+            width={1514}
+            height={932}
+            className="h-auto w-full drop-shadow-[0_0_50px_rgba(0,152,221,0.6)]"
+          />
+        </div>
       </Container>
     </section>
   );

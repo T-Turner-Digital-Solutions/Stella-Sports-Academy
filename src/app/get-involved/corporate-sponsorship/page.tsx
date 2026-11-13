@@ -26,26 +26,40 @@ export default function CorporateSponsorshipPage() {
         <Container>
           <SectionHeading eyebrow="Sponsorship Levels" title="Choose a Level" align="center" className="mx-auto" />
           <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
-            {sponsorshipTiers.map((tier) => (
-              <div
-                key={tier.name}
-                className={cn(
-                  "flex flex-col gap-4 rounded-2xl border p-6",
-                  tier.featured ? "border-red-700 bg-red-100 shadow-lg" : "border-ink/10 bg-paper"
-                )}
-              >
-                <p className="font-display text-lg uppercase tracking-wide text-ink">{tier.name}</p>
-                <p className="text-xs leading-relaxed text-ink/60">{tier.tagline}</p>
-                <ul className="mt-2 flex flex-col gap-2">
-                  {tier.benefits.map((benefit) => (
-                    <li key={benefit} className="flex items-start gap-2 text-xs text-ink/70">
-                      <Check className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-red-700" />
-                      {benefit}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+            {sponsorshipTiers.map((tier) => {
+              const Icon = tier.icon;
+              return (
+                <div
+                  key={tier.name}
+                  className={cn(
+                    "relative flex flex-col gap-4 rounded-2xl border p-6 text-center",
+                    tier.featured ? "border-red-700 bg-red-100 shadow-lg" : "border-ink/10 bg-paper"
+                  )}
+                >
+                  {tier.featured && (
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-red-700 px-4 py-1 text-xs font-bold uppercase tracking-wide text-white">
+                      Most Popular
+                    </span>
+                  )}
+                  <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-red-100">
+                    <Icon className="h-7 w-7 text-red-700" strokeWidth={1.75} />
+                  </span>
+                  <p className="font-display text-lg uppercase tracking-wide text-ink">{tier.name}</p>
+                  <p className="mx-auto w-fit rounded-full bg-white px-4 py-1.5 text-sm font-bold text-red-700">
+                    {tier.price}
+                  </p>
+                  <p className="text-xs leading-relaxed text-ink/60">{tier.tagline}</p>
+                  <ul className="mt-2 flex flex-col gap-2 text-left">
+                    {tier.benefits.map((benefit) => (
+                      <li key={benefit} className="flex items-start gap-2 text-xs text-ink/70">
+                        <Check className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-red-700" />
+                        {benefit}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
           </div>
         </Container>
       </section>
