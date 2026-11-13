@@ -35,11 +35,18 @@ export async function createBoardMeeting(data: {
 }) {
   const db = getDb();
   if (!db) return null;
+  // created_by is nullable (ON DELETE SET NULL) specifically so a stale,
+  // pre-database session id (e.g. the "env-admin" bootstrap sentinel — see
+  // @/lib/auth) falls back to no attribution instead of crashing the insert
+  // on an invalid UUID.
+  const createdBy = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(data.createdBy)
+    ? data.createdBy
+    : null;
   const result = await db.query<BoardMeeting>(
     `INSERT INTO board_meetings (title, scheduled_at, zoom_url, notes, created_by)
      VALUES ($1, $2, $3, $4, $5)
      RETURNING *`,
-    [data.title, data.scheduledAt, data.zoomUrl || null, data.notes || null, data.createdBy]
+    [data.title, data.scheduledAt, data.zoomUrl || null, data.notes || null, createdBy]
   );
   return result.rows[0] ?? null;
 }
