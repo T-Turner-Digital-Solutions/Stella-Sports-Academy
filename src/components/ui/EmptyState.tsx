@@ -6,16 +6,21 @@ export function EmptyState({
   title,
   description,
   className,
+  variant = "boxed",
 }: {
   icon: LucideIcon;
   title: string;
   description: string;
   className?: string;
+  /** "boxed" (default) keeps the dashed placeholder box. "flat" drops the
+   * box so the content sits directly in an already-styled parent card. */
+  variant?: "boxed" | "flat";
 }) {
   return (
     <div
       className={cn(
-        "flex flex-col items-center gap-3 rounded-2xl border border-dashed border-ink/15 bg-paper px-6 py-14 text-center",
+        "flex flex-col items-center gap-3 px-6 py-14 text-center",
+        variant === "boxed" && "rounded-2xl border border-dashed border-ink/15 bg-paper",
         className
       )}
     >

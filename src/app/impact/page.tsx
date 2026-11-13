@@ -45,6 +45,7 @@ export default function ImpactPage() {
             <h2 className="font-display mt-6 text-xl uppercase tracking-wide text-ink">College Placements & Scholarships</h2>
             <div className="mt-5">
               <EmptyState
+                variant="flat"
                 icon={Trophy}
                 title="Reporting Coming Soon"
                 description="Verified college placement and scholarship outcomes will be published here as they're confirmed."
@@ -58,6 +59,7 @@ export default function ImpactPage() {
             <h2 className="font-display mt-6 text-xl uppercase tracking-wide text-ink">Program Outcomes</h2>
             <div className="mt-5">
               <EmptyState
+                variant="flat"
                 icon={Users2}
                 title="Reporting Coming Soon"
                 description="Program outcome data — training completion, academic milestones, and more — will appear here as it's tracked."

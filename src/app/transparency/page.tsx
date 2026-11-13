@@ -6,6 +6,7 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Badge } from "@/components/ui/Badge";
+import { LeaderCard } from "@/components/leadership/LeaderCard";
 import { leadership } from "@/content/leadership";
 import { publicDocuments } from "@/content/transparency";
 import { site } from "@/content/site";
@@ -63,12 +64,9 @@ export default function TransparencyPage() {
       <section className="bg-paper py-20 sm:py-24">
         <Container>
           <SectionHeading eyebrow="Our Board" title="Board of Directors" />
-          <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {leadership.map((leader) => (
-              <div key={leader.name} className="rounded-xl border border-ink/10 bg-white px-5 py-4">
-                <p className="font-semibold text-ink">{leader.name}</p>
-                <p className="text-sm text-red-700">{leader.roleLabel}</p>
-              </div>
+              <LeaderCard key={leader.name} leader={leader} />
             ))}
           </div>
           <p className="mt-6 text-xs leading-relaxed text-ink/45">
@@ -99,9 +97,11 @@ export default function TransparencyPage() {
               </div>
             ) : (
               <EmptyState
+                variant="flat"
                 icon={ScrollText}
                 title="Documents Coming Soon"
                 description="Board-approved public documents — including the IRS determination letter, annual reports, and financial summaries — will be published here as they're finalized."
+                className="rounded-2xl border border-ink/10 bg-white"
               />
             )}
           </div>
