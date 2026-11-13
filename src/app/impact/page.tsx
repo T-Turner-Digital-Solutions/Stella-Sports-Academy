@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { GraduationCap, Trophy, Quote, Users2, UserRound } from "lucide-react";
+import { GraduationCap, Trophy, Quote, Users2 } from "lucide-react";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ImpactStatCard } from "@/components/ui/ImpactStatCard";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Button } from "@/components/ui/Button";
+import { LeaderCard } from "@/components/leadership/LeaderCard";
 import { impactStats, successStories } from "@/content/impact";
 import { leadership } from "@/content/leadership";
 import { site } from "@/content/site";
@@ -44,6 +45,7 @@ export default function ImpactPage() {
             <h2 className="font-display mt-6 text-xl uppercase tracking-wide text-ink">College Placements & Scholarships</h2>
             <div className="mt-5">
               <EmptyState
+                variant="flat"
                 icon={Trophy}
                 title="Reporting Coming Soon"
                 description="Verified college placement and scholarship outcomes will be published here as they're confirmed."
@@ -57,6 +59,7 @@ export default function ImpactPage() {
             <h2 className="font-display mt-6 text-xl uppercase tracking-wide text-ink">Program Outcomes</h2>
             <div className="mt-5">
               <EmptyState
+                variant="flat"
                 icon={Users2}
                 title="Reporting Coming Soon"
                 description="Program outcome data — training completion, academic milestones, and more — will appear here as it's tracked."
@@ -95,20 +98,9 @@ export default function ImpactPage() {
       <section className="bg-paper py-20 sm:py-28">
         <Container>
           <SectionHeading eyebrow="Our Board" title="Board of Directors" align="center" className="mx-auto" />
-          <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {leadership.map((leader) => (
-              <div
-                key={leader.name}
-                className="flex items-center gap-4 rounded-2xl border border-ink/10 bg-white px-5 py-4"
-              >
-                <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-ink text-white">
-                  <UserRound className="h-6 w-6" />
-                </span>
-                <div>
-                  <p className="font-semibold text-ink">{leader.name}</p>
-                  <p className="text-sm italic text-red-700">{leader.roleLabel}</p>
-                </div>
-              </div>
+              <LeaderCard key={leader.name} leader={leader} />
             ))}
           </div>
           <p className="mt-8 text-center text-sm italic text-ink/45">

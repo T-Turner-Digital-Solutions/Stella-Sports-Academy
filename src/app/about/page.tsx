@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { BookOpen, HeartHandshake, Users } from "lucide-react";
+import { HeartHandshake, Users } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { PageHero } from "@/components/ui/PageHero";
@@ -25,28 +25,25 @@ export default function AboutPage() {
       />
 
       {/* SUPPORT + MISSION SNAPSHOT */}
-      <section className="bg-paper py-16 sm:py-20">
-        <Container className="grid gap-6 md:grid-cols-2">
-          <div className="rounded-2xl border border-ink/10 bg-white p-8 text-center sm:p-10">
-            <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
-              <HeartHandshake className="h-6 w-6 text-red-700" />
+      <section className="bg-white py-16 sm:py-20">
+        <Container className="grid gap-10 text-center sm:grid-cols-2">
+          <div>
+            <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-red-100">
+              <HeartHandshake className="h-5 w-5 text-red-700" />
             </span>
-            <h2 className="font-display mt-6 text-xl uppercase tracking-wide text-ink">
+            <h2 className="font-display mt-4 text-lg uppercase tracking-wide text-ink">
               Support Stellar Sports Academy
             </h2>
-            <a
-              href={ZEFFY_GENERAL_DONATION_URL}
-              className="mx-auto mt-5 block w-fit rounded-xl bg-paper p-3"
-            >
+            <a href={ZEFFY_GENERAL_DONATION_URL} className="mx-auto mt-5 block w-fit">
               <Image
                 src="/brand/zeffy-donate-qr.png"
                 alt="QR code to donate to Stellar Sports Academy via Zeffy"
-                width={120}
-                height={120}
-                className="rounded-lg border-2 border-red-700/30"
+                width={220}
+                height={220}
+                className="rounded-xl border-2 border-red-700/30"
               />
             </a>
-            <p className="mt-3 font-display text-base uppercase tracking-wide text-ink">Donate Today</p>
+            <p className="mt-4 font-display text-base uppercase tracking-wide text-ink">Donate Today</p>
             <p className="mt-1 text-sm text-ink/60">
               Scan the QR code, or{" "}
               <a href={ZEFFY_GENERAL_DONATION_URL} className="font-semibold text-red-700 hover:underline">
@@ -56,20 +53,20 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-ink/10 bg-white p-8 text-center sm:p-10">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
-              <Users className="h-6 w-6 text-red-700" />
+          <div>
+            <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-red-100">
+              <Users className="h-5 w-5 text-red-700" />
             </span>
-            <h2 className="font-display mt-6 text-xl uppercase tracking-wide text-ink">Our Mission</h2>
+            <h2 className="font-display mt-4 text-lg uppercase tracking-wide text-ink">Our Mission</h2>
             <Image
               src="/brand/stella-mark.png"
               alt=""
               aria-hidden
               width={160}
               height={77}
-              className="mt-6 h-auto w-32"
+              className="mx-auto mt-5 h-auto w-28"
             />
-            <p className="font-display mt-4 text-lg italic leading-snug text-red-700">
+            <p className="font-display mt-3 text-lg italic leading-snug text-red-700">
               Empowering Young Athletes.
               <br />
               Building Champions for Life.
@@ -82,20 +79,17 @@ export default function AboutPage() {
       </section>
 
       {/* OUR STORY */}
-      <section className="bg-paper py-20 sm:py-28">
-        <Container className="grid gap-12 lg:grid-cols-[1fr_1.3fr] lg:items-center">
-          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-700 lg:hidden">
-            <BookOpen className="h-6 w-6 text-white" />
-          </span>
-          <SectionHeading eyebrow="Where It Began" title="Our Story" />
-          <div className="space-y-4 text-base leading-relaxed text-ink/70">
-            <p>
+      <section className="bg-white py-20 sm:py-28">
+        <Container>
+          <div className="mx-auto max-w-3xl text-center">
+            <SectionHeading eyebrow="Where It Began" title="Our Story" align="center" />
+            <p className="mt-6 text-lg leading-relaxed text-ink/70">
               Stellar Sports Academy was founded on a simple belief: talent is everywhere, but
               opportunity isn&rsquo;t. Too many young athletes — especially those from underserved
               communities — are held back not by ability, but by access to quality coaching,
               academic support, and mentorship.
             </p>
-            <p>
+            <p className="mt-4 text-lg leading-relaxed text-ink/70">
               Stellar was created to close that gap directly, combining athletic development with
               academics, mentorship, and life-skills training so athletes are supported as whole
               people, not just competitors.
