@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 
 export function LogoutButton({
@@ -10,12 +9,14 @@ export function LogoutButton({
   redirectTo?: string;
   className?: string;
 }) {
-  const router = useRouter();
-
   async function handleLogout() {
     await fetch("/api/admin/logout", { method: "POST" });
-    router.push(redirectTo);
-    router.refresh();
+    // A full page navigation, not router.push — the login/board pages can be
+    // cached by the Next.js client router from before sign-out, and
+    // navigating through it can land back on a stale authenticated render
+    // even though the cookie was actually cleared. Reloading the page from
+    // the server guarantees it sees the request with no session cookie.
+    window.location.href = redirectTo;
   }
 
   return (
