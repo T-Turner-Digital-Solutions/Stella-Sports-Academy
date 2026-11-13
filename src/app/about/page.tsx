@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Compass, Eye, BookOpen } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -6,7 +7,7 @@ import { PageHero } from "@/components/ui/PageHero";
 import { Button } from "@/components/ui/Button";
 import { LeaderCard } from "@/components/leadership/LeaderCard";
 import { site } from "@/content/site";
-import { leadership, founder } from "@/content/leadership";
+import { leadership } from "@/content/leadership";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -75,50 +76,21 @@ export default function AboutPage() {
       </section>
 
       {/* FOUNDER */}
-      <section className="bg-white py-20 sm:py-28">
+      <section className="bg-white py-12 sm:py-16">
         <Container>
-          <SectionHeading eyebrow="Founder's Message" title="Founder Story" />
-          <div className="mt-10 grid gap-10 rounded-3xl border border-ink/10 bg-paper p-8 sm:p-10 lg:grid-cols-[280px_1fr] lg:p-12">
-            <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
-              <div className="flex h-40 w-40 items-center justify-center rounded-2xl bg-gradient-to-br from-red-700 to-red-900 text-4xl font-bold text-white">
-                JW
-              </div>
-              <p className="font-display mt-5 text-xl uppercase tracking-wide text-ink">
-                {founder.name}
-              </p>
-              <p className="mt-1 text-sm font-semibold text-red-700">{founder.title}</p>
-            </div>
-            <div className="flex flex-col justify-center gap-4 text-base leading-relaxed text-ink/70">
-              <p>
-                Stellar Sports Academy was founded to give young athletes the same access to
-                training, academic support, and mentorship that too many communities go without —
-                and to make sure sports become a launchpad for life, not just a season.
-              </p>
-              <p className="text-sm italic text-ink/50">
-                Full founder biography coming soon — this section will be updated with approved
-                organizational content.
-              </p>
-              <div>
-                <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink/60">
-                  Get to Know Justin
-                </p>
-                <div className="relative w-full overflow-hidden rounded-xl" style={{ aspectRatio: "16 / 9" }}>
-                  <iframe
-                    src="https://www.youtube-nocookie.com/embed/cd4GrnD51aE"
-                    title="Former Alabama Safety Justin Woodall's Career, Coach Saban's Influence, & AIO Training — The Modest Sports Show"
-                    className="absolute inset-0 h-full w-full"
-                    loading="lazy"
-                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                  />
-                </div>
-                <p className="mt-2 text-xs text-ink/45">
-                  From &ldquo;The Modest Sports Show&rdquo; — Justin&rsquo;s career, Coach Saban&rsquo;s
-                  influence, and AIO Training.
-                </p>
-              </div>
-            </div>
+          <div className="relative w-full overflow-hidden rounded-2xl" style={{ aspectRatio: "2000 / 714" }}>
+            <Image
+              src="/brand/sections/founder-story-banner.webp"
+              alt="Founder's Message: Founder Story. Stellar Sports Academy was founded to give young athletes the same access to training, academic support, and mentorship that too many communities go without — and to make sure sports become a launchpad for life, not just a season. Justin Woodall, Founder & President."
+              fill
+              sizes="(min-width: 1280px) 1280px, 100vw"
+              className="object-cover object-center"
+            />
           </div>
+          <p className="mt-4 text-center text-sm italic text-ink/45">
+            Full founder biography coming soon — this section will be updated with approved
+            organizational content.
+          </p>
         </Container>
       </section>
 
