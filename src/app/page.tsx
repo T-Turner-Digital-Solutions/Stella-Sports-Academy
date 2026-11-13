@@ -1,29 +1,18 @@
 import Image from "next/image";
-import { ArrowRight, GraduationCap, HeartHandshake, ShieldAlert, Sparkles, Quote } from "lucide-react";
+import { ArrowRight, GraduationCap, HeartHandshake, Sparkles, Quote } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { ValueCard } from "@/components/ui/ValueCard";
 import { ImpactStatCard } from "@/components/ui/ImpactStatCard";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ProgramCard } from "@/components/programs/ProgramCard";
 import { CampaignCard } from "@/components/campaigns/CampaignCard";
 import { NewsletterForm } from "@/components/home/NewsletterForm";
 import { site } from "@/content/site";
-import { coreValues } from "@/content/values";
 import { programs } from "@/content/programs";
 import { campaigns } from "@/content/campaigns";
 import { impactStats, successStories } from "@/content/impact";
-
-const barriers = [
-  "Quality coaching",
-  "Athletic development",
-  "Academic resources",
-  "College recruiting support",
-  "Mentoring",
-  "Leadership opportunities",
-];
 
 export default function HomePage() {
   return (
@@ -98,15 +87,14 @@ export default function HomePage() {
       </section>
 
       {/* CORE VALUES */}
-      <section className="bg-paper py-20 sm:py-28">
-        <Container>
-          <SectionHeading eyebrow="What We Stand For" title="Core Values" align="center" className="mx-auto" />
-          <div className="mt-14 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-5">
-            {coreValues.map((value) => (
-              <ValueCard key={value.name} value={value} />
-            ))}
-          </div>
-        </Container>
+      <section className="relative w-full overflow-hidden" style={{ aspectRatio: "2000 / 668" }}>
+        <Image
+          src="/brand/sections/core-values-banner.webp"
+          alt="What we stand for: Core Values — Excellence, Discipline, Education, Character, Community"
+          fill
+          sizes="100vw"
+          className="object-cover object-center"
+        />
       </section>
 
       {/* PROGRAMS PREVIEW */}
@@ -129,6 +117,16 @@ export default function HomePage() {
 
       {/* CAMPAIGNS */}
       <section className="bg-paper py-20 sm:py-28">
+        <div className="relative mb-14 w-full overflow-hidden" style={{ aspectRatio: "2000 / 112" }}>
+          <Image
+            src="/brand/sections/campaigns-banner-top.webp"
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover object-center"
+            aria-hidden
+          />
+        </div>
         <Container>
           <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
             <SectionHeading eyebrow="Fuel the Mission" title="Current Campaigns" />
@@ -171,34 +169,14 @@ export default function HomePage() {
       </section>
 
       {/* WHY STELLAR MATTERS */}
-      <section className="bg-white py-20 sm:py-28">
-        <Container className="grid gap-14 lg:grid-cols-2 lg:items-center">
-          <div>
-            <SectionHeading
-              eyebrow="The Opportunity Gap"
-              title="Why Stellar Matters"
-              description="Many young athletes face real financial barriers that keep them from the resources their potential deserves."
-            />
-            <p className="mt-6 text-base leading-relaxed text-ink/70">
-              Stellar Sports Academy exists to help close that gap — connecting young athletes with
-              the training, support, and guidance they need, regardless of their family&rsquo;s ability
-              to pay.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            {barriers.map((barrier) => (
-              <div
-                key={barrier}
-                className="flex items-center gap-3 rounded-xl border border-ink/10 bg-paper px-4 py-4 text-sm font-medium text-ink/75"
-              >
-                <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-red-100 text-red-700">
-                  <ShieldAlert className="h-4 w-4" />
-                </span>
-                {barrier}
-              </div>
-            ))}
-          </div>
-        </Container>
+      <section className="relative w-full overflow-hidden" style={{ aspectRatio: "2000 / 667" }}>
+        <Image
+          src="/brand/sections/why-stellar-matters-banner.webp"
+          alt="The Opportunity Gap: Why Stellar Matters. Many young athletes face real financial barriers that keep them from the resources their potential deserves. Stellar Sports Academy exists to help close that gap, connecting young athletes with quality coaching, athletic development, academic resources, college recruiting support, mentoring, and leadership opportunities, regardless of their family's ability to pay."
+          fill
+          sizes="100vw"
+          className="object-cover object-center"
+        />
       </section>
 
       {/* SUCCESS STORIES */}
