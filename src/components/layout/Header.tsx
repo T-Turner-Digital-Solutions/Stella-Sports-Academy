@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Menu, X } from "lucide-react";
+import { ChevronDown, Menu, X, ShieldCheck } from "lucide-react";
 import { Logo } from "./Logo";
 import { Button } from "@/components/ui/Button";
 import { primaryNav } from "@/content/site";
@@ -101,6 +101,13 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <Link
+            href="/board/login"
+            className="hidden items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold text-ink/55 transition-colors hover:bg-paper-dim hover:text-ink lg:flex"
+          >
+            <ShieldCheck className="h-3.5 w-3.5" />
+            Board Members Login
+          </Link>
           <Button href="/donate" variant="primary" size="md" className="hidden sm:inline-flex">
             Donate
           </Button>
@@ -130,6 +137,13 @@ export function Header() {
             {primaryNav.map((item) => (
               <MobileNavItem key={item.href} item={item} />
             ))}
+            <Link
+              href="/board/login"
+              className="flex items-center gap-2 border-b border-ink/10 py-3 text-base font-semibold text-ink/70"
+            >
+              <ShieldCheck className="h-4 w-4" />
+              Board Members Login
+            </Link>
           </nav>
         </div>
       )}

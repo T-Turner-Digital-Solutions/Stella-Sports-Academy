@@ -4,11 +4,13 @@ import { SESSION_COOKIE, verifySessionToken } from "@/lib/session";
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const isLoginPage = pathname === "/admin/login";
+  const isBoardArea = pathname.startsWith("/board");
+  const isLoginPage = pathname === "/admin/login" || pathname === "/board/login";
   const isAcceptInvitePage = pathname === "/admin/accept-invite";
   const isLoginApi = pathname === "/api/admin/login";
   const isAcceptInviteApi = pathname === "/api/admin/accept-invite";
   const isApiRoute = pathname.startsWith("/api/admin/");
+  const defaultArea = isBoardArea ? "/board" : "/admin";
 
   if (isLoginApi || isAcceptInviteApi) {
     return NextResponse.next();
@@ -19,7 +21,7 @@ export async function proxy(request: NextRequest) {
 
   if (isLoginPage || isAcceptInvitePage) {
     if (session && isLoginPage) {
-      return NextResponse.redirect(new URL("/admin", request.url));
+      return NextResponse.redirect(new URL(defaultArea, request.url));
     }
     return NextResponse.next();
   }
@@ -28,7 +30,7 @@ export async function proxy(request: NextRequest) {
     if (isApiRoute) {
       return NextResponse.json({ message: "Not authenticated." }, { status: 401 });
     }
-    const loginUrl = new URL("/admin/login", request.url);
+    const loginUrl = new URL(isBoardArea ? "/board/login" : "/admin/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
   }
@@ -37,5 +39,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/admin/:path*"],
+  matcher: ["/admin/:path*", "/board/:path*", "/api/admin/:path*"],
 };

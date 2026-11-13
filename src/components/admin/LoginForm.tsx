@@ -8,7 +8,15 @@ import { FormStatus } from "@/components/forms/FormStatus";
 import { Button } from "@/components/ui/Button";
 import { postForm, type SubmitState } from "@/lib/forms-client";
 
-export function LoginForm() {
+export function LoginForm({
+  heading = "Admin Sign In",
+  description = "Stellar Sports Academy — internal review access only.",
+  defaultRedirect = "/admin",
+}: {
+  heading?: string;
+  description?: string;
+  defaultRedirect?: string;
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
@@ -22,7 +30,7 @@ export function LoginForm() {
     const result = await postForm("/api/admin/login", { email, password });
 
     if (result.ok) {
-      const redirect = searchParams.get("redirect") || "/admin";
+      const redirect = searchParams.get("redirect") || defaultRedirect;
       router.push(redirect);
       router.refresh();
     } else {
@@ -36,8 +44,8 @@ export function LoginForm() {
         <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
           <ShieldCheck className="h-6 w-6 text-red-700" />
         </span>
-        <h1 className="font-display text-2xl uppercase tracking-wide text-ink">Admin Sign In</h1>
-        <p className="text-sm text-ink/60">Stellar Sports Academy — internal review access only.</p>
+        <h1 className="font-display text-2xl uppercase tracking-wide text-ink">{heading}</h1>
+        <p className="text-sm text-ink/60">{description}</p>
       </div>
 
       <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-4 rounded-2xl border border-ink/10 bg-white p-6">
