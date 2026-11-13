@@ -7,8 +7,10 @@ export async function proxy(request: NextRequest) {
   const isBoardArea = pathname.startsWith("/board");
   const isLoginPage = pathname === "/admin/login" || pathname === "/board/login";
   const isAcceptInvitePage = pathname === "/admin/accept-invite";
+  const isForgotPasswordPage = pathname === "/admin/forgot-password";
   const isLoginApi = pathname === "/api/admin/login";
   const isAcceptInviteApi = pathname === "/api/admin/accept-invite";
+  const isForgotPasswordApi = pathname === "/api/admin/forgot-password";
   // Has its own auth check (owner session OR a DB_SETUP_SECRET header) — it
   // needs to run even when nobody has a valid session yet, e.g. right after
   // DATABASE_URL is first connected or rotated.
@@ -16,14 +18,14 @@ export async function proxy(request: NextRequest) {
   const isApiRoute = pathname.startsWith("/api/admin/");
   const defaultArea = isBoardArea ? "/board" : "/admin";
 
-  if (isLoginApi || isAcceptInviteApi || isDbSetupApi) {
+  if (isLoginApi || isAcceptInviteApi || isForgotPasswordApi || isDbSetupApi) {
     return NextResponse.next();
   }
 
   const token = request.cookies.get(SESSION_COOKIE)?.value;
   const session = token ? await verifySessionToken(token) : null;
 
-  if (isLoginPage || isAcceptInvitePage) {
+  if (isLoginPage || isAcceptInvitePage || isForgotPasswordPage) {
     if (session && isLoginPage) {
       return NextResponse.redirect(new URL(defaultArea, request.url));
     }

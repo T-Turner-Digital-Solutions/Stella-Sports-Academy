@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { CalendarClock, ClipboardList, ExternalLink } from "lucide-react";
+import Link from "next/link";
+import { CalendarClock, ClipboardList, ExternalLink, KeyRound } from "lucide-react";
 import { Logo } from "@/components/layout/Logo";
 import { LogoutButton } from "@/components/admin/LogoutButton";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -26,7 +27,16 @@ export default async function BoardPage() {
     <div className="flex min-h-screen flex-col">
       <header className="flex items-center justify-between border-b border-ink/10 bg-white px-5 py-4 sm:px-8">
         <Logo />
-        <LogoutButton redirectTo="/board/login" />
+        <div className="flex items-center gap-4">
+          <Link
+            href="/admin/change-password"
+            className="flex items-center gap-1.5 text-sm font-medium text-ink/60 hover:text-ink"
+          >
+            <KeyRound className="h-4 w-4" />
+            Change Password
+          </Link>
+          <LogoutButton redirectTo="/board/login" />
+        </div>
       </header>
 
       <main className="flex-1 py-12">

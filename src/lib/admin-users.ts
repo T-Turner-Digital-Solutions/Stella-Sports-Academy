@@ -17,6 +17,7 @@ export type AdminUserRecord = {
 };
 
 const INVITE_DURATION = "7 days";
+const RESET_DURATION = "1 hour";
 
 export async function getAdminUserCount() {
   const db = getDb();
@@ -112,4 +113,33 @@ export async function touchLastLogin(id: string) {
   const db = getDb();
   if (!db) return;
   await db.query(`UPDATE admin_users SET last_login_at = now() WHERE id = $1`, [id]);
+}
+
+/** Used by the "change password" flow for a signed-in user who already
+ * knows their current password. */
+export async function updateAdminUserPassword(id: string, passwordHash: string) {
+  const db = getDb();
+  if (!db) return false;
+  await db.query(`UPDATE admin_users SET password_hash = $1 WHERE id = $2`, [passwordHash, id]);
+  return true;
+}
+
+/** "Forgot password" — reuses the same invite_token/invite_expires_at
+ * columns and the same acceptInvite() to actually set the new password, so
+ * a reset link and an invite link both land on /admin/accept-invite. Only
+ * issues a token for an existing, active account; returns null otherwise
+ * (callers should show the same generic message either way, so a request
+ * can't be used to check which emails have accounts). */
+export async function createPasswordResetToken(email: string) {
+  const db = getDb();
+  if (!db) return null;
+  const token = crypto.randomBytes(24).toString("hex");
+  const result = await db.query<AdminUserRecord>(
+    `UPDATE admin_users
+     SET invite_token = $1, invite_expires_at = now() + interval '${RESET_DURATION}'
+     WHERE lower(email) = lower($2) AND active = true
+     RETURNING *`,
+    [token, email]
+  );
+  return result.rows[0] ?? null;
 }
