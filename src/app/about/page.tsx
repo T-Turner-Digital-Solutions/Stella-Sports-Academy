@@ -25,26 +25,26 @@ export default function AboutPage() {
       />
 
       {/* SUPPORT + MISSION SNAPSHOT */}
-      <section className="bg-white py-16 sm:py-20">
-        <Container className="grid gap-10 text-center sm:grid-cols-2">
+      <section className="bg-white py-10 sm:py-14">
+        <Container className="grid items-start gap-6 text-center sm:grid-cols-2">
           <div>
-            <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-red-100">
-              <HeartHandshake className="h-5 w-5 text-red-700" />
+            <span className="mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-red-100">
+              <HeartHandshake className="h-4 w-4 text-red-700" />
             </span>
-            <h2 className="font-display mt-4 text-lg uppercase tracking-wide text-ink">
+            <h2 className="font-display mt-3 text-base uppercase tracking-wide text-ink">
               Support Stellar Sports Academy
             </h2>
-            <a href={ZEFFY_GENERAL_DONATION_URL} className="mx-auto mt-5 block w-fit">
+            <a href={ZEFFY_GENERAL_DONATION_URL} className="mx-auto mt-3 block w-fit">
               <Image
                 src="/brand/zeffy-donate-qr.png"
                 alt="QR code to donate to Stellar Sports Academy via Zeffy"
-                width={220}
-                height={220}
+                width={150}
+                height={150}
                 className="rounded-xl border-2 border-red-700/30"
               />
             </a>
-            <p className="mt-4 font-display text-base uppercase tracking-wide text-ink">Donate Today</p>
-            <p className="mt-1 text-sm text-ink/60">
+            <p className="mt-3 font-display text-sm uppercase tracking-wide text-ink">Donate Today</p>
+            <p className="mt-1 text-xs text-ink/60">
               Scan the QR code, or{" "}
               <a href={ZEFFY_GENERAL_DONATION_URL} className="font-semibold text-red-700 hover:underline">
                 click here
@@ -54,24 +54,24 @@ export default function AboutPage() {
           </div>
 
           <div>
-            <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-red-100">
-              <Users className="h-5 w-5 text-red-700" />
+            <span className="mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-red-100">
+              <Users className="h-4 w-4 text-red-700" />
             </span>
-            <h2 className="font-display mt-4 text-lg uppercase tracking-wide text-ink">Our Mission</h2>
+            <h2 className="font-display mt-3 text-base uppercase tracking-wide text-ink">Our Mission</h2>
             <Image
               src="/brand/stella-mark.png"
               alt=""
               aria-hidden
               width={160}
               height={77}
-              className="mx-auto mt-5 h-auto w-28"
+              className="mx-auto mt-3 h-auto w-16"
             />
-            <p className="font-display mt-3 text-lg italic leading-snug text-red-700">
+            <p className="font-display mt-2 text-sm italic leading-snug text-red-700">
               Empowering Young Athletes.
               <br />
               Building Champions for Life.
             </p>
-            <p className="mt-3 text-sm leading-relaxed text-ink/60">
+            <p className="mt-2 text-xs leading-relaxed text-ink/60">
               Providing training, academic support, and mentorship for young athletes.
             </p>
           </div>
