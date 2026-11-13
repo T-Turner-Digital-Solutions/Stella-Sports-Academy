@@ -45,10 +45,10 @@ export function BoardMeetingForm() {
         <span className="flex h-9 w-9 items-center justify-center rounded-full bg-red-100">
           <Video className="h-4 w-4 text-red-700" />
         </span>
-        <h2 className="font-display text-lg uppercase tracking-wide text-ink">Schedule a Zoom Meeting</h2>
+        <h2 className="font-display text-lg uppercase tracking-wide text-ink">Schedule a Meeting or Event</h2>
       </div>
 
-      <Field label="Meeting Title" htmlFor="meeting-title" required>
+      <Field label="Title" htmlFor="meeting-title" required>
         <TextInput id="meeting-title" required value={title} onChange={(e) => setTitle(e.target.value)} />
       </Field>
 
@@ -62,19 +62,22 @@ export function BoardMeetingForm() {
             onChange={(e) => setScheduledAt(e.target.value)}
           />
         </Field>
-        <Field label="Zoom Link" htmlFor="meeting-zoom-url" required hint="The real Zoom meeting URL board members will click to join.">
+        <Field
+          label="Link"
+          htmlFor="meeting-zoom-url"
+          hint="Optional — Zoom link for a call, or an event/RSVP page for an in-person event."
+        >
           <TextInput
             id="meeting-zoom-url"
             type="url"
-            required
-            placeholder="https://zoom.us/j/..."
+            placeholder="https://zoom.us/j/... or an event page URL"
             value={zoomUrl}
             onChange={(e) => setZoomUrl(e.target.value)}
           />
         </Field>
       </div>
 
-      <Field label="Notes" htmlFor="meeting-notes" hint="Optional — agenda, dial-in info, etc.">
+      <Field label="Notes" htmlFor="meeting-notes" hint="Optional — agenda, location/address, dial-in info, etc.">
         <TextArea id="meeting-notes" value={notes} onChange={(e) => setNotes(e.target.value)} />
       </Field>
 

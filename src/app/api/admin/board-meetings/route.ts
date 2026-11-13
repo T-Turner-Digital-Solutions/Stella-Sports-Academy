@@ -7,7 +7,7 @@ import { createBoardMeeting, deleteBoardMeeting } from "@/lib/board-meetings";
 const createSchema = z.object({
   title: z.string().trim().min(1, "Title is required").max(200),
   scheduledAt: z.string().trim().min(1, "Date and time are required"),
-  zoomUrl: z.string().trim().url("Enter a valid Zoom link"),
+  zoomUrl: z.string().trim().url("Enter a valid link").optional().or(z.literal("")),
   notes: z.string().trim().max(2000).optional(),
 });
 
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
   const parsed = createSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ message: "Enter a title, date/time, and a valid Zoom link." }, { status: 400 });
+    return NextResponse.json({ message: "Enter a title, date/time, and (if any) a valid link." }, { status: 400 });
   }
 
   const meeting = await createBoardMeeting({

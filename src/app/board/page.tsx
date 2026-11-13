@@ -77,15 +77,15 @@ export default async function BoardPage() {
                 <span className="flex h-9 w-9 items-center justify-center rounded-full bg-red-100">
                   <CalendarClock className="h-4 w-4 text-red-700" />
                 </span>
-                <h2 className="font-display text-lg uppercase tracking-wide text-ink">Upcoming Meetings</h2>
+                <h2 className="font-display text-lg uppercase tracking-wide text-ink">Upcoming Meetings & Events</h2>
               </div>
 
               <div className="mt-4 flex flex-col gap-3">
                 {!dbReady || meetings.length === 0 ? (
                   <EmptyState
                     icon={CalendarClock}
-                    title="No Meetings Scheduled"
-                    description="Upcoming board Zoom meetings will appear here once scheduled."
+                    title="Nothing Scheduled"
+                    description="Upcoming board meetings and events will appear here once scheduled."
                   />
                 ) : (
                   meetings.map((meeting) => (
@@ -93,15 +93,17 @@ export default async function BoardPage() {
                       <p className="font-semibold text-ink">{meeting.title}</p>
                       <p className="mt-1 text-sm text-ink/60">{formatDateTime(meeting.scheduled_at)}</p>
                       {meeting.notes && <p className="mt-2 text-sm text-ink/50">{meeting.notes}</p>}
-                      <a
-                        href={meeting.zoom_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-red-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-800"
-                      >
-                        Join on Zoom
-                        <ExternalLink className="h-3.5 w-3.5" />
-                      </a>
+                      {meeting.zoom_url && (
+                        <a
+                          href={meeting.zoom_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-red-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-800"
+                        >
+                          View Link
+                          <ExternalLink className="h-3.5 w-3.5" />
+                        </a>
+                      )}
                     </div>
                   ))
                 )}
