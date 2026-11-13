@@ -15,7 +15,9 @@ const EXPECTED_TABLES = [
 
 /** Owners can always use this; DB_SETUP_SECRET is an optional extra way in
  * for one-off operational use (e.g. scripted verification right after
- * DATABASE_URL is first connected, before anyone has a session yet). */
+ * DATABASE_URL is first connected, before anyone has a session yet, or
+ * right after DATABASE_URL changes — a DB-dependent login attempt in that
+ * window would otherwise 500 since admin_users doesn't exist yet). */
 async function isAuthorized(request: Request) {
   const session = await getCurrentAdminSession();
   if (session?.role === "owner") return true;
