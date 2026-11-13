@@ -39,8 +39,14 @@ export async function findAdminUserByEmail(email: string) {
 export async function findAdminUserById(id: string) {
   const db = getDb();
   if (!db) return null;
-  const result = await db.query<AdminUserRecord>(`SELECT * FROM admin_users WHERE id = $1`, [id]);
-  return result.rows[0] ?? null;
+  try {
+    const result = await db.query<AdminUserRecord>(`SELECT * FROM admin_users WHERE id = $1`, [id]);
+    return result.rows[0] ?? null;
+  } catch {
+    // id isn't a valid UUID (e.g. a stale pre-database session) — treat as
+    // "no such user" instead of letting the Postgres type error surface.
+    return null;
+  }
 }
 
 export async function findAdminUserByInviteToken(token: string) {
