@@ -4,34 +4,33 @@ export function PortalPageHero({
   title,
   description,
   eyebrow = "Board Portal",
-  photo,
   badge,
 }: {
   title: string;
   description: string;
   eyebrow?: string;
-  /** Path under /public for a real photo bleeding in from the right. Omit for a plain gradient band (e.g. the dashboard). */
-  photo?: string;
   /** Small pill shown top-right of the band, e.g. "Upcoming". */
   badge?: string;
 }) {
   return (
     <div className="relative overflow-hidden border-b border-blue-100 bg-gradient-to-br from-white via-blue-50 to-blue-100">
-      {photo ? (
-        <div aria-hidden className="pointer-events-none absolute inset-y-0 right-0 hidden w-[46%] sm:block">
-          <Image src={photo} alt="" fill sizes="46vw" className="object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-50 via-blue-50/30 to-transparent" />
-        </div>
-      ) : (
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 opacity-50 sm:block"
-          style={{
-            background:
-              "radial-gradient(circle at 85% 20%, rgba(59,130,246,0.35), transparent 45%), radial-gradient(circle at 60% 70%, rgba(37,99,235,0.25), transparent 50%)",
-          }}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 opacity-50 sm:block"
+        style={{
+          background:
+            "radial-gradient(circle at 85% 20%, rgba(59,130,246,0.35), transparent 45%), radial-gradient(circle at 60% 70%, rgba(37,99,235,0.25), transparent 50%)",
+        }}
+      />
+      <div aria-hidden className="pointer-events-none absolute inset-y-0 right-6 hidden w-40 items-center lg:flex xl:right-10 xl:w-48">
+        <Image
+          src="/brand/stella-lockup.png"
+          alt=""
+          width={1514}
+          height={932}
+          className="h-auto w-full drop-shadow-[0_0_30px_rgba(37,99,235,0.35)]"
         />
-      )}
+      </div>
 
       {badge && (
         <span className="absolute right-5 top-6 z-10 hidden items-center gap-1.5 rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold text-blue-700 sm:right-8 sm:flex lg:right-10">
