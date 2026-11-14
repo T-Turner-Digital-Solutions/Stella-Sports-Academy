@@ -76,6 +76,22 @@ export async function listDonations() {
   return result.rows;
 }
 
+/** Actual Stripe-processed donations, summed per calendar year — the only
+ * automated "actual" figure available for the Financials goal-progress
+ * calculation. Donations made through other channels (checks, cash, bank
+ * transfers, Zeffy, etc.) aren't tracked here and are reported as such
+ * rather than folded into this total. */
+export async function getDonationTotalsByYear(): Promise<Record<number, number>> {
+  const db = getDb();
+  if (!db) return {};
+  const result = await db.query<{ year: number; total_cents: string }>(
+    `SELECT EXTRACT(YEAR FROM created_at)::int AS year, SUM(amount_cents) AS total_cents
+     FROM donations
+     GROUP BY year`
+  );
+  return Object.fromEntries(result.rows.map((r) => [r.year, Number(r.total_cents)]));
+}
+
 export async function getDonationTotals(): Promise<DonationTotals | null> {
   const db = getDb();
   if (!db) return null;

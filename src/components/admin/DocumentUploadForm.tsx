@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Upload } from "lucide-react";
-import { Field, TextInput, TextArea, Select } from "@/components/forms/fields";
+import { Field, TextInput, TextArea, Select, CheckboxField } from "@/components/forms/fields";
 import { FormStatus } from "@/components/forms/FormStatus";
 import { Button } from "@/components/ui/Button";
 import type { SubmitState } from "@/lib/forms-client";
@@ -17,6 +17,10 @@ export function DocumentUploadForm() {
   const [category, setCategory] = useState<DocumentCategory>("corporate-record-book");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [effectiveDate, setEffectiveDate] = useState("");
+  const [allowPrint, setAllowPrint] = useState(true);
+  const [allowDownload, setAllowDownload] = useState(true);
+  const [allowEmail, setAllowEmail] = useState(true);
   const [state, setState] = useState<SubmitState>({ status: "idle" });
 
   async function handleSubmit(e: React.FormEvent) {
@@ -34,6 +38,10 @@ export function DocumentUploadForm() {
     body.set("category", category);
     body.set("title", title);
     body.set("description", description);
+    if (effectiveDate) body.set("effectiveDate", effectiveDate);
+    body.set("allowPrint", String(allowPrint));
+    body.set("allowDownload", String(allowDownload));
+    body.set("allowEmail", String(allowEmail));
 
     try {
       const res = await fetch("/api/admin/documents", { method: "POST", body });
@@ -85,6 +93,10 @@ export function DocumentUploadForm() {
         <TextArea id="doc-description" value={description} onChange={(e) => setDescription(e.target.value)} />
       </Field>
 
+      <Field label="Effective Date" htmlFor="doc-effective-date" hint="Optional — defaults to today.">
+        <TextInput id="doc-effective-date" type="date" value={effectiveDate} onChange={(e) => setEffectiveDate(e.target.value)} />
+      </Field>
+
       <Field label="File" htmlFor="doc-file" required hint="PDF only, up to 4 MB.">
         <input
           ref={fileInputRef}
@@ -95,6 +107,13 @@ export function DocumentUploadForm() {
           className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink file:mr-4 file:rounded-full file:border-0 file:bg-red-100 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-red-700"
         />
       </Field>
+
+      <div className="flex flex-col gap-2 rounded-xl border border-ink/10 bg-paper p-4">
+        <p className="text-xs font-bold uppercase tracking-wide text-ink/50">Board Member Permissions</p>
+        <CheckboxField id="doc-allow-print" label="Allow printing" checked={allowPrint} onChange={(e) => setAllowPrint(e.target.checked)} />
+        <CheckboxField id="doc-allow-download" label="Allow downloading" checked={allowDownload} onChange={(e) => setAllowDownload(e.target.checked)} />
+        <CheckboxField id="doc-allow-email" label="Allow emailing to other board members" checked={allowEmail} onChange={(e) => setAllowEmail(e.target.checked)} />
+      </div>
 
       <Button type="submit" size="md" disabled={state.status === "submitting"} className="self-start">
         {state.status === "submitting" ? "Uploading…" : "Upload"}

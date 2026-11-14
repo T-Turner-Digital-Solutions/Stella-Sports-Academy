@@ -28,6 +28,10 @@ export type BoardDocument = {
   version: number;
   is_current: boolean;
   archived: boolean;
+  effective_date: string;
+  allow_print: boolean;
+  allow_download: boolean;
+  allow_email: boolean;
 };
 
 export const DOCUMENT_CATEGORY_LABELS: Record<DocumentCategory, string> = {
@@ -41,3 +45,52 @@ export const DOCUMENT_CATEGORY_LABELS: Record<DocumentCategory, string> = {
   "irs-determination-letter": "IRS Determination Letter",
   other: "Other",
 };
+
+/** The six top-level groups the Corporate Records library is organized
+ * into, per the board's requested layout — a display-only grouping over
+ * the finer DocumentCategory values above, not a separate schema concept. */
+export type RecordGroup =
+  | "corporate-record-book"
+  | "formation"
+  | "governance"
+  | "resolutions"
+  | "compliance"
+  | "other";
+
+export const RECORD_GROUP_LABELS: Record<RecordGroup, string> = {
+  "corporate-record-book": "Corporate Record Book",
+  formation: "Formation Documents",
+  governance: "Bylaws & Governance Policies",
+  resolutions: "Board Resolutions",
+  compliance: "Compliance Filings",
+  other: "Other Official Corporate Records",
+};
+
+export const RECORD_GROUP_DESCRIPTIONS: Record<RecordGroup, string> = {
+  "corporate-record-book": "The complete, featured record book",
+  formation: "Articles, Incorporation, EIN",
+  governance: "Bylaws, Policies, Procedures",
+  resolutions: "Board actions and approvals",
+  compliance: "IRS, annual reports, state filings (e.g. Form 990)",
+  other: "Minutes, contracts, agreements, and other official records",
+};
+
+export function categoryToGroup(category: DocumentCategory): RecordGroup {
+  switch (category) {
+    case "corporate-record-book":
+      return "corporate-record-book";
+    case "articles-of-incorporation":
+    case "ein-letter":
+      return "formation";
+    case "bylaws":
+    case "policy":
+      return "governance";
+    case "board-resolution":
+      return "resolutions";
+    case "irs-determination-letter":
+      return "compliance";
+    case "organizational-minutes":
+    case "other":
+      return "other";
+  }
+}

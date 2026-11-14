@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Download, FileText, Mail, Printer } from "lucide-react";
-import { site } from "@/content/site";
+import { ArrowLeft, Download, FileText, Printer } from "lucide-react";
 import { Logo } from "@/components/layout/Logo";
 import { Container } from "@/components/ui/Container";
 import { getCurrentAdminSession } from "@/lib/auth";
@@ -11,6 +10,7 @@ import { findBoardDocumentById, listAcknowledgmentsForDocument } from "@/lib/boa
 import { DOCUMENT_CATEGORY_LABELS } from "@/lib/board-documents-shared";
 import { formatDate } from "@/lib/utils";
 import { AcknowledgeButton } from "@/components/board/AcknowledgeButton";
+import { EmailDocumentButton } from "@/components/board/EmailDocumentButton";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Document" };
@@ -57,39 +57,35 @@ export default async function BoardDocumentPage({ params }: { params: Promise<{ 
                     )}
                   </h1>
                   {document.description && <p className="mt-2 max-w-xl text-sm text-white/70">{document.description}</p>}
-                  <p className="mt-3 text-xs text-white/40">Uploaded {formatDate(document.created_at)}</p>
+                  <p className="mt-3 text-xs text-white/40">Effective {formatDate(document.effective_date)}</p>
                 </div>
               </div>
 
               <div className="flex flex-shrink-0 flex-col items-stretch gap-2 sm:items-end">
-                <div className="flex flex-wrap items-center gap-2">
-                  <a
-                    href={`/api/board/documents/${document.id}/download`}
-                    download={document.file_name}
-                    className="flex items-center gap-1.5 rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10"
-                  >
-                    <Download className="h-4 w-4" />
-                    Download
-                  </a>
-                  <a
-                    href={`/api/board/documents/${document.id}/download`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title="Opens the full document in a new tab, where your browser's print dialog can print the whole document or just the pages you need"
-                    className="flex items-center gap-1.5 rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10"
-                  >
-                    <Printer className="h-4 w-4" />
-                    Print
-                  </a>
-                  <a
-                    href={`mailto:?subject=${encodeURIComponent(`Stellar Sports Academy — ${document.title}`)}&body=${encodeURIComponent(
-                      `${document.title}\n\n${site.url}/board/documents/${document.id}\n\n(Requires board portal sign-in to open.)`
-                    )}`}
-                    className="flex items-center gap-1.5 rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10"
-                  >
-                    <Mail className="h-4 w-4" />
-                    Email
-                  </a>
+                <div className="relative flex flex-wrap items-center gap-2">
+                  {document.allow_download && (
+                    <a
+                      href={`/api/board/documents/${document.id}/download`}
+                      download={document.file_name}
+                      className="flex items-center gap-1.5 rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+                    >
+                      <Download className="h-4 w-4" />
+                      Download
+                    </a>
+                  )}
+                  {document.allow_print && (
+                    <a
+                      href={`/api/board/documents/${document.id}/download`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Opens the full document in a new tab, where your browser's print dialog can print the whole document or just the pages you need"
+                      className="flex items-center gap-1.5 rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+                    >
+                      <Printer className="h-4 w-4" />
+                      Print
+                    </a>
+                  )}
+                  {document.allow_email && <EmailDocumentButton documentId={document.id} />}
                 </div>
                 <AcknowledgeButton documentId={document.id} initiallyAcknowledged={alreadyAcknowledged} />
               </div>
