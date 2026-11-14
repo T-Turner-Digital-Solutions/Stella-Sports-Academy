@@ -222,3 +222,18 @@ CREATE TABLE IF NOT EXISTS financial_goal_changes (
   new_cents           INTEGER NOT NULL,
   changed_by          UUID REFERENCES admin_users(id) ON DELETE SET NULL
 );
+
+-- Board Operations suggestion box. Any board member can submit; the owner
+-- reviews and moves status along. Starts empty — no sample ideas seeded.
+CREATE TABLE IF NOT EXISTS board_suggestions (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  created_by          UUID REFERENCES admin_users(id) ON DELETE SET NULL,
+  category            TEXT NOT NULL CHECK (category IN ('fundraising', 'programs', 'facilities', 'events', 'partnerships', 'other')),
+  title               TEXT NOT NULL,
+  description         TEXT NOT NULL,
+  status              TEXT NOT NULL DEFAULT 'submitted' CHECK (status IN ('submitted', 'under_review', 'approved', 'declined', 'in_progress', 'completed')),
+  admin_response      TEXT,
+  responded_by        UUID REFERENCES admin_users(id) ON DELETE SET NULL,
+  responded_at        TIMESTAMPTZ
+);

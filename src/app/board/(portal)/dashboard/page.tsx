@@ -31,13 +31,13 @@ export default async function BoardDashboardPage() {
   const nextMeeting = meetings[0];
 
   return (
-    <Container>
+    <>
       <PortalPageHero
         eyebrow="Board Portal"
         title={session?.name ? `Welcome, ${session.name}` : "Dashboard"}
         description="Updates, action items, and key announcements."
       />
-
+      <Container className="py-8">
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <Link
           href="/board/meetings"
@@ -52,7 +52,7 @@ export default async function BoardDashboardPage() {
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </span>
           </div>
-          <p className="mt-2 font-display text-lg text-ink">
+          <p className="font-portal-heading mt-2 text-lg text-ink">
             {nextMeeting ? nextMeeting.title : "Nothing Scheduled"}
           </p>
           <p className="text-sm font-medium text-ink/60">
@@ -73,7 +73,7 @@ export default async function BoardDashboardPage() {
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </span>
           </div>
-          <p className="mt-2 font-display text-lg text-ink">
+          <p className="font-portal-heading mt-2 text-lg text-ink">
             {pendingCount > 0 ? `${pendingCount} Awaiting Acknowledgment` : "All Caught Up"}
           </p>
           <p className="text-sm font-medium text-ink/60">
@@ -87,7 +87,7 @@ export default async function BoardDashboardPage() {
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100">
             <ClipboardList className="h-4 w-4 text-blue-700" />
           </span>
-          <h2 className="font-display text-lg uppercase tracking-wide text-ink">Athletics Tracker</h2>
+          <h2 className="font-portal-heading text-lg text-ink">Athletics Tracker</h2>
         </div>
 
         <div className="mt-4">
@@ -97,6 +97,7 @@ export default async function BoardDashboardPage() {
             </div>
           ) : (
             <EmptyState
+              theme="blue"
               icon={ClipboardList}
               title="Not Connected Yet"
               description="The Google Sheets athletics tracker will appear here once the sheet link is shared and connected."
@@ -104,6 +105,7 @@ export default async function BoardDashboardPage() {
           )}
         </div>
       </section>
-    </Container>
+      </Container>
+    </>
   );
 }

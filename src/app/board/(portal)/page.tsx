@@ -51,7 +51,7 @@ export default async function BoardPortalHubPage() {
   const session = await getCurrentAdminSession();
 
   return (
-    <Container>
+    <Container className="py-8">
       <div className="relative grid grid-cols-1 items-center gap-6 overflow-hidden rounded-2xl border border-blue-100 bg-gradient-to-br from-white via-blue-50 to-blue-100 px-6 py-10 sm:px-10 sm:py-14 lg:grid-cols-[1fr_auto]">
         <div
           aria-hidden
