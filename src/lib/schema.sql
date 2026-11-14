@@ -107,11 +107,26 @@ CREATE TABLE IF NOT EXISTS board_meetings (
   title               TEXT NOT NULL,
   scheduled_at        TIMESTAMPTZ NOT NULL,
   zoom_url            TEXT,
-  notes               TEXT
+  notes               TEXT,
+
+  status              TEXT NOT NULL DEFAULT 'scheduled' CHECK (status IN ('scheduled', 'live', 'completed', 'cancelled')),
+
+  reminder_24h_sent_at TIMESTAMPTZ,
+  reminder_1h_sent_at  TIMESTAMPTZ
 );
 
 -- zoom_url was originally NOT NULL — relax it for existing databases too.
 ALTER TABLE board_meetings ALTER COLUMN zoom_url DROP NOT NULL;
+
+-- Existing databases predate these columns.
+ALTER TABLE board_meetings ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'scheduled';
+ALTER TABLE board_meetings ADD COLUMN IF NOT EXISTS reminder_24h_sent_at TIMESTAMPTZ;
+ALTER TABLE board_meetings ADD COLUMN IF NOT EXISTS reminder_1h_sent_at TIMESTAMPTZ;
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'board_meetings_status_check') THEN
+    ALTER TABLE board_meetings ADD CONSTRAINT board_meetings_status_check CHECK (status IN ('scheduled', 'live', 'completed', 'cancelled'));
+  END IF;
+END $$;
 
 -- One row per completed Stripe Checkout session (one-time or the first
 -- payment of a recurring gift). Donor-level detail here is admin-only —
