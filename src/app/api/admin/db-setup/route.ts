@@ -11,6 +11,8 @@ const EXPECTED_TABLES = [
   "admin_users",
   "board_meetings",
   "donations",
+  "board_documents",
+  "board_document_acknowledgments",
 ];
 
 /** Owners can always use this; DB_SETUP_SECRET is an optional extra way in
