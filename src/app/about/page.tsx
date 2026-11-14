@@ -101,14 +101,19 @@ export default function AboutPage() {
       {/* FOUNDER */}
       <section className="bg-white py-12 sm:py-16">
         <Container>
-          <div className="relative w-full overflow-hidden rounded-2xl" style={{ aspectRatio: "2000 / 714" }}>
-            <Image
-              src="/brand/sections/founder-story-banner.webp"
-              alt="Founder's Message: Founder Story. Stellar Sports Academy was founded to give young athletes the same access to training, academic support, and mentorship that too many communities go without — and to make sure sports become a launchpad for life, not just a season. Justin Woodall, Founder & President."
-              fill
-              sizes="(min-width: 1280px) 1280px, 100vw"
-              className="object-cover object-center"
-            />
+          <div className="overflow-x-auto sm:overflow-visible">
+            <div
+              className="relative min-w-[720px] overflow-hidden rounded-2xl sm:min-w-0 sm:w-full"
+              style={{ aspectRatio: "2000 / 714" }}
+            >
+              <Image
+                src="/brand/sections/founder-story-banner.webp"
+                alt="Founder's Message: Founder Story. Stellar Sports Academy was founded to give young athletes the same access to training, academic support, and mentorship that too many communities go without — and to make sure sports become a launchpad for life, not just a season. Justin Woodall, Founder & President."
+                fill
+                sizes="(min-width: 1280px) 1280px, 720px"
+                className="object-cover object-center"
+              />
+            </div>
           </div>
           <p className="mt-4 text-center text-sm italic text-ink/45">
             Full founder biography coming soon — this section will be updated with approved
