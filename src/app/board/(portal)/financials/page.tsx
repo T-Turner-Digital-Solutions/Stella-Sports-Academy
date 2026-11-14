@@ -41,12 +41,12 @@ export default async function BoardFinancialsPage() {
   );
 
   return (
-    <>
+    <Container>
       <PortalPageHero
         title="Financials"
         description="Track contributions, funding, and progress toward our long-term goals."
       />
-      <Container className="py-8">
+      <div className="mt-6">
         <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
           <StatCard icon={Coins} label="Total Contributions" value={formatCurrency(allTimeRaised)} />
           <StatCard icon={Gift} label="Total Grants & Funding" value={formatCurrency(0)} />
@@ -60,14 +60,14 @@ export default async function BoardFinancialsPage() {
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100">
                 <TrendingUp className="h-4 w-4 text-blue-700" />
               </span>
-              <h2 className="font-portal-heading text-lg text-ink">5-Year Financial Plan &amp; Goals</h2>
+              <h2 className="font-semibold text-lg text-[#0b1f3a]">5-Year Financial Plan &amp; Goals</h2>
             </div>
             <p className="mt-1 text-sm text-ink/50">
               Annual contributions, grants, sponsorships, and total revenue goals for {years[0]?.year ?? currentYear}–
               {years[years.length - 1]?.year ?? currentYear}.
             </p>
 
-            <div className="mt-4 overflow-x-auto rounded-2xl border border-ink/10 bg-white shadow-sm">
+            <div className="mt-4 overflow-x-auto rounded-xl border border-ink/10 bg-white">
               <table className="w-full min-w-[640px] text-left text-sm">
                 <thead>
                   <tr className="bg-blue-900 text-xs font-bold uppercase tracking-wide text-white/80">
@@ -110,10 +110,10 @@ export default async function BoardFinancialsPage() {
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100">
                 <Target className="h-4 w-4 text-blue-700" />
               </span>
-              <h2 className="font-portal-heading text-lg text-ink">{currentYear} Goal Progress</h2>
+              <h2 className="font-semibold text-lg text-[#0b1f3a]">{currentYear} Goal Progress</h2>
             </div>
 
-            <div className="mt-4 flex flex-col gap-4 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm">
+            <div className="mt-4 flex flex-col gap-4 rounded-xl border border-ink/10 bg-white p-5">
               <div className="flex items-center justify-between">
                 <span className="flex items-center gap-2 text-sm font-medium text-ink/60">
                   <Coins className="h-4 w-4 text-blue-700" />
@@ -157,7 +157,7 @@ export default async function BoardFinancialsPage() {
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100">
                 <Link2 className="h-4 w-4 text-blue-700" />
               </span>
-              <h2 className="font-portal-heading text-lg text-ink">Connected Accounts</h2>
+              <h2 className="font-semibold text-lg text-[#0b1f3a]">Connected Accounts</h2>
             </div>
             <p className="mt-1 text-sm text-ink/50">Live totals from our donation platform.</p>
 
@@ -193,7 +193,7 @@ export default async function BoardFinancialsPage() {
             </div>
           </section>
         </div>
-      </Container>
-    </>
+      </div>
+    </Container>
   );
 }

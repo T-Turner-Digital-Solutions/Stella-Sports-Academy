@@ -38,8 +38,8 @@ export default async function BoardDocumentPage({ params }: { params: Promise<{ 
 
       <main className="flex-1 py-10">
         <Container className="max-w-4xl">
-          <div className="overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-sm">
-            <div className="flex flex-col gap-4 border-b border-ink/10 bg-ink p-6 text-white sm:flex-row sm:items-start sm:justify-between sm:p-8">
+          <div className="overflow-hidden rounded-xl border border-ink/10 bg-white">
+            <div className="flex flex-col gap-4 border-b border-ink/10 bg-[#0b1f3a] p-6 text-white sm:flex-row sm:items-start sm:justify-between sm:p-8">
               <div className="flex items-start gap-4">
                 <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-white/10">
                   <FileText className="h-6 w-6 text-white" />
@@ -48,7 +48,7 @@ export default async function BoardDocumentPage({ params }: { params: Promise<{ 
                   <p className="text-xs font-bold uppercase tracking-wide text-white/50">
                     {DOCUMENT_CATEGORY_LABELS[document.category]} &middot; Version {document.version}
                   </p>
-                  <h1 className="mt-1 font-display text-2xl uppercase tracking-wide text-white">
+                  <h1 className="mt-1 text-2xl font-semibold text-white">
                     {document.title}
                     {(!document.is_current || document.archived) && (
                       <span className="ml-3 rounded-full bg-white/10 px-2.5 py-1 text-xs font-semibold normal-case tracking-normal text-white/70">

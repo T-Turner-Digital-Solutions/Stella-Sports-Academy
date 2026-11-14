@@ -64,9 +64,9 @@ function SubmitSuggestionForm({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="fixed inset-0 z-30 flex items-center justify-center bg-ink/40 p-4">
-      <div className="w-full max-w-lg rounded-2xl bg-white p-6">
+      <div className="w-full max-w-lg rounded-xl bg-white p-6">
         <div className="flex items-center justify-between">
-          <h3 className="font-portal-heading text-lg text-ink">Submit a Suggestion</h3>
+          <h3 className="font-semibold text-lg text-[#0b1f3a]">Submit a Suggestion</h3>
           <button type="button" onClick={onClose} className="text-ink/40 hover:text-ink">
             <X className="h-5 w-5" />
           </button>
@@ -110,7 +110,7 @@ function SubmitSuggestionForm({ onClose }: { onClose: () => void }) {
           <button
             type="submit"
             disabled={status === "submitting"}
-            className="rounded-full bg-blue-700 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-800 hover:shadow-md disabled:opacity-50"
+            className="rounded-full bg-blue-700 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-800 disabled:opacity-50"
           >
             {status === "submitting" ? "Submitting…" : "Submit Suggestion"}
           </button>
@@ -137,21 +137,21 @@ export function BoardSuggestions({ suggestions, isOwner }: { suggestions: BoardS
   }
 
   return (
-    <div className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm">
+    <div className="rounded-xl border border-ink/10 bg-white p-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex items-center gap-2.5">
           <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
             <Lightbulb className="h-4 w-4 text-blue-700" />
           </span>
           <div>
-            <h2 className="font-portal-heading text-lg text-ink">Board Suggestions</h2>
+            <h2 className="font-semibold text-lg text-[#0b1f3a]">Board Suggestions</h2>
             <p className="text-sm text-ink/50">Share ideas, improvements, and opportunities for the academy.</p>
           </div>
         </div>
         <button
           type="button"
           onClick={() => setShowForm(true)}
-          className="flex flex-shrink-0 items-center gap-1.5 rounded-full bg-blue-700 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-800 hover:shadow-md"
+          className="flex flex-shrink-0 items-center gap-1.5 rounded-full bg-blue-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-800"
         >
           <Plus className="h-4 w-4" />
           Submit a Suggestion

@@ -16,14 +16,14 @@ export default async function BoardCorporateRecordsPage() {
   const acknowledgedIds = dbReady && session ? await listAcknowledgedDocumentIds(session.id) : [];
 
   return (
-    <>
+    <Container>
       <PortalPageHero
         title="Corporate Records"
         description="Official organizational records, governing documents, and compliance filings."
       />
-      <Container className="py-8">
+      <div className="mt-6">
         <CorporateRecordsBrowser documents={documents} acknowledgedIds={acknowledgedIds} />
-      </Container>
-    </>
+      </div>
+    </Container>
   );
 }

@@ -20,12 +20,12 @@ export default async function BoardOperationsPage() {
   const openSuggestions = suggestions.filter((s) => s.status !== "completed" && s.status !== "declined").length;
 
   return (
-    <>
+    <Container>
       <PortalPageHero
         title="Board Operations"
         description="Manage board activities, committee work, operational tasks, and continuous improvement."
       />
-      <Container className="py-8">
+      <div className="mt-6">
         <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
           <StatCard icon={ClipboardList} label="Open Tasks" value={0} />
           <StatCard icon={Users} label="Active Committees" value={0} />
@@ -40,11 +40,11 @@ export default async function BoardOperationsPage() {
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100">
               <Users className="h-4 w-4 text-blue-700" />
             </span>
-            <h2 className="font-portal-heading text-lg text-ink">Board Directory</h2>
+            <h2 className="font-semibold text-lg text-[#0b1f3a]">Board Directory</h2>
           </div>
           <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
             {leadership.map((leader) => (
-              <div key={leader.name} className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm">
+              <div key={leader.name} className="rounded-xl border border-ink/10 bg-white p-5">
                 <p className="font-semibold text-ink">{leader.name}</p>
                 <p className="mt-0.5 text-sm text-ink/60">{leader.roleLabel}</p>
               </div>
@@ -55,19 +55,19 @@ export default async function BoardOperationsPage() {
         <section className="mt-8">
           <Link
             href="/admin/change-password"
-            className="group flex items-center gap-4 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
+            className="group flex items-center gap-4 rounded-xl border border-ink/10 bg-white p-5 transition-colors hover:border-blue-200"
           >
             <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
               <KeyRound className="h-5 w-5 text-blue-700" />
             </span>
             <div className="flex-1">
-              <p className="font-portal-heading text-base text-ink">Account Settings</p>
+              <p className="font-semibold text-base text-[#0b1f3a]">Account Settings</p>
               <p className="mt-0.5 text-sm text-ink/60">Update your name and password.</p>
             </div>
             <ArrowRight className="h-4 w-4 text-ink/40 transition-transform group-hover:translate-x-1" />
           </Link>
         </section>
-      </Container>
-    </>
+      </div>
+    </Container>
   );
 }

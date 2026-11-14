@@ -44,7 +44,7 @@ export function EmailDocumentButton({ documentId }: { documentId: string }) {
   return (
     <div className="absolute right-0 top-full z-10 mt-2 w-80 rounded-xl border border-ink/10 bg-white p-4 text-left shadow-lg">
       <div className="flex items-center justify-between">
-        <p className="font-display text-sm uppercase tracking-wide text-ink">Email Document</p>
+        <p className="text-sm font-semibold text-[#0b1f3a]">Email Document</p>
         <button type="button" onClick={() => setOpen(false)} aria-label="Close" className="text-ink/40 hover:text-ink">
           <X className="h-4 w-4" />
         </button>

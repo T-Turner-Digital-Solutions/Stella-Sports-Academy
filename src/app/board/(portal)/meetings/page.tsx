@@ -27,13 +27,13 @@ export default async function BoardMeetingsPage() {
   const past = all.filter((m) => !upcoming.some((u) => u.id === m.id));
 
   return (
-    <>
+    <Container>
       <PortalPageHero
         title="Board Meetings"
         description="Schedule, attend, and review board meetings, agendas, and minutes."
         badge={nextMeeting ? "Upcoming" : undefined}
       />
-      <Container className="py-8">
+      <div className="mt-6">
       {/* NEXT MEETING */}
       <div>
         {!dbReady || !nextMeeting ? (
@@ -44,12 +44,12 @@ export default async function BoardMeetingsPage() {
             description="The next board meeting will appear here once it's scheduled."
           />
         ) : (
-          <div className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm sm:p-8">
+          <div className="rounded-xl border border-ink/10 bg-white p-6 sm:p-8">
             <p className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-blue-700">
               <Video className="h-3.5 w-3.5" />
               Next Meeting
             </p>
-            <h2 className="font-portal-heading mt-2 text-2xl text-ink">{nextMeeting.title}</h2>
+            <h2 className="font-semibold mt-2 text-2xl text-[#0b1f3a]">{nextMeeting.title}</h2>
             <p className="mt-2 text-sm font-medium text-ink/60">{formatDateTime(nextMeeting.scheduled_at)}</p>
             {nextMeeting.notes && <p className="mt-3 max-w-2xl text-sm text-ink/60">{nextMeeting.notes}</p>}
             {nextMeeting.zoom_url ? (
@@ -57,7 +57,7 @@ export default async function BoardMeetingsPage() {
                 href={nextMeeting.zoom_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-5 inline-flex items-center gap-2 rounded-full bg-blue-700 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-800 hover:shadow-md"
+                className="mt-5 inline-flex items-center gap-2 rounded-full bg-blue-700 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-800"
               >
                 <Video className="h-4 w-4" />
                 Join Meeting
@@ -71,24 +71,24 @@ export default async function BoardMeetingsPage() {
 
       {/* AGENDA / MINUTES / ATTENDANCE / DOCUMENTS */}
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div id="agenda" className="flex items-center gap-4 rounded-2xl border-l-4 border-blue-700 bg-white p-5">
+        <div id="agenda" className="flex items-center gap-4 rounded-xl border-l-4 border-blue-700 bg-white p-5">
           <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-blue-50">
             <ClipboardList className="h-5 w-5 text-blue-700" />
           </span>
           <div className="flex-1">
-            <p className="font-portal-heading text-base text-ink">Meeting Agenda</p>
+            <p className="font-semibold text-base text-[#0b1f3a]">Meeting Agenda</p>
             <p className="mt-1 text-sm text-ink/60">
               {nextMeeting?.notes || "No agenda has been added for the next meeting yet."}
             </p>
           </div>
         </div>
 
-        <div id="attendance" className="flex items-center gap-4 rounded-2xl border-l-4 border-blue-700 bg-white p-5">
+        <div id="attendance" className="flex items-center gap-4 rounded-xl border-l-4 border-blue-700 bg-white p-5">
           <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-blue-50">
             <Users className="h-5 w-5 text-blue-700" />
           </span>
           <div className="flex-1">
-            <p className="font-portal-heading text-base text-ink">Attendance</p>
+            <p className="font-semibold text-base text-[#0b1f3a]">Attendance</p>
             <p className="mt-1 text-sm text-ink/60">
               Attendance is recorded by the board secretary after each meeting and will appear here.
             </p>
@@ -97,13 +97,13 @@ export default async function BoardMeetingsPage() {
 
         <Link
           href="/board/corporate-records"
-          className="group flex items-center gap-4 rounded-2xl border-l-4 border-blue-700 bg-white p-5 transition-shadow hover:shadow-md"
+          className="group flex items-center gap-4 rounded-xl border-l-4 border-blue-700 bg-white p-5 transition-shadow"
         >
           <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-blue-50">
             <FileSignature className="h-5 w-5 text-blue-700" />
           </span>
           <div className="flex-1">
-            <p className="font-portal-heading text-base text-ink">Meeting Minutes</p>
+            <p className="font-semibold text-base text-[#0b1f3a]">Meeting Minutes</p>
             <p className="mt-1 text-sm text-ink/60">Access approved meeting minutes, filed under Corporate Records.</p>
           </div>
           <ChevronRight className="h-4 w-4 flex-shrink-0 text-ink/30 transition-transform group-hover:translate-x-1" />
@@ -111,13 +111,13 @@ export default async function BoardMeetingsPage() {
 
         <Link
           href="/board/corporate-records"
-          className="group flex items-center gap-4 rounded-2xl border-l-4 border-blue-700 bg-white p-5 transition-shadow hover:shadow-md"
+          className="group flex items-center gap-4 rounded-xl border-l-4 border-blue-700 bg-white p-5 transition-shadow"
         >
           <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-blue-50">
             <FolderOpen className="h-5 w-5 text-blue-700" />
           </span>
           <div className="flex-1">
-            <p className="font-portal-heading text-base text-ink">Board Documents</p>
+            <p className="font-semibold text-base text-[#0b1f3a]">Board Documents</p>
             <p className="mt-1 text-sm text-ink/60">Access related documents and meeting materials.</p>
           </div>
           <ChevronRight className="h-4 w-4 flex-shrink-0 text-ink/30 transition-transform group-hover:translate-x-1" />
@@ -127,10 +127,10 @@ export default async function BoardMeetingsPage() {
       {/* OTHER UPCOMING */}
       {otherUpcoming.length > 0 && (
         <section className="mt-10">
-          <h2 className="font-portal-heading text-lg text-ink">Also Upcoming</h2>
+          <h2 className="font-semibold text-lg text-[#0b1f3a]">Also Upcoming</h2>
           <div className="mt-4 flex flex-col gap-3">
             {otherUpcoming.map((meeting) => (
-              <div key={meeting.id} className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm">
+              <div key={meeting.id} className="rounded-xl border border-ink/10 bg-white p-5">
                 <p className="font-semibold text-ink">{meeting.title}</p>
                 <p className="mt-1 text-sm text-ink/60">{formatDateTime(meeting.scheduled_at)}</p>
                 {meeting.notes && <p className="mt-2 text-sm text-ink/50">{meeting.notes}</p>}
@@ -142,7 +142,7 @@ export default async function BoardMeetingsPage() {
 
       {/* PAST MEETINGS */}
       <section className="mt-10">
-        <h2 className="font-portal-heading text-lg text-ink">Previous Meetings</h2>
+        <h2 className="font-semibold text-lg text-[#0b1f3a]">Previous Meetings</h2>
         <div className="mt-4">
           {past.length === 0 ? (
             <EmptyState
@@ -154,7 +154,7 @@ export default async function BoardMeetingsPage() {
           ) : (
             <div className="flex flex-col gap-3">
               {past.map((meeting) => (
-                <div key={meeting.id} className="rounded-2xl border border-ink/10 bg-paper-dim p-5">
+                <div key={meeting.id} className="rounded-xl border border-ink/10 bg-paper-dim p-5">
                   <p className="font-semibold text-ink">{meeting.title}</p>
                   <p className="mt-1 text-sm text-ink/60">{formatDateTime(meeting.scheduled_at)}</p>
                   {meeting.notes && <p className="mt-2 text-sm text-ink/50">{meeting.notes}</p>}
@@ -164,7 +164,7 @@ export default async function BoardMeetingsPage() {
           )}
         </div>
       </section>
-      </Container>
-    </>
+      </div>
+    </Container>
   );
 }

@@ -7,14 +7,14 @@ export const metadata: Metadata = { title: "Voting & Approvals" };
 
 export default function BoardVotingPage() {
   return (
-    <>
+    <Container>
       <PortalPageHero
         title="Voting & Approvals"
         description="Create, review, and vote on board actions, resolutions, and approvals."
       />
-      <Container className="py-8">
+      <div className="mt-6">
         <VotingBoard />
-      </Container>
-    </>
+      </div>
+    </Container>
   );
 }
