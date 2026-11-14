@@ -173,3 +173,29 @@ CREATE TABLE IF NOT EXISTS board_document_acknowledgments (
   acknowledged_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE (document_id, admin_user_id)
 );
+
+-- Fundraising GOALS by year and category — never actual money received.
+-- Actual contributions come from the donations table (Stripe); grants and
+-- sponsorships have no automated actuals source yet, so the Financials page
+-- shows those as not-yet-tracked rather than inventing a number. Owner-only
+-- to edit (see POST /api/admin/financial-goals); every board member can view.
+CREATE TABLE IF NOT EXISTS financial_goals (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  year                INTEGER NOT NULL,
+  category            TEXT NOT NULL CHECK (category IN ('contributions', 'grants', 'sponsorships', 'total_revenue')),
+  goal_cents          INTEGER NOT NULL DEFAULT 0,
+  updated_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_by          UUID REFERENCES admin_users(id) ON DELETE SET NULL,
+  UNIQUE (year, category)
+);
+
+-- Audit trail of goal edits — previous amount, new amount, who, and when.
+CREATE TABLE IF NOT EXISTS financial_goal_changes (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  year                INTEGER NOT NULL,
+  category            TEXT NOT NULL,
+  previous_cents      INTEGER NOT NULL,
+  new_cents           INTEGER NOT NULL,
+  changed_by          UUID REFERENCES admin_users(id) ON DELETE SET NULL
+);
