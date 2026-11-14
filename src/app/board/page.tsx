@@ -47,7 +47,7 @@ export default async function BoardPage() {
             className="flex items-center gap-1.5 text-sm font-medium text-ink/60 hover:text-ink"
           >
             <KeyRound className="h-4 w-4" />
-            Change Password
+            Account Settings
           </Link>
           <LogoutButton
             redirectTo="/board/login"

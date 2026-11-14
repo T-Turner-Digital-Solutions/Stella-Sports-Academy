@@ -16,7 +16,7 @@ const navItems = [
   { href: "/admin/board-meetings", label: "Board Meetings", icon: Video },
   { href: "/admin/documents", label: "Corporate Records", icon: FileText },
   { href: "/admin/team", label: "Board Members", icon: Users },
-  { href: "/admin/change-password", label: "Change Password", icon: KeyRound },
+  { href: "/admin/change-password", label: "Account Settings", icon: KeyRound },
 ];
 
 export function AdminSidebar() {

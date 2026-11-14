@@ -1,8 +1,9 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Archive, ExternalLink, RefreshCw } from "lucide-react";
+import { Archive, Eye, RefreshCw } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { DOCUMENT_CATEGORY_LABELS, type BoardDocument } from "@/lib/board-documents-shared";
 
@@ -66,15 +67,13 @@ function DocumentRow({ document }: { document: BoardDocument }) {
           </p>
         </div>
         <div className="flex flex-shrink-0 items-center gap-2">
-          <a
-            href={`/api/board/documents/${document.id}/download`}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href={`/board/documents/${document.id}`}
             className="flex items-center gap-1.5 rounded-lg border border-ink/15 px-3 py-2 text-sm font-medium text-ink/70 transition-colors hover:bg-paper"
           >
-            <ExternalLink className="h-4 w-4" />
+            <Eye className="h-4 w-4" />
             View
-          </a>
+          </Link>
           {document.is_current && !document.archived && (
             <>
               <button
