@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { FileText } from "lucide-react";
 import { isDatabaseConfigured } from "@/lib/db";
-import { listAllBoardDocuments } from "@/lib/board-documents";
+import { listAllBoardDocuments, listAcknowledgmentsWithNames } from "@/lib/board-documents";
+import { listAdminUsers } from "@/lib/admin-users";
 import { getCurrentAdminSession } from "@/lib/auth";
 import { DbNotConfigured } from "@/components/admin/DbNotConfigured";
 import { DocumentUploadForm } from "@/components/admin/DocumentUploadForm";
-import { DocumentsList } from "@/components/admin/DocumentsList";
+import { DocumentsList, type DocumentAcknowledgment } from "@/components/admin/DocumentsList";
 import { EmptyState } from "@/components/ui/EmptyState";
 
 export const dynamic = "force-dynamic";
@@ -16,6 +17,17 @@ export default async function AdminDocumentsPage() {
   const session = await getCurrentAdminSession();
   const isOwner = session?.role === "owner";
   const documents = dbReady && isOwner ? await listAllBoardDocuments() : [];
+  const members = dbReady && isOwner ? await listAdminUsers() : [];
+  const activeMemberCount = members.filter((m) => m.active).length;
+
+  const acknowledgmentsByDocument: Record<string, DocumentAcknowledgment[]> = {};
+  if (dbReady && isOwner) {
+    for (const doc of documents) {
+      if (doc.is_current && !doc.archived) {
+        acknowledgmentsByDocument[doc.id] = await listAcknowledgmentsWithNames(doc.id);
+      }
+    }
+  }
 
   return (
     <div>
@@ -39,7 +51,11 @@ export default async function AdminDocumentsPage() {
             {documents.length === 0 ? (
               <EmptyState icon={FileText} title="No Records Yet" description="Documents you upload will appear here and on the board portal." />
             ) : (
-              <DocumentsList documents={documents} />
+              <DocumentsList
+                documents={documents}
+                activeMemberCount={activeMemberCount}
+                acknowledgmentsByDocument={acknowledgmentsByDocument}
+              />
             )}
           </>
         )}

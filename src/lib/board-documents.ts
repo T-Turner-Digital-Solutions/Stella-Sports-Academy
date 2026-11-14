@@ -45,6 +45,10 @@ export async function createBoardDocument(data: {
   fileBytes: ArrayBuffer;
   uploadedBy: string;
   replaceId?: string;
+  effectiveDate?: string;
+  allowPrint?: boolean;
+  allowDownload?: boolean;
+  allowEmail?: boolean;
 }) {
   const db = getDb();
   if (!db) return null;
@@ -69,8 +73,9 @@ export async function createBoardDocument(data: {
 
   const result = await db.query<BoardDocument>(
     `INSERT INTO board_documents
-       (category, title, description, blob_key, file_name, content_type, file_size_bytes, version, uploaded_by)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+       (category, title, description, blob_key, file_name, content_type, file_size_bytes, version, uploaded_by,
+        effective_date, allow_print, allow_download, allow_email)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, COALESCE($10, CURRENT_DATE), $11, $12, $13)
      RETURNING *`,
     [
       data.category,
@@ -82,9 +87,26 @@ export async function createBoardDocument(data: {
       data.fileBytes.byteLength,
       version,
       uploadedBy,
+      data.effectiveDate || null,
+      data.allowPrint ?? true,
+      data.allowDownload ?? true,
+      data.allowEmail ?? true,
     ]
   );
   return result.rows[0] ?? null;
+}
+
+export async function updateDocumentPermissions(
+  id: string,
+  permissions: { allowPrint: boolean; allowDownload: boolean; allowEmail: boolean }
+) {
+  const db = getDb();
+  if (!db) return false;
+  await db.query(
+    `UPDATE board_documents SET allow_print = $1, allow_download = $2, allow_email = $3 WHERE id = $4`,
+    [permissions.allowPrint, permissions.allowDownload, permissions.allowEmail, id]
+  );
+  return true;
 }
 
 export async function getBoardDocumentBytes(blobKey: string) {
@@ -136,6 +158,39 @@ export async function listAcknowledgmentsForDocument(documentId: string) {
     [documentId]
   );
   return result.rows;
+}
+
+/** Admin-facing acknowledgment tracking: who has acknowledged this document
+ * (by name) and when. */
+export async function listAcknowledgmentsWithNames(documentId: string) {
+  const db = getDb();
+  if (!db) return [];
+  const result = await db.query<{ name: string; email: string; acknowledged_at: string }>(
+    `SELECT u.name, u.email, a.acknowledged_at
+     FROM board_document_acknowledgments a
+     JOIN admin_users u ON u.id = a.admin_user_id
+     WHERE a.document_id = $1
+     ORDER BY a.acknowledged_at ASC`,
+    [documentId]
+  );
+  return result.rows;
+}
+
+export async function logDocumentEmail(data: {
+  documentId: string;
+  sentBy: string;
+  recipientEmail: string;
+  message?: string;
+}) {
+  const db = getDb();
+  if (!db) return false;
+  const sentBy = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(data.sentBy) ? data.sentBy : null;
+  await db.query(
+    `INSERT INTO board_document_email_log (document_id, sent_by, recipient_email, message)
+     VALUES ($1, $2, $3, $4)`,
+    [data.documentId, sentBy, data.recipientEmail, data.message || null]
+  );
+  return true;
 }
 
 /** Document ids the given member has NOT yet acknowledged, among current,

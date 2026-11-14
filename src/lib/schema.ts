@@ -157,8 +157,19 @@ CREATE TABLE IF NOT EXISTS board_documents (
 
   version             INTEGER NOT NULL DEFAULT 1,
   is_current          BOOLEAN NOT NULL DEFAULT true,
-  archived            BOOLEAN NOT NULL DEFAULT false
+  archived            BOOLEAN NOT NULL DEFAULT false,
+
+  effective_date      DATE NOT NULL DEFAULT CURRENT_DATE,
+  allow_print         BOOLEAN NOT NULL DEFAULT true,
+  allow_download      BOOLEAN NOT NULL DEFAULT true,
+  allow_email         BOOLEAN NOT NULL DEFAULT true
 );
+
+-- Existing databases predate these columns.
+ALTER TABLE board_documents ADD COLUMN IF NOT EXISTS effective_date DATE NOT NULL DEFAULT CURRENT_DATE;
+ALTER TABLE board_documents ADD COLUMN IF NOT EXISTS allow_print BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE board_documents ADD COLUMN IF NOT EXISTS allow_download BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE board_documents ADD COLUMN IF NOT EXISTS allow_email BOOLEAN NOT NULL DEFAULT true;
 
 -- One row per board member who has acknowledged a specific document
 -- version — acknowledging a new version does not carry over, since the
@@ -169,6 +180,18 @@ CREATE TABLE IF NOT EXISTS board_document_acknowledgments (
   admin_user_id       UUID NOT NULL REFERENCES admin_users(id) ON DELETE CASCADE,
   acknowledged_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE (document_id, admin_user_id)
+);
+
+-- Audit trail for "Email Document" — who sent it, to whom, and when. The
+-- recipient must be an active admin_users email (enforced in the API route,
+-- not here) so a document can never be emailed to an unauthorized address.
+CREATE TABLE IF NOT EXISTS board_document_email_log (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  document_id         UUID NOT NULL REFERENCES board_documents(id) ON DELETE CASCADE,
+  sent_by             UUID REFERENCES admin_users(id) ON DELETE SET NULL,
+  recipient_email     TEXT NOT NULL,
+  message             TEXT,
+  sent_at             TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 -- Fundraising GOALS by year and category — never actual money received.

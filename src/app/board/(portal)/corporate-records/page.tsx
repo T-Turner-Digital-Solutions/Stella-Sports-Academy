@@ -5,7 +5,7 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { isDatabaseConfigured } from "@/lib/db";
 import { getCurrentAdminSession } from "@/lib/auth";
 import { listCurrentBoardDocuments, listAcknowledgedDocumentIds } from "@/lib/board-documents";
-import { BoardDocumentsList } from "@/components/board/BoardDocumentsList";
+import { CorporateRecordsBrowser } from "@/components/board/CorporateRecordsBrowser";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Corporate Records" };
@@ -19,17 +19,17 @@ export default async function BoardCorporateRecordsPage() {
   return (
     <Container>
       <h1 className="font-display text-2xl uppercase tracking-wide text-ink">Corporate Records</h1>
-      <p className="mt-1 text-sm text-ink/60">Official record book, bylaws, and governance documents.</p>
+      <p className="mt-1 text-sm text-ink/60">Official organizational records, governing documents, and compliance filings.</p>
 
       <div className="mt-8">
         {!dbReady || documents.length === 0 ? (
           <EmptyState
             icon={FileText}
-            title="No Records Yet"
-            description="Governance documents the owner uploads will appear here for you to view and acknowledge."
+            title="No Records Available"
+            description="Corporate records will appear here once they are uploaded and approved."
           />
         ) : (
-          <BoardDocumentsList documents={documents} acknowledgedIds={acknowledgedIds} />
+          <CorporateRecordsBrowser documents={documents} acknowledgedIds={acknowledgedIds} />
         )}
       </div>
     </Container>

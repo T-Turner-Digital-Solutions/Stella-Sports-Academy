@@ -22,11 +22,24 @@ const CATEGORIES = [
   "other",
 ] as const satisfies readonly DocumentCategory[];
 
+const boolField = z
+  .union([z.literal("true"), z.literal("false"), z.undefined(), z.null()])
+  .transform((v) => v === "true");
+
 const uploadFieldsSchema = z.object({
   category: z.enum(CATEGORIES),
   title: z.string().trim().min(1, "Title is required").max(200),
   description: z.string().trim().max(2000).optional(),
   replaceId: z.string().uuid().optional(),
+  effectiveDate: z
+    .string()
+    .trim()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Enter a valid date.")
+    .optional()
+    .or(z.literal("")),
+  allowPrint: boolField,
+  allowDownload: boolField,
+  allowEmail: boolField,
 });
 
 export async function POST(request: Request) {
@@ -63,6 +76,10 @@ export async function POST(request: Request) {
     title: form.get("title"),
     description: form.get("description") || undefined,
     replaceId: form.get("replaceId") || undefined,
+    effectiveDate: form.get("effectiveDate") || undefined,
+    allowPrint: form.get("allowPrint") || undefined,
+    allowDownload: form.get("allowDownload") || undefined,
+    allowEmail: form.get("allowEmail") || undefined,
   });
   if (!parsed.success) {
     return NextResponse.json({ message: parsed.error.issues[0]?.message || "Check the form and try again." }, { status: 400 });
@@ -85,6 +102,10 @@ export async function POST(request: Request) {
     fileBytes,
     uploadedBy: session.id,
     replaceId: parsed.data.replaceId,
+    effectiveDate: parsed.data.effectiveDate || undefined,
+    allowPrint: parsed.data.allowPrint,
+    allowDownload: parsed.data.allowDownload,
+    allowEmail: parsed.data.allowEmail,
   });
 
   if (!document) {
