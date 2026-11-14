@@ -1,4 +1,4 @@
-import { Logo } from "@/components/layout/Logo";
+import Image from "next/image";
 import { PortalUserMenu } from "@/components/board/PortalUserMenu";
 import { getCurrentAdminSession } from "@/lib/auth";
 
@@ -7,23 +7,18 @@ export async function PortalHeader() {
   const roleLabel = session?.role === "owner" ? "Administrator" : "Board Member";
 
   return (
-    <header className="relative overflow-hidden border-b border-ink/10 bg-white">
-      {/* Diagonal brand accent, top-right — black with a Capri Blue edge glow, matching the hero panels */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -right-10 -top-24 hidden h-40 w-32 bg-black sm:block"
-        style={{
-          clipPath: "polygon(60% 0, 100% 0, 40% 100%, 0 100%)",
-          boxShadow: "inset 6px 0 16px -4px rgba(0,191,255,0.6)",
-        }}
-      />
-      <div className="relative flex items-center justify-between px-5 py-4 sm:px-8">
-        <div className="flex items-center gap-4">
-          <Logo />
-          <span className="hidden h-6 w-px bg-ink/15 sm:block" />
-          <span className="font-portal-heading hidden text-base text-ink sm:block">Board Management Portal</span>
+    <header className="bg-[#0b1f3a]">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3 sm:px-8">
+        <div className="flex min-w-0 items-center gap-3">
+          <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-white/10">
+            <Image src="/brand/stella-mark.png" alt="" width={1514} height={730} className="h-6 w-auto" />
+          </span>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-bold uppercase tracking-wide text-white">Stellar Sports Academy</p>
+            <p className="truncate text-xs text-white/60">Board Management Portal</p>
+          </div>
         </div>
-        <PortalUserMenu roleLabel={roleLabel} />
+        <PortalUserMenu roleLabel={roleLabel} light />
       </div>
     </header>
   );

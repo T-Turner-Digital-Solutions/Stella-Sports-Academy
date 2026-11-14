@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import { LayoutGrid, FolderOpen, CalendarClock, BarChart3, CheckSquare, Users } from "lucide-react";
+import Link from "next/link";
+import { LayoutGrid, FolderOpen, CalendarClock, BarChart3, CheckSquare, Users, ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionTile } from "@/components/board/SectionTile";
 import { getCurrentAdminSession } from "@/lib/auth";
+import { isDatabaseConfigured } from "@/lib/db";
+import { listUpcomingBoardMeetings } from "@/lib/board-meetings";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Board Portal" };
@@ -47,62 +49,52 @@ const SECTIONS = [
   },
 ] as const;
 
+function formatDateTime(iso: string) {
+  return new Intl.DateTimeFormat("en-US", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: "America/Chicago",
+  }).format(new Date(iso));
+}
+
 export default async function BoardPortalHubPage() {
   const session = await getCurrentAdminSession();
+  const dbReady = isDatabaseConfigured();
+  const upcoming = dbReady ? await listUpcomingBoardMeetings() : [];
+  const nextMeeting = upcoming[0];
 
   return (
     <Container className="py-8">
-      <div className="relative grid grid-cols-1 items-center gap-6 overflow-hidden rounded-2xl border border-blue-100 bg-white px-6 py-10 shadow-sm sm:px-10 sm:py-14 lg:grid-cols-[1fr_auto]">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-y-0 right-0 hidden w-[56%] bg-black lg:block"
-          style={{ clipPath: "polygon(18% 0, 100% 0, 100% 100%, 0 100%)" }}
-        >
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(circle at 70% 50%, rgba(0,191,255,0.55), transparent 55%), radial-gradient(circle at 25% 15%, rgba(0,191,255,0.25), transparent 45%), linear-gradient(135deg, #000000 0%, #001824 55%, #00344a 100%)",
-            }}
-          />
-          <div
-            className="absolute inset-0 opacity-20"
-            style={{
-              backgroundImage: "radial-gradient(rgba(0,191,255,0.6) 1px, transparent 1.5px)",
-              backgroundSize: "18px 18px",
-            }}
-          />
-        </div>
-        <div className="relative">
-          <p className="text-xs font-bold uppercase tracking-widest text-blue-700">
-            Welcome{session?.name ? `, ${session.name}` : ""}
-          </p>
-          <h1 className="font-portal-heading mt-2 text-3xl text-ink sm:text-4xl">
-            Stellar Sports Academy
-            <br />
-            <span className="text-blue-700">Board Member Portal</span>
-          </h1>
-          <p className="mt-4 max-w-xl text-sm text-ink/60">
-            Everything you need to govern, collaborate, and support the academy.
-          </p>
-          <div className="mt-5 h-1 w-16 rounded-full bg-blue-700" />
-        </div>
-        <div aria-hidden className="relative hidden w-48 justify-self-center lg:block lg:justify-self-end">
-          <Image
-            src="/brand/stella-lockup.png"
-            alt=""
-            width={1514}
-            height={932}
-            className="h-auto w-full drop-shadow-[0_0_30px_rgba(0,191,255,0.55)]"
-          />
-        </div>
+      <div className="rounded-xl border border-ink/10 bg-white p-6 sm:p-8">
+        <p className="text-xs font-bold uppercase tracking-widest text-blue-700">
+          Welcome{session?.name ? `, ${session.name}` : ""}
+        </p>
+        <h1 className="mt-1.5 text-2xl font-bold text-[#0b1f3a] sm:text-3xl">Your Board Portal</h1>
+        <p className="mt-2 max-w-xl text-sm text-ink/60">
+          Everything you need to govern, collaborate, and support the academy.
+        </p>
       </div>
 
-      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {SECTIONS.map((section) => (
           <SectionTile key={section.href} {...section} />
         ))}
       </div>
+
+      <Link
+        href="/board/meetings"
+        className="mt-6 flex items-center justify-between gap-4 rounded-xl border border-blue-100 bg-blue-50 p-5 transition-colors hover:border-blue-200"
+      >
+        <div>
+          <p className="text-sm font-semibold text-[#0b1f3a]">Upcoming Meetings &amp; Reminders</p>
+          <p className="mt-0.5 text-sm text-ink/60">
+            {nextMeeting
+              ? `${nextMeeting.title} — ${formatDateTime(nextMeeting.scheduled_at)}`
+              : "Nothing scheduled right now."}
+          </p>
+        </div>
+        <ArrowRight className="h-4 w-4 flex-shrink-0 text-blue-700" />
+      </Link>
     </Container>
   );
 }

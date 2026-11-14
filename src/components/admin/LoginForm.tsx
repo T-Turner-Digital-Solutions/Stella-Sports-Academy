@@ -100,9 +100,11 @@ export function LoginForm({
         <FormStatus state={state} />
       </form>
       <p className="mt-4 text-center text-sm text-ink/60">
+        Already a member but haven&apos;t set a password yet?{" "}
         <Link href="/admin/forgot-password" className={`font-semibold hover:underline ${t.link}`}>
-          Forgot your password?
+          Set one here
         </Link>
+        .
       </p>
     </div>
   );
