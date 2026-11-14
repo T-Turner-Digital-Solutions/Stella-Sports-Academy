@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CalendarClock, Video, ClipboardList, FileSignature, Users, FolderOpen } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { PortalPageHero } from "@/components/board/PortalPageHero";
 import { isDatabaseConfigured } from "@/lib/db";
 import { listUpcomingBoardMeetings, listAllBoardMeetings } from "@/lib/board-meetings";
 
@@ -27,11 +28,13 @@ export default async function BoardMeetingsPage() {
 
   return (
     <Container>
-      <h1 className="font-display text-2xl uppercase tracking-wide text-ink">Board Meetings</h1>
-      <p className="mt-1 text-sm text-ink/60">Schedule, attend, and review board meetings, agendas, and minutes.</p>
+      <PortalPageHero
+        title="Board Meetings"
+        description="Schedule, attend, and review board meetings, agendas, and minutes."
+      />
 
       {/* NEXT MEETING */}
-      <div className="mt-8">
+      <div>
         {!dbReady || !nextMeeting ? (
           <EmptyState
             icon={CalendarClock}

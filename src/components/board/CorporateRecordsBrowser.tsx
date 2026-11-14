@@ -3,8 +3,9 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, FileText, FolderOpen, Search } from "lucide-react";
+import { CheckCircle2, FileText, FolderOpen, Scale, ShieldCheck, Gavel, Search } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import { StatCard } from "@/components/board/StatCard";
 import {
   DOCUMENT_CATEGORY_LABELS,
   RECORD_GROUP_LABELS,
@@ -63,14 +64,10 @@ export function CorporateRecordsBrowser({
   return (
     <div className="flex flex-col gap-6">
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        {(["all", "governance", "compliance", "resolutions"] as const).map((key) => (
-          <div key={key} className="rounded-2xl border border-ink/10 bg-white p-4">
-            <p className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-ink/50">
-              {key === "all" ? "Total Records" : RECORD_GROUP_LABELS[key]}
-            </p>
-            <p className="mt-1 font-display text-2xl text-ink">{key === "all" ? documents.length : countsByGroup[key]}</p>
-          </div>
-        ))}
+        <StatCard icon={FolderOpen} label="Total Records" value={documents.length} />
+        <StatCard icon={Scale} label={RECORD_GROUP_LABELS.governance} value={countsByGroup.governance} />
+        <StatCard icon={ShieldCheck} label={RECORD_GROUP_LABELS.compliance} value={countsByGroup.compliance} />
+        <StatCard icon={Gavel} label={RECORD_GROUP_LABELS.resolutions} value={countsByGroup.resolutions} />
       </div>
 
       {featured && (
