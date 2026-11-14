@@ -22,9 +22,8 @@ export function Logo({ light = false, className }: { light?: boolean; className?
         )}
       >
         Stellar
-        <span className={light ? "text-white" : "text-red-700"}> Sports</span>
         <br />
-        <span> Academy</span>
+        <span className={light ? "text-white" : "text-red-700"}>Sports Academy</span>
       </span>
     </Link>
   );

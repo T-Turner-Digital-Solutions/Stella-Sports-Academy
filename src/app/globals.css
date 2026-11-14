@@ -7,16 +7,17 @@
      bg-red-700 / text-red-700 etc. (Tailwind's "red" scale name, kept only
      because renaming would mean touching every component) resolves to a
      real shade of the brand's Capri Blue instead of the old hand-picked
-     #0066a8. CTA buttons stay on a darker step (700/800) rather than the
-     literal #00BFFF so white button text keeps enough contrast; icons,
-     badges, and small accents can use the lighter/brighter steps that sit
+     #0066a8. CTA buttons/active states stay one step darker than the
+     literal #00BFFF (700/600, not 500) so white button text keeps usable
+     contrast, but are tuned as bright as that still allows; icons, badges,
+     and small accents can use the lighter/brighter steps that sit even
      closer to the true brand color. */
   --color-ink: #333333;          /* charcoal grey — replaces black */
   --color-ink-soft: #4a4a4a;     /* lighter grey for hover states */
   --color-red-900: hsl(206 85% 10%);
   --color-red-800: hsl(200 95% 25%);
-  --color-red-700: hsl(198 100% 33%);   /* primary CTA */
-  --color-red-600: hsl(196 100% 41%);   /* hover */
+  --color-red-700: hsl(197 100% 38%);   /* primary CTA — brightened closer to the brand color */
+  --color-red-600: hsl(196 100% 45%);   /* hover */
   --color-red-500: hsl(195 100% 50%);   /* #00BFFF — exact brand Capri Blue */
   --color-red-400: hsl(195 100% 61%);
   --color-red-300: hsl(195 100% 73%);
@@ -38,8 +39,8 @@
   --color-blue-300: hsl(195 100% 73%);
   --color-blue-400: hsl(195 100% 61%);
   --color-blue-500: hsl(195 100% 50%);   /* #00BFFF — exact brand Capri Blue */
-  --color-blue-600: hsl(196 100% 41%);
-  --color-blue-700: hsl(198 100% 33%);
+  --color-blue-600: hsl(196 100% 45%);
+  --color-blue-700: hsl(197 100% 38%);
   --color-blue-800: hsl(200 95% 25%);
   --color-blue-900: hsl(203 90% 18%);
   --color-blue-950: hsl(206 85% 10%);
