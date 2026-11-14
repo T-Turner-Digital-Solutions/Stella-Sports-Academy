@@ -81,6 +81,13 @@ body {
   font-family: var(--font-display), var(--font-sans), sans-serif;
 }
 
+/* Board portal headlines only — the reference design uses a bold serif
+   typeface, distinct from the public site's condensed all-caps Anton. */
+.font-portal-heading {
+  font-family: var(--font-merriweather), var(--font-sans), serif;
+  font-weight: 900;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
