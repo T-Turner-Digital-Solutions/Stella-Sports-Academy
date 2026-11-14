@@ -6,6 +6,7 @@ import { SectionTile } from "@/components/board/SectionTile";
 import { getCurrentAdminSession } from "@/lib/auth";
 import { isDatabaseConfigured } from "@/lib/db";
 import { listUpcomingBoardMeetings } from "@/lib/board-meetings";
+import { findAdminUserById, firstName, formatPositionLabel } from "@/lib/admin-users";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Board Portal" };
@@ -62,14 +63,17 @@ export default async function BoardPortalHubPage() {
   const dbReady = isDatabaseConfigured();
   const upcoming = dbReady ? await listUpcomingBoardMeetings() : [];
   const nextMeeting = upcoming[0];
+  const member = dbReady && session ? await findAdminUserById(session.id) : null;
+  const positionLabel = member ? formatPositionLabel(member) : null;
 
   return (
     <Container className="py-8">
       <div className="rounded-xl border border-ink/10 bg-white p-6 sm:p-8">
-        <p className="text-xs font-bold uppercase tracking-widest text-blue-700">
-          Welcome{session?.name ? `, ${session.name}` : ""}
-        </p>
-        <h1 className="mt-1.5 text-2xl font-bold text-[#0b1f3a] sm:text-3xl">Your Board Portal</h1>
+        <p className="text-xs font-bold uppercase tracking-widest text-blue-700">Board Portal</p>
+        <h1 className="mt-1.5 text-2xl font-bold text-[#0b1f3a] sm:text-3xl">
+          Welcome{session?.name ? `, ${firstName(session.name)}` : ""}!
+        </h1>
+        {positionLabel && <p className="mt-1 text-sm font-semibold text-blue-700">{positionLabel}</p>}
         <p className="mt-2 max-w-xl text-sm text-ink/60">
           Everything you need to govern, collaborate, and support the academy.
         </p>

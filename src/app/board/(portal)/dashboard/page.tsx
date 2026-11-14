@@ -7,6 +7,7 @@ import { isDatabaseConfigured } from "@/lib/db";
 import { getCurrentAdminSession } from "@/lib/auth";
 import { listUpcomingBoardMeetings } from "@/lib/board-meetings";
 import { listCurrentBoardDocuments, listAcknowledgedDocumentIds } from "@/lib/board-documents";
+import { findAdminUserById, firstName, formatPositionLabel } from "@/lib/admin-users";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Dashboard" };
@@ -27,12 +28,15 @@ export default async function BoardDashboardPage() {
   const acknowledgedIds = dbReady && session ? await listAcknowledgedDocumentIds(session.id) : [];
   const pendingCount = documents.filter((d) => !acknowledgedIds.includes(d.id)).length;
   const nextMeeting = meetings[0];
+  const member = dbReady && session ? await findAdminUserById(session.id) : null;
+  const positionLabel = member ? formatPositionLabel(member) : null;
 
   return (
     <Container>
       <PortalPageHero
         eyebrow="Board Portal"
-        title={session?.name ? `Welcome, ${session.name}` : "Dashboard"}
+        title={session?.name ? `Welcome, ${firstName(session.name)}!` : "Dashboard"}
+        subtitle={positionLabel ?? undefined}
         description="Updates, action items, and key announcements."
       />
       <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">

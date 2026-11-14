@@ -1,6 +1,7 @@
 import { cn, formatDate } from "@/lib/utils";
 import type { AdminUserRecord } from "@/lib/admin-users";
 import { ToggleAdminActiveButton } from "@/components/admin/ToggleAdminActiveButton";
+import { EditTitleButton } from "@/components/admin/EditTitleButton";
 
 function memberStatus(user: AdminUserRecord) {
   if (!user.active) return { label: "Deactivated", className: "bg-ink/5 text-ink/40" };
@@ -25,6 +26,7 @@ export function TeamTable({
             <th className="px-5 py-3">Name</th>
             <th className="px-5 py-3">Email</th>
             <th className="px-5 py-3">Role</th>
+            <th className="px-5 py-3">Position</th>
             <th className="px-5 py-3">Status</th>
             <th className="px-5 py-3">Last Sign In</th>
             {canManage && <th className="px-5 py-3">&nbsp;</th>}
@@ -41,6 +43,13 @@ export function TeamTable({
                 </td>
                 <td className="px-5 py-4 text-ink/70">{member.email}</td>
                 <td className="px-5 py-4 text-ink/70 capitalize">{member.role}</td>
+                <td className="px-5 py-4 text-sm">
+                  {canManage ? (
+                    <EditTitleButton id={member.id} title={member.title} />
+                  ) : (
+                    member.title || <span className="text-ink/40">Not set</span>
+                  )}
+                </td>
                 <td className="px-5 py-4">
                   <span className={cn("inline-flex items-center rounded-full px-2.5 py-1 text-xs font-bold uppercase tracking-wide", status.className)}>
                     {status.label}

@@ -87,12 +87,19 @@ CREATE TABLE IF NOT EXISTS admin_users (
   email               TEXT UNIQUE NOT NULL,
   name                TEXT NOT NULL,
   role                TEXT NOT NULL DEFAULT 'member' CHECK (role IN ('owner', 'member')),
+  -- Official board position (e.g. "Vice President", "Treasurer"), set by an
+  -- owner from /admin/team. Shown on the board portal's personalized
+  -- welcome message. NULL until an owner sets it — never inferred by name.
+  title               TEXT,
   password_hash       TEXT,
   invite_token        TEXT UNIQUE,
   invite_expires_at   TIMESTAMPTZ,
   active              BOOLEAN NOT NULL DEFAULT true,
   last_login_at       TIMESTAMPTZ
 );
+
+-- title was added after some admin_users rows already existed.
+ALTER TABLE admin_users ADD COLUMN IF NOT EXISTS title TEXT;
 
 -- Board meetings and events. Any signed-in board member/admin account can
 -- add or remove one — this is a scheduling convenience, not an

@@ -9,12 +9,30 @@ export type AdminUserRecord = {
   email: string;
   name: string;
   role: AdminRole;
+  title: string | null;
   password_hash: string | null;
   invite_token: string | null;
   invite_expires_at: string | null;
   active: boolean;
   last_login_at: string | null;
 };
+
+/** First name only, for a friendly "Welcome, X!" greeting. */
+export function firstName(fullName: string) {
+  return fullName.trim().split(/\s+/)[0] ?? fullName;
+}
+
+/** The label shown under a board member's name on the portal — their real
+ * official position, set by an owner from /admin/team. Never guessed from
+ * a name; falls back to a generic label only when no title has been set
+ * yet. */
+export function formatPositionLabel(user: { role: AdminRole; title: string | null }) {
+  const title = user.title?.trim();
+  if (user.role === "owner") {
+    return title ? `Owner / Administrator • ${title}` : "Owner / Administrator";
+  }
+  return title || "Board Member";
+}
 
 const INVITE_DURATION = "7 days";
 const RESET_DURATION = "1 hour";
@@ -75,15 +93,15 @@ export async function createOwnerFromBootstrap(email: string, passwordHash: stri
   return result.rows[0] ?? null;
 }
 
-export async function createInvite(data: { email: string; name: string; role: AdminRole }) {
+export async function createInvite(data: { email: string; name: string; role: AdminRole; title?: string }) {
   const db = getDb();
   if (!db) return null;
   const token = crypto.randomBytes(24).toString("hex");
   const result = await db.query<AdminUserRecord>(
-    `INSERT INTO admin_users (email, name, role, invite_token, invite_expires_at, active)
-     VALUES ($1, $2, $3, $4, now() + interval '${INVITE_DURATION}', true)
+    `INSERT INTO admin_users (email, name, role, title, invite_token, invite_expires_at, active)
+     VALUES ($1, $2, $3, $4, $5, now() + interval '${INVITE_DURATION}', true)
      RETURNING *`,
-    [data.email.trim().toLowerCase(), data.name, data.role, token]
+    [data.email.trim().toLowerCase(), data.name, data.role, data.title?.trim() || null, token]
   );
   return result.rows[0] ?? null;
 }
@@ -128,6 +146,15 @@ export async function updateAdminUserName(id: string, name: string) {
   const db = getDb();
   if (!db) return false;
   await db.query(`UPDATE admin_users SET name = $1 WHERE id = $2`, [name, id]);
+  return true;
+}
+
+/** Owner-only — sets a board member's official position (e.g. "Secretary"),
+ * shown on their personalized portal welcome message. Pass null to clear it. */
+export async function updateAdminUserTitle(id: string, title: string | null) {
+  const db = getDb();
+  if (!db) return false;
+  await db.query(`UPDATE admin_users SET title = $1 WHERE id = $2`, [title?.trim() || null, id]);
   return true;
 }
 

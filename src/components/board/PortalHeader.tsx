@@ -1,10 +1,13 @@
 import Image from "next/image";
 import { PortalUserMenu } from "@/components/board/PortalUserMenu";
 import { getCurrentAdminSession } from "@/lib/auth";
+import { isDatabaseConfigured } from "@/lib/db";
+import { findAdminUserById, formatPositionLabel } from "@/lib/admin-users";
 
 export async function PortalHeader() {
   const session = await getCurrentAdminSession();
-  const roleLabel = session?.role === "owner" ? "Administrator" : "Board Member";
+  const member = isDatabaseConfigured() && session ? await findAdminUserById(session.id) : null;
+  const roleLabel = member ? formatPositionLabel(member) : session?.role === "owner" ? "Administrator" : "Board Member";
 
   return (
     <header className="bg-[#0b1f3a]">
