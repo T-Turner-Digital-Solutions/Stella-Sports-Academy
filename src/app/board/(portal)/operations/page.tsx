@@ -44,7 +44,7 @@ export default async function BoardOperationsPage() {
           </div>
           <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
             {leadership.map((leader) => (
-              <div key={leader.name} className="rounded-2xl border border-ink/10 bg-white p-5">
+              <div key={leader.name} className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm">
                 <p className="font-semibold text-ink">{leader.name}</p>
                 <p className="mt-0.5 text-sm text-ink/60">{leader.roleLabel}</p>
               </div>
@@ -55,7 +55,7 @@ export default async function BoardOperationsPage() {
         <section className="mt-8">
           <Link
             href="/admin/change-password"
-            className="group flex items-center gap-4 rounded-2xl border border-ink/10 bg-white p-5 transition-shadow hover:shadow-md"
+            className="group flex items-center gap-4 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
           >
             <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
               <KeyRound className="h-5 w-5 text-blue-700" />

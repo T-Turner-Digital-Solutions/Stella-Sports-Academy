@@ -52,15 +52,20 @@ export default async function BoardPortalHubPage() {
 
   return (
     <Container className="py-8">
-      <div className="relative grid grid-cols-1 items-center gap-6 overflow-hidden rounded-2xl border border-blue-100 bg-gradient-to-br from-white via-blue-50 to-blue-100 px-6 py-10 sm:px-10 sm:py-14 lg:grid-cols-[1fr_auto]">
+      <div className="relative grid grid-cols-1 items-center gap-6 overflow-hidden rounded-2xl border border-blue-100 bg-white px-6 py-10 shadow-sm sm:px-10 sm:py-14 lg:grid-cols-[1fr_auto]">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 opacity-50 sm:block"
-          style={{
-            background:
-              "radial-gradient(circle at 85% 20%, rgba(59,130,246,0.35), transparent 45%), radial-gradient(circle at 60% 70%, rgba(37,99,235,0.25), transparent 50%)",
-          }}
-        />
+          className="pointer-events-none absolute inset-y-0 right-0 hidden w-[56%] bg-gradient-to-br from-blue-500 via-blue-700 to-blue-900 lg:block"
+          style={{ clipPath: "polygon(18% 0, 100% 0, 100% 100%, 0 100%)" }}
+        >
+          <div
+            className="absolute inset-0 opacity-20"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.5), transparent 35%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.3), transparent 40%)",
+            }}
+          />
+        </div>
         <div className="relative">
           <p className="text-xs font-bold uppercase tracking-widest text-blue-700">
             Welcome{session?.name ? `, ${session.name}` : ""}
@@ -81,7 +86,7 @@ export default async function BoardPortalHubPage() {
             alt=""
             width={1514}
             height={932}
-            className="h-auto w-full drop-shadow-[0_0_30px_rgba(37,99,235,0.35)]"
+            className="h-auto w-full drop-shadow-[0_8px_20px_rgba(0,0,0,0.35)]"
           />
         </div>
       </div>

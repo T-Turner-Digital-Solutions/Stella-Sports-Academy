@@ -13,27 +13,34 @@ export function PortalPageHero({
   badge?: string;
 }) {
   return (
-    <div className="relative overflow-hidden border-b border-blue-100 bg-gradient-to-br from-white via-blue-50 to-blue-100">
+    <div className="relative overflow-hidden border-b border-blue-100 bg-white">
+      {/* Bold diagonal color panel standing in for photography — built from
+          real brand assets (the logo), not a placeholder or stock image. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 opacity-50 sm:block"
-        style={{
-          background:
-            "radial-gradient(circle at 85% 20%, rgba(59,130,246,0.35), transparent 45%), radial-gradient(circle at 60% 70%, rgba(37,99,235,0.25), transparent 50%)",
-        }}
-      />
-      <div aria-hidden className="pointer-events-none absolute inset-y-0 right-6 hidden w-40 items-center lg:flex xl:right-10 xl:w-48">
-        <Image
-          src="/brand/stella-lockup.png"
-          alt=""
-          width={1514}
-          height={932}
-          className="h-auto w-full drop-shadow-[0_0_30px_rgba(37,99,235,0.35)]"
+        className="pointer-events-none absolute inset-y-0 right-0 hidden w-[46%] bg-gradient-to-br from-blue-500 via-blue-700 to-blue-900 sm:block"
+        style={{ clipPath: "polygon(12% 0, 100% 0, 100% 100%, 0 100%)" }}
+      >
+        <div
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.5), transparent 35%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.3), transparent 40%)",
+          }}
         />
+        <div className="relative flex h-full items-center justify-end pr-8 lg:pr-14 xl:pr-20">
+          <Image
+            src="/brand/stella-lockup.png"
+            alt=""
+            width={1514}
+            height={932}
+            className="h-auto w-36 drop-shadow-[0_8px_20px_rgba(0,0,0,0.35)] lg:w-44 xl:w-52"
+          />
+        </div>
       </div>
 
       {badge && (
-        <span className="absolute right-5 top-6 z-10 hidden items-center gap-1.5 rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold text-blue-700 sm:right-8 sm:flex lg:right-10">
+        <span className="absolute right-5 top-6 z-10 hidden items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm sm:right-8 sm:flex lg:right-10">
           {badge}
         </span>
       )}

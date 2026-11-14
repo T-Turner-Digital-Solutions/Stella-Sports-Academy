@@ -110,7 +110,7 @@ function SubmitSuggestionForm({ onClose }: { onClose: () => void }) {
           <button
             type="submit"
             disabled={status === "submitting"}
-            className="rounded-full bg-blue-700 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-800 disabled:opacity-50"
+            className="rounded-full bg-blue-700 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-800 hover:shadow-md disabled:opacity-50"
           >
             {status === "submitting" ? "Submitting…" : "Submit Suggestion"}
           </button>
@@ -137,7 +137,7 @@ export function BoardSuggestions({ suggestions, isOwner }: { suggestions: BoardS
   }
 
   return (
-    <div className="rounded-2xl border border-ink/10 bg-white p-5">
+    <div className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex items-center gap-2.5">
           <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
@@ -151,7 +151,7 @@ export function BoardSuggestions({ suggestions, isOwner }: { suggestions: BoardS
         <button
           type="button"
           onClick={() => setShowForm(true)}
-          className="flex flex-shrink-0 items-center gap-1.5 rounded-full bg-blue-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-800"
+          className="flex flex-shrink-0 items-center gap-1.5 rounded-full bg-blue-700 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-800 hover:shadow-md"
         >
           <Plus className="h-4 w-4" />
           Submit a Suggestion

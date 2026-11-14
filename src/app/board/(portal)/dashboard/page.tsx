@@ -41,7 +41,7 @@ export default async function BoardDashboardPage() {
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <Link
           href="/board/meetings"
-          className="group flex flex-col gap-2 rounded-2xl border border-ink/10 bg-white p-6 transition-shadow hover:shadow-md"
+          className="group flex flex-col gap-2 rounded-2xl border border-ink/10 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
         >
           <div className="flex items-center justify-between">
             <span className="flex h-11 w-11 items-center justify-center rounded-full bg-blue-100">
@@ -62,7 +62,7 @@ export default async function BoardDashboardPage() {
 
         <Link
           href="/board/corporate-records"
-          className="group flex flex-col gap-2 rounded-2xl border border-ink/10 bg-white p-6 transition-shadow hover:shadow-md"
+          className="group flex flex-col gap-2 rounded-2xl border border-ink/10 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
         >
           <div className="flex items-center justify-between">
             <span className="flex h-11 w-11 items-center justify-center rounded-full bg-blue-100">

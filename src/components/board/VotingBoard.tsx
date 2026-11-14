@@ -79,7 +79,7 @@ export function VotingBoard() {
             />
           </div>
 
-          <div className="mt-4 overflow-x-auto rounded-2xl border border-ink/10 bg-white">
+          <div className="mt-4 overflow-x-auto rounded-2xl border border-ink/10 bg-white shadow-sm">
             <table className="w-full min-w-[640px] text-left text-sm">
               <thead>
                 <tr className="bg-blue-900 text-xs font-bold uppercase tracking-wide text-white/80">
@@ -107,7 +107,7 @@ export function VotingBoard() {
         </div>
 
         <div className="flex flex-col gap-4">
-          <div className="rounded-2xl border border-ink/10 bg-white p-5">
+          <div className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm">
             <div className="flex items-center gap-2.5">
               <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
                 <Plus className="h-4 w-4 text-blue-700" />
@@ -122,14 +122,14 @@ export function VotingBoard() {
                   "Setting this up safely needs your bylaws' quorum, voting eligibility, and approval rules first — tell Tabitha's team and we'll wire it up."
                 )
               }
-              className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-800"
+              className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-800 hover:shadow-md"
             >
               <Plus className="h-4 w-4" />
               Create Vote / Approval
             </button>
           </div>
 
-          <div className="rounded-2xl border border-ink/10 bg-white p-5">
+          <div className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm">
             <div className="flex items-center gap-2.5">
               <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
                 <Upload className="h-4 w-4 text-blue-700" />
@@ -149,7 +149,7 @@ export function VotingBoard() {
             </button>
           </div>
 
-          <div className="rounded-2xl border border-ink/10 bg-white p-5">
+          <div className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm">
             <div className="flex items-center gap-2.5">
               <Rocket className="h-4 w-4 text-blue-700" />
               <p className="font-portal-heading text-base text-ink">Quick Actions</p>

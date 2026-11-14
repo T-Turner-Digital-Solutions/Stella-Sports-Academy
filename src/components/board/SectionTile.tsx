@@ -15,7 +15,7 @@ export function SectionTile({
   return (
     <Link
       href={href}
-      className="group flex items-center gap-4 rounded-2xl border border-ink/10 bg-white p-5 transition-shadow hover:shadow-md"
+      className="group flex items-center gap-4 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
     >
       <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-blue-700">
         <Icon className="h-6 w-6 text-white" />

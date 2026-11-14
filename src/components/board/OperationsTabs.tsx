@@ -65,7 +65,7 @@ export function OperationsTabs({ suggestions, isOwner }: { suggestions: BoardSug
       <div className="mt-6">
         {active === "overview" && (
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <div className="rounded-2xl border border-ink/10 bg-white p-5">
+            <div className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm">
               <div className="flex items-center gap-2.5">
                 <span className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100">
                   <Target className="h-4 w-4 text-blue-700" />

@@ -67,7 +67,7 @@ export default async function BoardFinancialsPage() {
               {years[years.length - 1]?.year ?? currentYear}.
             </p>
 
-            <div className="mt-4 overflow-x-auto rounded-2xl border border-ink/10 bg-white">
+            <div className="mt-4 overflow-x-auto rounded-2xl border border-ink/10 bg-white shadow-sm">
               <table className="w-full min-w-[640px] text-left text-sm">
                 <thead>
                   <tr className="bg-blue-900 text-xs font-bold uppercase tracking-wide text-white/80">
@@ -113,7 +113,7 @@ export default async function BoardFinancialsPage() {
               <h2 className="font-portal-heading text-lg text-ink">{currentYear} Goal Progress</h2>
             </div>
 
-            <div className="mt-4 flex flex-col gap-4 rounded-2xl border border-ink/10 bg-white p-5">
+            <div className="mt-4 flex flex-col gap-4 rounded-2xl border border-ink/10 bg-white p-5 shadow-sm">
               <div className="flex items-center justify-between">
                 <span className="flex items-center gap-2 text-sm font-medium text-ink/60">
                   <Coins className="h-4 w-4 text-blue-700" />

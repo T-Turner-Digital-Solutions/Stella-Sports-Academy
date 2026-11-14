@@ -44,7 +44,7 @@ export default async function BoardMeetingsPage() {
             description="The next board meeting will appear here once it's scheduled."
           />
         ) : (
-          <div className="rounded-2xl border border-ink/10 bg-white p-6 sm:p-8">
+          <div className="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm sm:p-8">
             <p className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-blue-700">
               <Video className="h-3.5 w-3.5" />
               Next Meeting
@@ -57,7 +57,7 @@ export default async function BoardMeetingsPage() {
                 href={nextMeeting.zoom_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-5 inline-flex items-center gap-2 rounded-full bg-blue-700 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-800"
+                className="mt-5 inline-flex items-center gap-2 rounded-full bg-blue-700 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-800 hover:shadow-md"
               >
                 <Video className="h-4 w-4" />
                 Join Meeting
@@ -130,7 +130,7 @@ export default async function BoardMeetingsPage() {
           <h2 className="font-portal-heading text-lg text-ink">Also Upcoming</h2>
           <div className="mt-4 flex flex-col gap-3">
             {otherUpcoming.map((meeting) => (
-              <div key={meeting.id} className="rounded-2xl border border-ink/10 bg-white p-5">
+              <div key={meeting.id} className="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm">
                 <p className="font-semibold text-ink">{meeting.title}</p>
                 <p className="mt-1 text-sm text-ink/60">{formatDateTime(meeting.scheduled_at)}</p>
                 {meeting.notes && <p className="mt-2 text-sm text-ink/50">{meeting.notes}</p>}

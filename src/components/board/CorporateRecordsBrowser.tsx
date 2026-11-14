@@ -108,7 +108,7 @@ export function CorporateRecordsBrowser({
             </div>
           </div>
 
-          <div className="mt-4 overflow-x-auto rounded-2xl border border-ink/10 bg-white">
+          <div className="mt-4 overflow-x-auto rounded-2xl border border-ink/10 bg-white shadow-sm">
             <table className="w-full min-w-[640px] text-left text-sm">
               <thead>
                 <tr className="bg-blue-900 text-xs font-bold uppercase tracking-wide text-white/80">
@@ -145,7 +145,7 @@ export function CorporateRecordsBrowser({
                         <div className="flex items-center justify-end gap-2">
                           <Link
                             href={`/board/documents/${d.id}`}
-                            className="rounded-full bg-blue-700 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-blue-800"
+                            className="rounded-full bg-blue-700 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-blue-800 hover:shadow-md"
                           >
                             View
                           </Link>
