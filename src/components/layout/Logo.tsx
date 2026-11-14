@@ -23,8 +23,8 @@ export function Logo({ light = false, className }: { light?: boolean; className?
       >
         Stellar
         <span className={light ? "text-white" : "text-red-700"}> Sports</span>
-        <br className="hidden sm:block" />
-        <span className="hidden sm:inline"> Academy</span>
+        <br />
+        <span> Academy</span>
       </span>
     </Link>
   );

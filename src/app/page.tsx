@@ -97,14 +97,14 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="hidden items-center justify-center lg:flex">
+          <div className="flex items-center justify-center">
             <Image
               src="/brand/stella-lockup.png"
               alt={`${site.name} logo`}
               width={1514}
               height={932}
               priority
-              className="h-auto w-full max-w-lg drop-shadow-[0_0_50px_rgba(0,152,221,0.6)]"
+              className="h-auto w-full max-w-[260px] drop-shadow-[0_0_50px_rgba(0,152,221,0.6)] sm:max-w-sm lg:max-w-lg"
             />
           </div>
         </Container>
