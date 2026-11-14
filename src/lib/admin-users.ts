@@ -121,6 +121,16 @@ export async function touchLastLogin(id: string) {
   await db.query(`UPDATE admin_users SET last_login_at = now() WHERE id = $1`, [id]);
 }
 
+/** Self-service display-name update — the "Owner" bootstrap account
+ * especially starts with a placeholder name, and a board member should be
+ * able to correct it to their real name. */
+export async function updateAdminUserName(id: string, name: string) {
+  const db = getDb();
+  if (!db) return false;
+  await db.query(`UPDATE admin_users SET name = $1 WHERE id = $2`, [name, id]);
+  return true;
+}
+
 /** Used by the "change password" flow for a signed-in user who already
  * knows their current password. */
 export async function updateAdminUserPassword(id: string, passwordHash: string) {

@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, ExternalLink } from "lucide-react";
+import { CheckCircle2, FileText } from "lucide-react";
 import { DOCUMENT_CATEGORY_LABELS, type BoardDocument } from "@/lib/board-documents-shared";
 
 export function BoardDocumentsList({
@@ -36,15 +37,13 @@ export function BoardDocumentsList({
             {document.description && <p className="mt-1 text-sm text-ink/50">{document.description}</p>}
 
             <div className="mt-3 flex flex-wrap items-center gap-2.5">
-              <a
-                href={`/api/board/documents/${document.id}/download`}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href={`/board/documents/${document.id}`}
                 className="flex items-center gap-1.5 rounded-full bg-red-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-800"
               >
+                <FileText className="h-3.5 w-3.5" />
                 View Document
-                <ExternalLink className="h-3.5 w-3.5" />
-              </a>
+              </Link>
 
               {isAcknowledged ? (
                 <span className="flex items-center gap-1.5 text-sm font-medium text-ink/50">
