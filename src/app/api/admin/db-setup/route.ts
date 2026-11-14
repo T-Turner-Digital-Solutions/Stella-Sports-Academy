@@ -44,12 +44,21 @@ async function tableStatus() {
   const tables = Object.fromEntries(EXPECTED_TABLES.map((t) => [t, existing.has(t)]));
 
   let adminUserCount: number | null = null;
+  let titleColumnExists: boolean | null = null;
   if (existing.has("admin_users")) {
     const count = await db.query<{ count: string }>(`SELECT count(*) FROM admin_users`);
     adminUserCount = Number(count.rows[0]?.count ?? 0);
+
+    const column = await db.query<{ exists: boolean }>(
+      `SELECT EXISTS (
+         SELECT 1 FROM information_schema.columns
+         WHERE table_name = 'admin_users' AND column_name = 'title'
+       ) AS exists`
+    );
+    titleColumnExists = column.rows[0]?.exists ?? false;
   }
 
-  return { connected: true as const, tables, adminUserCount };
+  return { connected: true as const, tables, adminUserCount, titleColumnExists };
 }
 
 export async function GET(request: Request) {

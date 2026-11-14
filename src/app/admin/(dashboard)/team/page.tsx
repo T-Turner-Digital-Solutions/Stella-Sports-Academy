@@ -6,6 +6,7 @@ import { getCurrentAdminSession } from "@/lib/auth";
 import { DbNotConfigured } from "@/components/admin/DbNotConfigured";
 import { TeamTable } from "@/components/admin/TeamTable";
 import { InviteForm } from "@/components/admin/InviteForm";
+import { DbSetupPanel } from "@/components/admin/DbSetupPanel";
 import { EmptyState } from "@/components/ui/EmptyState";
 
 export const dynamic = "force-dynamic";
@@ -27,6 +28,7 @@ export default async function AdminTeamPage() {
           <DbNotConfigured />
         ) : (
           <>
+            {isOwner && <DbSetupPanel />}
             {isOwner && <InviteForm />}
             {members.length === 0 ? (
               <EmptyState icon={Users} title="No Board Members Yet" description="Board member accounts will appear here." />
