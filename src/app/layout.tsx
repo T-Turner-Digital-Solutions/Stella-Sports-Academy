@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Anton } from "next/font/google";
+import { Inter, Anton, Merriweather } from "next/font/google";
 import "./globals.css";
 import { SiteChrome } from "@/components/layout/SiteChrome";
 import { site } from "@/content/site";
@@ -14,6 +14,16 @@ const anton = Anton({
   variable: "--font-anton",
   subsets: ["latin"],
   weight: "400",
+  display: "swap",
+});
+
+// Board portal only — its reference design uses bold serif headlines
+// ("Board Meetings", "Financials"), distinct from the public site's
+// condensed all-caps Anton display font.
+const merriweather = Merriweather({
+  variable: "--font-merriweather",
+  subsets: ["latin"],
+  weight: ["700", "900"],
   display: "swap",
 });
 
@@ -50,7 +60,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${anton.variable} h-full scroll-smooth antialiased`}
+      className={`${inter.variable} ${anton.variable} ${merriweather.variable} h-full scroll-smooth antialiased`}
     >
       <body className="flex min-h-full flex-col bg-white text-ink">
         <a

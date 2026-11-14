@@ -38,8 +38,8 @@ export default async function BoardDocumentPage({ params }: { params: Promise<{ 
 
       <main className="flex-1 py-10">
         <Container className="max-w-4xl">
-          <div className="overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-sm">
-            <div className="flex flex-col gap-4 border-b border-ink/10 bg-ink p-6 text-white sm:flex-row sm:items-start sm:justify-between sm:p-8">
+          <div className="overflow-hidden rounded-xl border border-ink/10 bg-white">
+            <div className="flex flex-col gap-4 border-b border-ink/10 bg-[#0b1f3a] p-6 text-white sm:flex-row sm:items-start sm:justify-between sm:p-8">
               <div className="flex items-start gap-4">
                 <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-white/10">
                   <FileText className="h-6 w-6 text-white" />
@@ -48,7 +48,7 @@ export default async function BoardDocumentPage({ params }: { params: Promise<{ 
                   <p className="text-xs font-bold uppercase tracking-wide text-white/50">
                     {DOCUMENT_CATEGORY_LABELS[document.category]} &middot; Version {document.version}
                   </p>
-                  <h1 className="mt-1 font-display text-2xl uppercase tracking-wide text-white">
+                  <h1 className="mt-1 text-2xl font-semibold text-white">
                     {document.title}
                     {(!document.is_current || document.archived) && (
                       <span className="ml-3 rounded-full bg-white/10 px-2.5 py-1 text-xs font-semibold normal-case tracking-normal text-white/70">
@@ -75,10 +75,10 @@ export default async function BoardDocumentPage({ params }: { params: Promise<{ 
                   )}
                   {document.allow_print && (
                     <a
-                      href={`/api/board/documents/${document.id}/download`}
+                      href={`/api/board/documents/${document.id}/download#view=FitH&pagemode=none`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      title="Opens the full document in a new tab, where your browser's print dialog can print the whole document or just the pages you need"
+                      title="Opens the full document in a new tab at a readable size, where your browser's print dialog can print the whole document or just the pages you need"
                       className="flex items-center gap-1.5 rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10"
                     >
                       <Printer className="h-4 w-4" />
@@ -93,7 +93,11 @@ export default async function BoardDocumentPage({ params }: { params: Promise<{ 
 
             <div className="bg-paper-dim p-3 sm:p-5">
               <div className="overflow-hidden rounded-xl border border-ink/10 bg-white" style={{ height: "80vh" }}>
-                <iframe src={`/api/board/documents/${document.id}/download`} title={document.title} className="h-full w-full" />
+                <iframe
+                  src={`/api/board/documents/${document.id}/download#view=FitH&pagemode=none`}
+                  title={document.title}
+                  className="h-full w-full"
+                />
               </div>
             </div>
           </div>

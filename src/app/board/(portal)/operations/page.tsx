@@ -1,58 +1,73 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Users, KeyRound, ArrowRight } from "lucide-react";
+import { Users, KeyRound, ArrowRight, ClipboardList, CalendarDays, Lightbulb } from "lucide-react";
 import { Container } from "@/components/ui/Container";
-import { EmptyState } from "@/components/ui/EmptyState";
 import { PortalPageHero } from "@/components/board/PortalPageHero";
+import { StatCard } from "@/components/board/StatCard";
+import { OperationsTabs } from "@/components/board/OperationsTabs";
 import { leadership } from "@/content/leadership";
+import { isDatabaseConfigured } from "@/lib/db";
+import { getCurrentAdminSession } from "@/lib/auth";
+import { listBoardSuggestions } from "@/lib/board-suggestions";
 
+export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Board Operations" };
 
-export default function BoardOperationsPage() {
+export default async function BoardOperationsPage() {
+  const dbReady = isDatabaseConfigured();
+  const session = await getCurrentAdminSession();
+  const suggestions = dbReady ? await listBoardSuggestions() : [];
+  const openSuggestions = suggestions.filter((s) => s.status !== "completed" && s.status !== "declined").length;
+
   return (
     <Container>
-      <PortalPageHero title="Board Operations" description="Directory, tasks, committees, and policies." />
-
-      <section>
-        <div className="flex items-center gap-2.5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100">
-            <Users className="h-4 w-4 text-blue-700" />
-          </span>
-          <h2 className="font-display text-lg uppercase tracking-wide text-ink">Board Directory</h2>
+      <PortalPageHero
+        title="Board Operations"
+        description="Manage board activities, committee work, operational tasks, and continuous improvement."
+      />
+      <div className="mt-6">
+        <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <StatCard icon={ClipboardList} label="Open Tasks" value={0} />
+          <StatCard icon={Users} label="Active Committees" value={0} />
+          <StatCard icon={CalendarDays} label="Upcoming Events" value={0} />
+          <StatCard icon={Lightbulb} label="Suggestions" value={openSuggestions} />
         </div>
-        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {leadership.map((leader) => (
-            <div key={leader.name} className="rounded-2xl border border-ink/10 bg-white p-5">
-              <p className="font-semibold text-ink">{leader.name}</p>
-              <p className="mt-0.5 text-sm text-ink/60">{leader.roleLabel}</p>
-            </div>
-          ))}
-        </div>
-      </section>
 
-      <section className="mt-8">
-        <Link
-          href="/admin/change-password"
-          className="group flex items-center gap-4 rounded-2xl border border-ink/10 bg-white p-5 transition-shadow hover:shadow-md"
-        >
-          <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
-            <KeyRound className="h-5 w-5 text-blue-700" />
-          </span>
-          <div className="flex-1">
-            <p className="font-display text-base uppercase tracking-wide text-ink">Account Settings</p>
-            <p className="mt-0.5 text-sm text-ink/60">Update your name and password.</p>
+        <OperationsTabs suggestions={suggestions} isOwner={session?.role === "owner"} />
+
+        <section className="mt-8">
+          <div className="flex items-center gap-2.5">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100">
+              <Users className="h-4 w-4 text-blue-700" />
+            </span>
+            <h2 className="font-semibold text-lg text-[#0b1f3a]">Board Directory</h2>
           </div>
-          <ArrowRight className="h-4 w-4 text-ink/40 transition-transform group-hover:translate-x-1" />
-        </Link>
-      </section>
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {leadership.map((leader) => (
+              <div key={leader.name} className="rounded-xl border border-ink/10 bg-white p-5">
+                <p className="font-semibold text-ink">{leader.name}</p>
+                <p className="mt-0.5 text-sm text-ink/60">{leader.roleLabel}</p>
+              </div>
+            ))}
+          </div>
+        </section>
 
-      <section className="mt-8">
-        <EmptyState
-          icon={Users}
-          title="Committees, Tasks & Policies Coming Soon"
-          description="Committee assignments, task tracking, and confidentiality/conflict-of-interest acknowledgments will be added in a later stage of the portal."
-        />
-      </section>
+        <section className="mt-8">
+          <Link
+            href="/admin/change-password"
+            className="group flex items-center gap-4 rounded-xl border border-ink/10 bg-white p-5 transition-colors hover:border-blue-200"
+          >
+            <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
+              <KeyRound className="h-5 w-5 text-blue-700" />
+            </span>
+            <div className="flex-1">
+              <p className="font-semibold text-base text-[#0b1f3a]">Account Settings</p>
+              <p className="mt-0.5 text-sm text-ink/60">Update your name and password.</p>
+            </div>
+            <ArrowRight className="h-4 w-4 text-ink/40 transition-transform group-hover:translate-x-1" />
+          </Link>
+        </section>
+      </div>
     </Container>
   );
 }

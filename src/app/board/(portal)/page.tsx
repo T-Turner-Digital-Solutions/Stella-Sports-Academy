@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import { LayoutGrid, FolderOpen, CalendarClock, BarChart3, CheckSquare, Users } from "lucide-react";
+import Link from "next/link";
+import { LayoutGrid, FolderOpen, CalendarClock, BarChart3, CheckSquare, Users, ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionTile } from "@/components/board/SectionTile";
 import { getCurrentAdminSession } from "@/lib/auth";
+import { isDatabaseConfigured } from "@/lib/db";
+import { listUpcomingBoardMeetings } from "@/lib/board-meetings";
+import { findAdminUserById, firstName, formatPositionLabel } from "@/lib/admin-users";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Board Portal" };
@@ -47,41 +50,55 @@ const SECTIONS = [
   },
 ] as const;
 
+function formatDateTime(iso: string) {
+  return new Intl.DateTimeFormat("en-US", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: "America/Chicago",
+  }).format(new Date(iso));
+}
+
 export default async function BoardPortalHubPage() {
   const session = await getCurrentAdminSession();
+  const dbReady = isDatabaseConfigured();
+  const upcoming = dbReady ? await listUpcomingBoardMeetings() : [];
+  const nextMeeting = upcoming[0];
+  const member = dbReady && session ? await findAdminUserById(session.id) : null;
+  const positionLabel = member ? formatPositionLabel(member) : null;
 
   return (
-    <Container>
-      <div className="grid grid-cols-1 items-center gap-6 overflow-hidden rounded-2xl bg-ink px-6 py-10 text-white sm:px-10 sm:py-14 lg:grid-cols-[1fr_auto]">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-widest text-blue-300">
-            Welcome{session?.name ? `, ${session.name}` : ""}
-          </p>
-          <h1 className="mt-2 font-display text-3xl uppercase tracking-wide text-white sm:text-4xl">
-            Stellar Sports Academy
-            <br />
-            <span className="text-blue-400">Board Member Portal</span>
-          </h1>
-          <p className="mt-4 max-w-xl text-sm text-white/60">
-            Everything you need to govern, collaborate, and support the academy.
-          </p>
-        </div>
-        <div aria-hidden className="hidden w-48 justify-self-center lg:block lg:justify-self-end">
-          <Image
-            src="/brand/stella-lockup.png"
-            alt=""
-            width={1514}
-            height={932}
-            className="h-auto w-full drop-shadow-[0_0_50px_rgba(0,152,221,0.6)]"
-          />
-        </div>
+    <Container className="py-8">
+      <div className="rounded-xl border border-ink/10 bg-white p-6 sm:p-8">
+        <p className="text-xs font-bold uppercase tracking-widest text-blue-700">Board Portal</p>
+        <h1 className="mt-1.5 text-2xl font-bold text-[#0b1f3a] sm:text-3xl">
+          Welcome{session?.name ? `, ${firstName(session.name)}` : ""}!
+        </h1>
+        {positionLabel && <p className="mt-1 text-sm font-semibold text-blue-700">{positionLabel}</p>}
+        <p className="mt-2 max-w-xl text-sm text-ink/60">
+          Everything you need to govern, collaborate, and support the academy.
+        </p>
       </div>
 
-      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {SECTIONS.map((section) => (
           <SectionTile key={section.href} {...section} />
         ))}
       </div>
+
+      <Link
+        href="/board/meetings"
+        className="mt-6 flex items-center justify-between gap-4 rounded-xl border border-blue-100 bg-blue-50 p-5 transition-colors hover:border-blue-200"
+      >
+        <div>
+          <p className="text-sm font-semibold text-[#0b1f3a]">Upcoming Meetings &amp; Reminders</p>
+          <p className="mt-0.5 text-sm text-ink/60">
+            {nextMeeting
+              ? `${nextMeeting.title} — ${formatDateTime(nextMeeting.scheduled_at)}`
+              : "Nothing scheduled right now."}
+          </p>
+        </div>
+        <ArrowRight className="h-4 w-4 flex-shrink-0 text-blue-700" />
+      </Link>
     </Container>
   );
 }

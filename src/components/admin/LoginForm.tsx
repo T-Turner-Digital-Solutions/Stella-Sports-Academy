@@ -6,18 +6,38 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ShieldCheck } from "lucide-react";
 import { Field, TextInput } from "@/components/forms/fields";
 import { FormStatus } from "@/components/forms/FormStatus";
-import { Button } from "@/components/ui/Button";
 import { postForm, type SubmitState } from "@/lib/forms-client";
+
+const THEMES = {
+  red: {
+    badge: "bg-red-100",
+    icon: "text-red-700",
+    heading: "font-display uppercase tracking-wide",
+    button: "bg-red-700 hover:bg-red-800",
+    link: "text-red-700",
+  },
+  blue: {
+    badge: "bg-blue-100",
+    icon: "text-blue-700",
+    heading: "font-portal-heading",
+    button: "bg-blue-700 hover:bg-blue-800",
+    link: "text-blue-700",
+  },
+} as const;
 
 export function LoginForm({
   heading = "Admin Sign In",
   description = "Stellar Sports Academy — internal review access only.",
   defaultRedirect = "/admin",
+  theme = "red",
 }: {
   heading?: string;
   description?: string;
   defaultRedirect?: string;
+  /** "blue" matches the board portal's branding; "red" matches the admin backend. */
+  theme?: "red" | "blue";
 }) {
+  const t = THEMES[theme];
   const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
@@ -42,10 +62,10 @@ export function LoginForm({
   return (
     <div className="mx-auto w-full max-w-sm">
       <div className="flex flex-col items-center gap-3 text-center">
-        <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
-          <ShieldCheck className="h-6 w-6 text-red-700" />
+        <span className={`flex h-12 w-12 items-center justify-center rounded-full ${t.badge}`}>
+          <ShieldCheck className={`h-6 w-6 ${t.icon}`} />
         </span>
-        <h1 className="font-display text-2xl uppercase tracking-wide text-ink">{heading}</h1>
+        <h1 className={`${t.heading} text-2xl text-ink`}>{heading}</h1>
         <p className="text-sm text-ink/60">{description}</p>
       </div>
 
@@ -70,15 +90,21 @@ export function LoginForm({
             onChange={(e) => setPassword(e.target.value)}
           />
         </Field>
-        <Button type="submit" size="md" disabled={state.status === "submitting"}>
+        <button
+          type="submit"
+          disabled={state.status === "submitting"}
+          className={`rounded-full px-6 py-3 text-sm font-semibold text-white transition-colors disabled:opacity-50 ${t.button}`}
+        >
           {state.status === "submitting" ? "Signing in…" : "Sign In"}
-        </Button>
+        </button>
         <FormStatus state={state} />
       </form>
       <p className="mt-4 text-center text-sm text-ink/60">
-        <Link href="/admin/forgot-password" className="font-semibold text-red-700 hover:underline">
-          Forgot your password?
+        Already a member but haven&apos;t set a password yet?{" "}
+        <Link href="/admin/forgot-password" className={`font-semibold hover:underline ${t.link}`}>
+          Set one here
         </Link>
+        .
       </p>
     </div>
   );

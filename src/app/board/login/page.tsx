@@ -12,6 +12,7 @@ export default function BoardLoginPage() {
           heading="Board Members Login"
           description="Stellar Sports Academy — private access for board members."
           defaultRedirect="/board"
+          theme="blue"
         />
       </Suspense>
     </div>

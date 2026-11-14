@@ -84,12 +84,19 @@ CREATE TABLE IF NOT EXISTS admin_users (
   email               TEXT UNIQUE NOT NULL,
   name                TEXT NOT NULL,
   role                TEXT NOT NULL DEFAULT 'member' CHECK (role IN ('owner', 'member')),
+  -- Official board position (e.g. "Vice President", "Treasurer"), set by an
+  -- owner from /admin/team. Shown on the board portal's personalized
+  -- welcome message. NULL until an owner sets it — never inferred by name.
+  title               TEXT,
   password_hash       TEXT,
   invite_token        TEXT UNIQUE,
   invite_expires_at   TIMESTAMPTZ,
   active              BOOLEAN NOT NULL DEFAULT true,
   last_login_at       TIMESTAMPTZ
 );
+
+-- title was added after some admin_users rows already existed.
+ALTER TABLE admin_users ADD COLUMN IF NOT EXISTS title TEXT;
 
 -- Board meetings and events. Any signed-in board member/admin account can
 -- add or remove one — this is a scheduling convenience, not an
@@ -104,11 +111,31 @@ CREATE TABLE IF NOT EXISTS board_meetings (
   title               TEXT NOT NULL,
   scheduled_at        TIMESTAMPTZ NOT NULL,
   zoom_url            TEXT,
-  notes               TEXT
+  notes               TEXT,
+
+  -- Manually controlled by an admin — never inferred from scheduled_at vs.
+  -- now(), per the board's explicit instruction not to fake a LIVE status
+  -- just because the scheduled time has arrived.
+  status              TEXT NOT NULL DEFAULT 'scheduled' CHECK (status IN ('scheduled', 'live', 'completed', 'cancelled')),
+
+  -- Set once each automatic reminder has actually been sent, so the
+  -- scheduled reminder function never double-sends.
+  reminder_24h_sent_at TIMESTAMPTZ,
+  reminder_1h_sent_at  TIMESTAMPTZ
 );
 
 -- zoom_url was originally NOT NULL — relax it for existing databases too.
 ALTER TABLE board_meetings ALTER COLUMN zoom_url DROP NOT NULL;
+
+-- Existing databases predate these columns.
+ALTER TABLE board_meetings ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'scheduled';
+ALTER TABLE board_meetings ADD COLUMN IF NOT EXISTS reminder_24h_sent_at TIMESTAMPTZ;
+ALTER TABLE board_meetings ADD COLUMN IF NOT EXISTS reminder_1h_sent_at TIMESTAMPTZ;
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'board_meetings_status_check') THEN
+    ALTER TABLE board_meetings ADD CONSTRAINT board_meetings_status_check CHECK (status IN ('scheduled', 'live', 'completed', 'cancelled'));
+  END IF;
+END $$;
 
 -- One row per completed Stripe Checkout session (one-time or the first
 -- payment of a recurring gift). Donor-level detail here is admin-only —
@@ -218,5 +245,20 @@ CREATE TABLE IF NOT EXISTS financial_goal_changes (
   previous_cents      INTEGER NOT NULL,
   new_cents           INTEGER NOT NULL,
   changed_by          UUID REFERENCES admin_users(id) ON DELETE SET NULL
+);
+
+-- Board Operations suggestion box. Any board member can submit; the owner
+-- reviews and moves status along. Starts empty — no sample ideas seeded.
+CREATE TABLE IF NOT EXISTS board_suggestions (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  created_by          UUID REFERENCES admin_users(id) ON DELETE SET NULL,
+  category            TEXT NOT NULL CHECK (category IN ('fundraising', 'programs', 'facilities', 'events', 'partnerships', 'other')),
+  title               TEXT NOT NULL,
+  description         TEXT NOT NULL,
+  status              TEXT NOT NULL DEFAULT 'submitted' CHECK (status IN ('submitted', 'under_review', 'approved', 'declined', 'in_progress', 'completed')),
+  admin_response      TEXT,
+  responded_by        UUID REFERENCES admin_users(id) ON DELETE SET NULL,
+  responded_at        TIMESTAMPTZ
 );
 `;
