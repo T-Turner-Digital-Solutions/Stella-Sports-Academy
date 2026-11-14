@@ -18,22 +18,28 @@ export function PortalPageHero({
           real brand assets (the logo), not a placeholder or stock image. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-y-0 right-0 hidden w-[46%] bg-gradient-to-br from-blue-500 via-blue-700 to-blue-950 sm:block"
+        className="pointer-events-none absolute inset-y-0 right-0 hidden w-[46%] bg-black sm:block"
         style={{ clipPath: "polygon(12% 0, 100% 0, 100% 100%, 0 100%)" }}
       >
-        {/* Dot-grid texture + light blooms, so the panel reads as a designed
-            surface rather than a flat color fill. */}
+        {/* Glowing brand-sheet treatment: near-black panel, Capri Blue light
+            blooming from behind the logo, like the official brand mockups. */}
         <div
-          className="absolute inset-0 opacity-25"
+          className="absolute inset-0"
           style={{
-            backgroundImage:
-              "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.55), transparent 35%), radial-gradient(circle at 80% 75%, rgba(255,255,255,0.3), transparent 40%), radial-gradient(rgba(255,255,255,0.5) 1px, transparent 1.5px)",
-            backgroundSize: "auto, auto, 18px 18px",
+            background:
+              "radial-gradient(circle at 78% 50%, rgba(0,191,255,0.55), transparent 55%), radial-gradient(circle at 30% 15%, rgba(0,191,255,0.25), transparent 45%), linear-gradient(135deg, #000000 0%, #001824 55%, #00344a 100%)",
           }}
         />
-        {/* A second, lighter diagonal stripe near the seam — echoes the header's two-tone accent. */}
         <div
-          className="absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-blue-300/70 to-transparent sm:w-14"
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage: "radial-gradient(rgba(0,191,255,0.6) 1px, transparent 1.5px)",
+            backgroundSize: "18px 18px",
+          }}
+        />
+        {/* A lighter diagonal light-streak near the seam — echoes the header's two-tone accent and the brand sheet's light trails. */}
+        <div
+          className="absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-blue-400/60 to-transparent sm:w-14"
           style={{ clipPath: "polygon(60% 0, 100% 0, 40% 100%, 0 100%)" }}
         />
         <div className="relative flex h-full items-center justify-end pr-8 lg:pr-14 xl:pr-20">
@@ -42,7 +48,7 @@ export function PortalPageHero({
             alt=""
             width={1514}
             height={932}
-            className="h-auto w-36 drop-shadow-[0_8px_20px_rgba(0,0,0,0.4)] lg:w-44 xl:w-52"
+            className="h-auto w-36 drop-shadow-[0_0_30px_rgba(0,191,255,0.55)] lg:w-44 xl:w-52"
           />
         </div>
       </div>

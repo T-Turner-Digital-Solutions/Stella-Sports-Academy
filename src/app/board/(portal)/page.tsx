@@ -55,14 +55,21 @@ export default async function BoardPortalHubPage() {
       <div className="relative grid grid-cols-1 items-center gap-6 overflow-hidden rounded-2xl border border-blue-100 bg-white px-6 py-10 shadow-sm sm:px-10 sm:py-14 lg:grid-cols-[1fr_auto]">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-y-0 right-0 hidden w-[56%] bg-gradient-to-br from-blue-500 via-blue-700 to-blue-900 lg:block"
+          className="pointer-events-none absolute inset-y-0 right-0 hidden w-[56%] bg-black lg:block"
           style={{ clipPath: "polygon(18% 0, 100% 0, 100% 100%, 0 100%)" }}
         >
           <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(circle at 70% 50%, rgba(0,191,255,0.55), transparent 55%), radial-gradient(circle at 25% 15%, rgba(0,191,255,0.25), transparent 45%), linear-gradient(135deg, #000000 0%, #001824 55%, #00344a 100%)",
+            }}
+          />
+          <div
             className="absolute inset-0 opacity-20"
             style={{
-              backgroundImage:
-                "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.5), transparent 35%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.3), transparent 40%)",
+              backgroundImage: "radial-gradient(rgba(0,191,255,0.6) 1px, transparent 1.5px)",
+              backgroundSize: "18px 18px",
             }}
           />
         </div>
@@ -86,7 +93,7 @@ export default async function BoardPortalHubPage() {
             alt=""
             width={1514}
             height={932}
-            className="h-auto w-full drop-shadow-[0_8px_20px_rgba(0,0,0,0.35)]"
+            className="h-auto w-full drop-shadow-[0_0_30px_rgba(0,191,255,0.55)]"
           />
         </div>
       </div>
