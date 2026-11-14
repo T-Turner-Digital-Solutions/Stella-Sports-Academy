@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Users, KeyRound, ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { PortalPageHero } from "@/components/board/PortalPageHero";
 import { leadership } from "@/content/leadership";
 
 export const metadata: Metadata = { title: "Board Operations" };
@@ -10,10 +11,9 @@ export const metadata: Metadata = { title: "Board Operations" };
 export default function BoardOperationsPage() {
   return (
     <Container>
-      <h1 className="font-display text-2xl uppercase tracking-wide text-ink">Board Operations</h1>
-      <p className="mt-1 text-sm text-ink/60">Directory, tasks, committees, and policies.</p>
+      <PortalPageHero title="Board Operations" description="Directory, tasks, committees, and policies." />
 
-      <section className="mt-8">
+      <section>
         <div className="flex items-center gap-2.5">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100">
             <Users className="h-4 w-4 text-blue-700" />

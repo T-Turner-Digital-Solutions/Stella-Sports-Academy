@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
-import { BarChart3, Coins, Target, Flag, TrendingUp } from "lucide-react";
+import { BarChart3, Coins, Target, Flag, TrendingUp, Gift } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { PortalPageHero } from "@/components/board/PortalPageHero";
+import { StatCard } from "@/components/board/StatCard";
 import { isDatabaseConfigured } from "@/lib/db";
 import { listFinancialGoalYears } from "@/lib/financial-goals";
 import { getDonationTotalsByYear } from "@/lib/donations";
@@ -25,14 +27,26 @@ export default async function BoardFinancialsPage() {
   const hasAnyGoals = years.some(
     (y) => y.contributions_cents || y.grants_cents || y.sponsorships_cents || y.total_revenue_cents
   );
+  const allTimeRaised = Object.values(actualsByYear).reduce((sum, c) => sum + c, 0);
 
   return (
     <Container>
-      <h1 className="font-display text-2xl uppercase tracking-wide text-ink">Financials</h1>
-      <p className="mt-1 text-sm text-ink/60">Track contributions, funding, and progress toward our long-term goals.</p>
+      <PortalPageHero
+        title="Financials"
+        description="Track contributions, funding, and progress toward our long-term goals."
+      />
+
+      {dbReady && (
+        <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <StatCard icon={Coins} label="Total Contributions" value={formatCurrency(allTimeRaised)} />
+          <StatCard icon={Gift} label={`${currentYear} Goal`} value={formatCurrency(currentYearGoals?.contributions_cents ?? 0)} />
+          <StatCard icon={Flag} label={`${currentYear} Raised`} value={formatCurrency(raisedToDate)} />
+          <StatCard icon={Target} label={`${currentYear} Progress`} value={`${progressPct}%`} />
+        </div>
+      )}
 
       {!dbReady || !hasAnyGoals ? (
-        <div className="mt-8">
+        <div>
           <EmptyState
             icon={BarChart3}
             title="No Goals Set Yet"
@@ -40,7 +54,7 @@ export default async function BoardFinancialsPage() {
           />
         </div>
       ) : (
-        <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr]">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr]">
           <section>
             <div className="flex items-center gap-2.5">
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100">

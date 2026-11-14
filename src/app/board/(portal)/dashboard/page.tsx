@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ClipboardList, FileText, CalendarClock, ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { PortalPageHero } from "@/components/board/PortalPageHero";
 import { isDatabaseConfigured } from "@/lib/db";
 import { getCurrentAdminSession } from "@/lib/auth";
 import { listUpcomingBoardMeetings } from "@/lib/board-meetings";
@@ -31,12 +32,13 @@ export default async function BoardDashboardPage() {
 
   return (
     <Container>
-      <h1 className="font-display text-2xl uppercase tracking-wide text-ink">
-        {session?.name ? `Welcome, ${session.name}` : "Dashboard"}
-      </h1>
-      <p className="mt-1 text-sm text-ink/60">Updates, action items, and key announcements.</p>
+      <PortalPageHero
+        eyebrow="Board Portal"
+        title={session?.name ? `Welcome, ${session.name}` : "Dashboard"}
+        description="Updates, action items, and key announcements."
+      />
 
-      <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <Link
           href="/board/meetings"
           className="group flex flex-col gap-2 rounded-2xl border border-ink/10 bg-white p-6 transition-shadow hover:shadow-md"
