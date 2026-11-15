@@ -112,13 +112,13 @@ export default async function BoardPortalHubPage() {
 
   return (
     <Container className="py-8">
-      <div className="rounded-xl border border-ink/10 bg-white p-6 sm:p-8">
-        <p className="text-xs font-bold uppercase tracking-widest text-blue-700">Board Portal</p>
-        <h1 className="mt-1.5 text-2xl font-bold text-[#0b1f3a] sm:text-3xl">
+      <div className="rounded-xl bg-[#0b1f3a] p-6 sm:p-8">
+        <p className="text-xs font-bold uppercase tracking-widest text-blue-300">Board Portal</p>
+        <h1 className="mt-1.5 text-2xl font-bold text-white sm:text-3xl">
           Welcome{session?.name ? `, ${firstName(session.name)}` : ""}!
         </h1>
-        {positionLabel && <p className="mt-1 text-sm font-semibold text-blue-700">{positionLabel}</p>}
-        <p className="mt-2 max-w-xl text-sm text-ink/60">
+        {positionLabel && <p className="mt-1 text-sm font-semibold text-blue-300">{positionLabel}</p>}
+        <p className="mt-2 max-w-xl text-sm text-white/70">
           Everything you need to govern, collaborate, and support the academy.
         </p>
       </div>
