@@ -48,6 +48,20 @@ export function MeetingForm({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    // A new meeting with no one specifically selected emails every active
+    // board member, real addresses included — require a deliberate,
+    // explicit confirmation so a quick test (or a forgotten click in the
+    // picker) can never notify the whole board by accident. Editing an
+    // already-scheduled meeting doesn't re-trigger this, since its
+    // audience was already confirmed when it was created.
+    if (!isEdit && inviteeIds.length === 0) {
+      const confirmed = window.confirm(
+        "No specific people are selected, so this will email the ENTIRE active board. Continue?"
+      );
+      if (!confirmed) return;
+    }
+
     setSaving(true);
     setError(null);
 
@@ -139,6 +153,11 @@ export function MeetingForm({
           )}
           <ChevronDown className="h-3.5 w-3.5" />
         </button>
+        {!isEdit && inviteeIds.length === 0 && (
+          <p className="mt-1.5 text-xs text-amber-700">
+            This will email every active board member — pick specific people above to notify only them.
+          </p>
+        )}
 
         {pickerOpen && (
           <div className="absolute left-0 top-full z-10 mt-2 w-64 rounded-xl border border-ink/10 bg-white p-2 shadow-lg">
