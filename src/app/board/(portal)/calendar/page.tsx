@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, CalendarClock } from "lucide-react";
+import { ChevronLeft, ChevronRight, CalendarClock, Video } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { PortalPageHero } from "@/components/board/PortalPageHero";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -153,16 +153,28 @@ export default async function BoardCalendarPage({
               />
             ) : (
               monthMeetings.map((meeting) => (
-                <Link
+                <div
                   key={meeting.id}
-                  href="/board/meetings"
                   className="rounded-xl border border-ink/10 bg-white p-4 transition-colors hover:border-blue-200"
                 >
-                  <p className="font-semibold text-sm text-[#0b1f3a]">{meeting.title}</p>
-                  <p className="mt-1 text-xs text-ink/50">
-                    {chicagoDateKey(meeting.scheduled_at)} at {formatTime(meeting.scheduled_at)}
-                  </p>
-                </Link>
+                  <Link href="/board/meetings" className="block">
+                    <p className="font-semibold text-sm text-[#0b1f3a]">{meeting.title}</p>
+                    <p className="mt-1 text-xs text-ink/50">
+                      {chicagoDateKey(meeting.scheduled_at)} at {formatTime(meeting.scheduled_at)}
+                    </p>
+                  </Link>
+                  {meeting.zoom_url && (
+                    <a
+                      href={meeting.zoom_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-blue-700 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-blue-800"
+                    >
+                      <Video className="h-3 w-3" />
+                      Join Meeting
+                    </a>
+                  )}
+                </div>
               ))
             )}
           </div>

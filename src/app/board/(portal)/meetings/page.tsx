@@ -176,6 +176,17 @@ export default async function BoardMeetingsPage() {
                   {inviteeLabel(meeting)}
                 </p>
                 {meeting.notes && <p className="mt-2 text-sm text-ink/50">{meeting.notes}</p>}
+                {meeting.zoom_url && (
+                  <a
+                    href={meeting.zoom_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-blue-700 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-blue-800"
+                  >
+                    <Video className="h-3.5 w-3.5" />
+                    Join Meeting
+                  </a>
+                )}
                 <MeetingCardActions meeting={meeting} members={members} />
               </div>
             ))}
