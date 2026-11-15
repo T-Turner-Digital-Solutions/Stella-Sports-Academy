@@ -272,15 +272,22 @@ CREATE TABLE IF NOT EXISTS board_notes (
   body                TEXT NOT NULL DEFAULT ''
 );
 
--- Shared board message board. Every signed-in board member/admin can read
--- and post; a message can be removed by its author or an owner. This is a
--- single shared channel (not private DMs) — see src/lib/board-messages.ts.
+-- Board message board. recipient_ids NULL means a broadcast to every
+-- signed-in board member/admin; a non-null array scopes the message to only
+-- those specific accounts (plus the sender) — a private message, not a
+-- public one. Visibility and delete permissions are enforced entirely in
+-- src/lib/board-messages.ts, never just in the UI, per the requirement that
+-- private messages be protected at the database/server level.
 CREATE TABLE IF NOT EXISTS board_messages (
   id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
   admin_user_id       UUID NOT NULL REFERENCES admin_users(id) ON DELETE CASCADE,
-  body                TEXT NOT NULL
+  body                TEXT NOT NULL,
+  recipient_ids       UUID[]
 );
+
+-- recipient_ids was added after some board_messages rows already existed.
+ALTER TABLE board_messages ADD COLUMN IF NOT EXISTS recipient_ids UUID[];
 
 -- Real votes/approvals and each member's individual response. Deliberately
 -- does NOT auto-compute pass/fail from quorum or threshold rules — those

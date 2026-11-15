@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { CalendarClock, FileCheck2, CalendarDays, Users, Video, ClipboardList, ArrowRight, CheckSquare } from "lucide-react";
+import { CalendarClock, FileCheck2, CalendarDays, Users, Video, ClipboardList, ArrowRight, CheckSquare, Lock } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { StatCard } from "@/components/board/StatCard";
 import { MiniBoardCalendar } from "@/components/board/MiniBoardCalendar";
@@ -10,7 +10,7 @@ import { getCurrentAdminSession } from "@/lib/auth";
 import { listUpcomingBoardMeetings, listAllBoardMeetings } from "@/lib/board-meetings";
 import { listCurrentBoardDocuments, listAcknowledgedDocumentIds } from "@/lib/board-documents";
 import { findAdminUserById, firstName, formatPositionLabel, listAdminUsers } from "@/lib/admin-users";
-import { listRecentMessages } from "@/lib/board-messages";
+import { listMessagesForUser } from "@/lib/board-messages";
 import { listAllVotes } from "@/lib/board-votes";
 import { formatRelativeDayTime, formatDate } from "@/lib/utils";
 
@@ -43,7 +43,7 @@ export default async function BoardDashboardPage() {
   const nextMeeting = upcoming[0];
   const member = dbReady && session ? await findAdminUserById(session.id) : null;
   const positionLabel = member ? formatPositionLabel(member) : null;
-  const recentMessages = dbReady ? await listRecentMessages(3) : [];
+  const recentMessages = dbReady && session ? await listMessagesForUser(session.id, 3) : [];
   const votes = dbReady ? await listAllVotes() : [];
   const pendingVotes = votes.filter((v) => v.status === "pending").slice(0, 3);
 
@@ -167,7 +167,10 @@ export default async function BoardDashboardPage() {
                   </span>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-baseline justify-between gap-2">
-                      <p className="truncate text-sm font-semibold text-[#0b1f3a]">{m.author_name}</p>
+                      <p className="flex items-center gap-1 truncate text-sm font-semibold text-[#0b1f3a]">
+                        {m.author_name}
+                        {m.recipient_ids !== null && <Lock className="h-3 w-3 flex-shrink-0 text-blue-700" />}
+                      </p>
                       <p className="flex-shrink-0 text-xs text-ink/40">{formatRelativeDayTime(m.created_at)}</p>
                     </div>
                     <p className="truncate text-sm text-ink/60">{m.body}</p>

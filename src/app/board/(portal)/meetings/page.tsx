@@ -7,6 +7,7 @@ import { PortalPageHero } from "@/components/board/PortalPageHero";
 import { isDatabaseConfigured } from "@/lib/db";
 import { listUpcomingBoardMeetings, listAllBoardMeetings } from "@/lib/board-meetings";
 import { MeetingLinkEditor } from "@/components/board/MeetingLinkEditor";
+import { CreateMeetingForm } from "@/components/board/CreateMeetingForm";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Board Meetings" };
@@ -35,8 +36,12 @@ export default async function BoardMeetingsPage() {
         badge={nextMeeting ? "Upcoming" : undefined}
       />
       <div className="mt-6">
+      <div className="flex justify-end">
+        <CreateMeetingForm />
+      </div>
+
       {/* NEXT MEETING */}
-      <div>
+      <div className="mt-4">
         {!dbReady || !nextMeeting ? (
           <EmptyState
             theme="blue"
