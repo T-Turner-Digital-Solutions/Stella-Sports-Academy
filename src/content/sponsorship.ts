@@ -78,6 +78,49 @@ export const sponsorshipTiers: SponsorshipTier[] = [
   },
 ];
 
+export type StellarNightsSponsorshipTier = {
+  level: string;
+  commitment: string;
+  recognition: string;
+};
+
+export const stellarNightsIntro = {
+  eventDate: "December 17, 2026",
+  heading: "Sponsor Stellar Nights on December 17, 2026, and invest in Stellar Sports Academy beyond the event.",
+  body: "Your support will help make this fundraising evening possible while advancing our state-of-the-art facility and youth programs. Each level combines event recognition with acknowledgment during the ongoing fundraising campaign.",
+};
+
+export const stellarNightsSponsorshipTiers: StellarNightsSponsorshipTier[] = [
+  {
+    level: "Team Player",
+    commitment: "$1,000",
+    recognition: "Name in the Stellar Nights sponsor listing and ongoing campaign sponsor acknowledgments.",
+  },
+  {
+    level: "Game Changer",
+    commitment: "$2,500",
+    recognition: "Name on event signage and campaign materials; acknowledgment at Stellar Nights and in campaign updates.",
+  },
+  {
+    level: "All-Star",
+    commitment: "$5,000",
+    recognition:
+      "Logo on event signage and campaign materials; acknowledgment at Stellar Nights, in campaign updates, and at the facility opening.",
+  },
+  {
+    level: "MVP",
+    commitment: "$10,000",
+    recognition:
+      "Prominent logo on event and campaign materials; verbal event recognition; dedicated campaign spotlight; facility opening acknowledgment.",
+  },
+  {
+    level: "Hall of Fame",
+    commitment: "$20,000+",
+    recognition:
+      "Premier logo on event and campaign materials; featured acknowledgment at Stellar Nights; dedicated campaign feature; facility opening recognition.",
+  },
+];
+
 export const athleteSponsorshipOptions = [
   {
     amount: "$25/month",
