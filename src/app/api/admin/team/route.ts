@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import bcrypt from "bcryptjs";
 import { getCurrentAdminSession } from "@/lib/auth";
 import { isDatabaseConfigured } from "@/lib/db";
 import {
@@ -8,6 +9,7 @@ import {
   updateAdminUserTitle,
   updateAdminUserEmail,
   resendInvite,
+  setAdminUserPasswordDirect,
 } from "@/lib/admin-users";
 import { sendConfirmationEmail, escapeHtml } from "@/lib/email";
 import { site } from "@/content/site";
@@ -17,6 +19,7 @@ const patchSchema = z.object({
   active: z.boolean().optional(),
   title: z.string().trim().max(100).optional(),
   email: z.string().trim().email().optional(),
+  password: z.string().min(8, "Password must be at least 8 characters.").optional(),
 });
 
 const resendSchema = z.object({
@@ -43,9 +46,15 @@ export async function PATCH(request: Request) {
   const parsed = patchSchema.safeParse(body);
   if (
     !parsed.success ||
-    (parsed.data.active === undefined && parsed.data.title === undefined && parsed.data.email === undefined)
+    (parsed.data.active === undefined &&
+      parsed.data.title === undefined &&
+      parsed.data.email === undefined &&
+      parsed.data.password === undefined)
   ) {
-    return NextResponse.json({ message: "Invalid request." }, { status: 400 });
+    return NextResponse.json(
+      { message: parsed.success ? "Invalid request." : parsed.error.issues[0]?.message || "Invalid request." },
+      { status: 400 }
+    );
   }
 
   if (parsed.data.id === session.id && parsed.data.active === false) {
@@ -68,6 +77,10 @@ export async function PATCH(request: Request) {
     if (!ok) {
       return NextResponse.json({ message: "That email is already in use by another account." }, { status: 409 });
     }
+  }
+  if (parsed.data.password !== undefined) {
+    const passwordHash = await bcrypt.hash(parsed.data.password, 10);
+    await setAdminUserPasswordDirect(parsed.data.id, passwordHash);
   }
 
   return NextResponse.json({ message: "Board member updated." });

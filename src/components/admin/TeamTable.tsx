@@ -4,6 +4,7 @@ import { ToggleAdminActiveButton } from "@/components/admin/ToggleAdminActiveBut
 import { EditTitleButton } from "@/components/admin/EditTitleButton";
 import { EditEmailButton } from "@/components/admin/EditEmailButton";
 import { ResendInviteButton } from "@/components/admin/ResendInviteButton";
+import { SetPasswordButton } from "@/components/admin/SetPasswordButton";
 
 function memberStatus(user: AdminUserRecord) {
   if (!user.active) return { label: "Deactivated", className: "bg-ink/5 text-ink/40" };
@@ -66,6 +67,7 @@ export function TeamTable({
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-4">
                       {!member.password_hash && member.active && <ResendInviteButton id={member.id} />}
+                      {member.id !== currentUserId && <SetPasswordButton id={member.id} name={member.name} />}
                       {member.id !== currentUserId && (
                         <ToggleAdminActiveButton id={member.id} active={member.active} />
                       )}
