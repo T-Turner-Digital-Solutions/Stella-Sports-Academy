@@ -42,16 +42,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Could not create the invite. Please try again." }, { status: 500 });
   }
 
-  const inviteUrl = `${site.url}/admin/accept-invite?token=${invite.invite_token}`;
+  const inviteUrl = `${site.url}/board/accept-invite?token=${invite.invite_token}`;
 
   await sendConfirmationEmail(
     invite.email,
-    `You're invited to ${site.name} admin`,
+    `You're invited to the ${site.name} Board Management Portal`,
     `<p>Hi ${escapeHtml(invite.name)},</p>
-     <p>${escapeHtml(session.name || "A board member")} invited you to the ${escapeHtml(site.name)} admin
-     section, where the board reviews athlete applications, volunteer sign-ups, sponsorship inquiries,
-     contact messages, and donations.</p>
-     <p><a href="${inviteUrl}">Set your password to accept the invite</a></p>
+     <p>${escapeHtml(session.name || "A board member")} invited you to the ${escapeHtml(site.name)} Board
+     Management Portal — meetings, corporate records, financials, notes, and messages for the board.</p>
+     <p><a href="${inviteUrl}">Set your password to activate your account</a></p>
      <p>This link expires in 7 days. If you weren't expecting this invite, you can ignore this email.</p>`
   );
 

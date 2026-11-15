@@ -103,11 +103,11 @@ export function Header() {
         <div className="flex items-center gap-2">
           <Link
             href="/board/login"
-            aria-label="Already a Member? Sign In"
+            aria-label="Board Member Login"
             className="flex items-center gap-1.5 rounded-full border border-red-700/30 px-3 py-2 text-xs font-semibold text-red-700 transition-colors hover:bg-red-100"
           >
             <ShieldCheck className="h-3.5 w-3.5 flex-shrink-0" />
-            <span className="hidden sm:inline">Already a Member? Sign In</span>
+            <span className="hidden sm:inline">Board Member Login</span>
           </Link>
           <Button href="/donate" variant="primary" size="md" className="hidden sm:inline-flex">
             Donate
@@ -143,7 +143,7 @@ export function Header() {
               className="flex items-center gap-2 border-b border-ink/10 py-3 text-base font-semibold text-red-700"
             >
               <ShieldCheck className="h-4 w-4" />
-              Already a Member? Sign In
+              Board Member Login
             </Link>
           </nav>
         </div>

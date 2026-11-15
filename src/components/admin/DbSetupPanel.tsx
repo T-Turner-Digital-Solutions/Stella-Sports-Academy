@@ -11,6 +11,8 @@ type Status = {
   notesReady?: boolean | null;
   messageThreadsReady?: boolean | null;
   minutesReady?: boolean | null;
+  suggestionsReady?: boolean | null;
+  votingReady?: boolean | null;
   message?: string;
 };
 
@@ -97,6 +99,12 @@ export function DbSetupPanel() {
           )}
           {status.minutesReady !== null && status.minutesReady !== undefined && (
             <StatusRow ok={status.minutesReady} label="Meeting minutes workflow ready" />
+          )}
+          {status.votingReady !== null && status.votingReady !== undefined && (
+            <StatusRow ok={status.votingReady} label="Voting & Approvals ready" />
+          )}
+          {status.suggestionsReady !== null && status.suggestionsReady !== undefined && (
+            <StatusRow ok={status.suggestionsReady} label="Board suggestions table ready" />
           )}
         </div>
       )}

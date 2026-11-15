@@ -5,10 +5,10 @@ import { Container } from "@/components/ui/Container";
 import { PortalPageHero } from "@/components/board/PortalPageHero";
 import { StatCard } from "@/components/board/StatCard";
 import { OperationsTabs } from "@/components/board/OperationsTabs";
-import { leadership } from "@/content/leadership";
 import { isDatabaseConfigured } from "@/lib/db";
 import { getCurrentAdminSession } from "@/lib/auth";
 import { listBoardSuggestions } from "@/lib/board-suggestions";
+import { listAdminUsers, formatPositionLabel } from "@/lib/admin-users";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Board Operations" };
@@ -18,6 +18,12 @@ export default async function BoardOperationsPage() {
   const session = await getCurrentAdminSession();
   const suggestions = dbReady ? await listBoardSuggestions() : [];
   const openSuggestions = suggestions.filter((s) => s.status !== "completed" && s.status !== "declined").length;
+  // Real approved accounts, not the static public-site leadership file —
+  // name and position only, nothing an active member couldn't already see
+  // about themselves and their fellow members. No add/invite/delete
+  // controls here; account management stays owner-only under Website
+  // Administration -> Board Members.
+  const members = dbReady ? (await listAdminUsers()).filter((m) => m.active) : [];
 
   return (
     <Container>
@@ -43,12 +49,16 @@ export default async function BoardOperationsPage() {
             <h2 className="font-semibold text-lg text-[#0b1f3a]">Board Directory</h2>
           </div>
           <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {leadership.map((leader) => (
-              <div key={leader.name} className="rounded-xl border border-ink/10 bg-white p-5">
-                <p className="font-semibold text-ink">{leader.name}</p>
-                <p className="mt-0.5 text-sm text-ink/60">{leader.roleLabel}</p>
-              </div>
-            ))}
+            {members.length === 0 ? (
+              <p className="text-sm text-ink/50">No active board member accounts yet.</p>
+            ) : (
+              members.map((member) => (
+                <div key={member.id} className="rounded-xl border border-ink/10 bg-white p-5">
+                  <p className="font-semibold text-ink">{member.name}</p>
+                  <p className="mt-0.5 text-sm text-ink/60">{formatPositionLabel(member)}</p>
+                </div>
+              ))
+            )}
           </div>
         </section>
 

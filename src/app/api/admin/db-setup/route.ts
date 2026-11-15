@@ -100,6 +100,8 @@ async function tableStatus() {
   const notesReady = tables.board_notes && columns["board_notes.shared_with"] && columns["board_notes.meeting_id"];
   const messageThreadsReady = tables.board_messages && columns["board_messages.parent_message_id"];
   const minutesReady = tables.board_meeting_minutes && tables.board_meeting_minutes_history;
+  const suggestionsReady = tables.board_suggestions;
+  const votingReady = tables.board_votes && tables.board_vote_responses;
 
   return {
     connected: true as const,
@@ -111,6 +113,8 @@ async function tableStatus() {
     notesReady,
     messageThreadsReady,
     minutesReady,
+    suggestionsReady,
+    votingReady,
   };
 }
 

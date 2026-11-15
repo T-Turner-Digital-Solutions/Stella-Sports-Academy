@@ -14,6 +14,14 @@ export type BoardMessage = {
   author_title: string | null;
 };
 
+// Postgres "undefined_column" (42703) or "undefined_table" (42P01) — see
+// the matching comment in @/lib/board-meetings for why this degrades
+// instead of failing the page.
+function isMigrationNotAppliedError(error: unknown): boolean {
+  if (!error || typeof error !== "object" || !("code" in error)) return false;
+  return error.code === "42703" || error.code === "42P01";
+}
+
 /** Every message a given member is allowed to see: every broadcast
  * (recipient_ids IS NULL) plus any private message where they're the
  * sender or a named recipient. This filter runs in SQL — never trust a
@@ -21,22 +29,28 @@ export type BoardMessage = {
 export async function listMessagesForUser(userId: string, limit = 50) {
   const db = getDb();
   if (!db) return [];
-  const result = await db.query<BoardMessage>(
-    `SELECT m.id, m.created_at, m.admin_user_id, m.body, m.recipient_ids, m.parent_message_id,
-            u.name AS author_name, u.role AS author_role, u.title AS author_title,
-            (
-              SELECT array_agg(ru.name ORDER BY ru.name)
-              FROM admin_users ru
-              WHERE ru.id = ANY(m.recipient_ids)
-            ) AS recipient_names
-     FROM board_messages m
-     JOIN admin_users u ON u.id = m.admin_user_id
-     WHERE m.recipient_ids IS NULL OR $1 = ANY(m.recipient_ids) OR m.admin_user_id = $1
-     ORDER BY m.created_at DESC
-     LIMIT $2`,
-    [userId, limit]
-  );
-  return result.rows;
+  try {
+    const result = await db.query<BoardMessage>(
+      `SELECT m.id, m.created_at, m.admin_user_id, m.body, m.recipient_ids, m.parent_message_id,
+              u.name AS author_name, u.role AS author_role, u.title AS author_title,
+              (
+                SELECT array_agg(ru.name ORDER BY ru.name)
+                FROM admin_users ru
+                WHERE ru.id = ANY(m.recipient_ids)
+              ) AS recipient_names
+       FROM board_messages m
+       JOIN admin_users u ON u.id = m.admin_user_id
+       WHERE m.recipient_ids IS NULL OR $1 = ANY(m.recipient_ids) OR m.admin_user_id = $1
+       ORDER BY m.created_at DESC
+       LIMIT $2`,
+      [userId, limit]
+    );
+    return result.rows;
+  } catch (error) {
+    if (!isMigrationNotAppliedError(error)) throw error;
+    console.error("[board-messages] Migration not applied yet — returning no messages instead of failing the page.");
+    return [];
+  }
 }
 
 /** recipientIds omitted/empty = broadcast to everyone, for a new top-level

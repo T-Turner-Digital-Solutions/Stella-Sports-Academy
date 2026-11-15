@@ -8,7 +8,7 @@ import { DbNotConfigured } from "@/components/admin/DbNotConfigured";
 import { formatCurrency } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Dashboard" };
+export const metadata: Metadata = { title: "Website Administration" };
 
 const cards = [
   { key: "applications", label: "Athlete Applications", href: "/admin/applications", icon: UserRound },
@@ -24,8 +24,11 @@ export default async function AdminDashboardPage() {
 
   return (
     <div>
-      <h1 className="font-display text-2xl uppercase tracking-wide text-ink">Dashboard</h1>
-      <p className="mt-1 text-sm text-ink/60">Review and manage everything submitted through the public site.</p>
+      <h1 className="font-display text-2xl uppercase tracking-wide text-ink">Website Administration</h1>
+      <p className="mt-1 text-sm text-ink/60">
+        Donations, applications, sponsorships, and contact submissions from the public site — separate from the
+        Board Management Portal.
+      </p>
 
       <div className="mt-8">
         {!dbReady ? (

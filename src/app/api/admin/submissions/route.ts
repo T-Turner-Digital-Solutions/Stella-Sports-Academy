@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { updateSubmissionStatus } from "@/lib/submissions";
+import { getCurrentAdminSession } from "@/lib/auth";
 
 const updateSchema = z.object({
   type: z.enum(["application", "volunteer", "sponsorship", "contact"]),
@@ -8,8 +9,15 @@ const updateSchema = z.object({
   status: z.enum(["new", "reviewed", "archived"]),
 });
 
-// Auth is enforced by middleware.ts for all /api/admin/* routes.
+// Session presence alone is enforced by proxy.ts for all /api/admin/* routes
+// — Website Administration itself is owner-only, so this re-checks role too,
+// the same way /api/admin/documents and /api/admin/financial-goals already do.
 export async function PATCH(request: Request) {
+  const session = await getCurrentAdminSession();
+  if (!session || session.role !== "owner") {
+    return NextResponse.json({ message: "Not authorized." }, { status: 403 });
+  }
+
   const body = await request.json().catch(() => null);
   const parsed = updateSchema.safeParse(body);
   if (!parsed.success) {

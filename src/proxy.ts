@@ -6,8 +6,8 @@ export async function proxy(request: NextRequest) {
 
   const isBoardArea = pathname.startsWith("/board");
   const isLoginPage = pathname === "/admin/login" || pathname === "/board/login";
-  const isAcceptInvitePage = pathname === "/admin/accept-invite";
-  const isForgotPasswordPage = pathname === "/admin/forgot-password";
+  const isAcceptInvitePage = pathname === "/admin/accept-invite" || pathname === "/board/accept-invite";
+  const isForgotPasswordPage = pathname === "/admin/forgot-password" || pathname === "/board/activate";
   const isLoginApi = pathname === "/api/admin/login";
   const isAcceptInviteApi = pathname === "/api/admin/accept-invite";
   const isForgotPasswordApi = pathname === "/api/admin/forgot-password";
@@ -16,7 +16,10 @@ export async function proxy(request: NextRequest) {
   // DATABASE_URL is first connected or rotated.
   const isDbSetupApi = pathname === "/api/admin/db-setup";
   const isApiRoute = pathname.startsWith("/api/admin/") || pathname.startsWith("/api/board/");
-  const defaultArea = isBoardArea ? "/board" : "/admin";
+  // The Board Portal is everyone's primary workspace — Website Administration
+  // is a secondary area reached from inside it, never a default landing spot,
+  // so an already-signed-in visitor hitting either login page lands there.
+  const defaultArea = "/board";
 
   if (isLoginApi || isAcceptInviteApi || isForgotPasswordApi || isDbSetupApi) {
     return NextResponse.next();

@@ -162,6 +162,27 @@ export async function recordMinutesDecision(
   return findMinutesForMeeting(minutes.meeting_id);
 }
 
+/** Every minutes record a given member can see — same visibility rule as
+ * the underlying meeting itself (board-wide, or restricted to the meeting's
+ * invitee list), since minutes can reference what was discussed in a
+ * restricted meeting. Powers the centralized Meeting Minutes library. */
+export async function listAllMinutesForUser(userId: string, isOwner: boolean) {
+  const db = getDb();
+  if (!db) return [];
+  const visibility = isOwner
+    ? "true"
+    : "(m.invitee_ids IS NULL OR $1 = ANY(m.invitee_ids) OR m.created_by = $1)";
+  const result = await db.query<BoardMeetingMinutes>(
+    `SELECT mm.*, m.title AS meeting_title, m.scheduled_at AS meeting_scheduled_at
+     FROM board_meeting_minutes mm
+     JOIN board_meetings m ON m.id = mm.meeting_id
+     WHERE ${visibility}
+     ORDER BY m.scheduled_at DESC`,
+    isOwner ? [] : [userId]
+  );
+  return result.rows;
+}
+
 export async function listMinutesHistory(minutesId: string) {
   const db = getDb();
   if (!db) return [];
