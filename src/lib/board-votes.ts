@@ -27,16 +27,30 @@ export type BoardVoteResponse = {
   responded_at: string;
 };
 
+// Postgres "undefined_column" (42703) or "undefined_table" (42P01) — see
+// the matching comment in @/lib/board-meetings for why this degrades
+// instead of failing the page.
+function isMigrationNotAppliedError(error: unknown): boolean {
+  if (!error || typeof error !== "object" || !("code" in error)) return false;
+  return error.code === "42703" || error.code === "42P01";
+}
+
 export async function listAllVotes() {
   const db = getDb();
   if (!db) return [];
-  const result = await db.query<BoardVote>(
-    `SELECT v.*, u.name AS creator_name
-     FROM board_votes v
-     LEFT JOIN admin_users u ON u.id = v.created_by
-     ORDER BY v.created_at DESC`
-  );
-  return result.rows;
+  try {
+    const result = await db.query<BoardVote>(
+      `SELECT v.*, u.name AS creator_name
+       FROM board_votes v
+       LEFT JOIN admin_users u ON u.id = v.created_by
+       ORDER BY v.created_at DESC`
+    );
+    return result.rows;
+  } catch (error) {
+    if (!isMigrationNotAppliedError(error)) throw error;
+    console.error("[board-votes] Migration not applied yet — returning no votes instead of failing the page.");
+    return [];
+  }
 }
 
 export async function listResponsesForVotes(voteIds: string[]) {

@@ -18,6 +18,18 @@ export type BoardMeeting = {
 
 const VISIBILITY_CLAUSE = `(invitee_ids IS NULL OR $1 = ANY(invitee_ids) OR created_by = $1)`;
 
+// Postgres "undefined_column" (42703) or "undefined_table" (42P01) —
+// thrown if this code runs against a database that hasn't had the
+// migration applied yet (missing status/invitee_ids, or the table itself).
+// Degrading to an empty list here, instead of letting the whole page 500,
+// is a deliberate stop-gap: it keeps /board and everything else that calls
+// these functions usable (just showing "nothing scheduled") until the
+// migration runs, rather than the entire portal going down over one query.
+function isMigrationNotAppliedError(error: unknown): boolean {
+  if (!error || typeof error !== "object" || !("code" in error)) return false;
+  return error.code === "42703" || error.code === "42P01";
+}
+
 /** Upcoming, non-cancelled meetings a given member can see — every
  * board-wide meeting, plus any invite-only meeting they were actually
  * invited to or created. isOwner bypasses the invite-list filter, since an
@@ -25,27 +37,39 @@ const VISIBILITY_CLAUSE = `(invitee_ids IS NULL OR $1 = ANY(invitee_ids) OR crea
 export async function listUpcomingBoardMeetingsForUser(userId: string, isOwner: boolean) {
   const db = getDb();
   if (!db) return [];
-  const result = await db.query<BoardMeeting>(
-    `SELECT * FROM board_meetings
-     WHERE scheduled_at >= now() AND status != 'cancelled'
-       AND (${isOwner ? "true" : VISIBILITY_CLAUSE})
-     ORDER BY scheduled_at ASC`,
-    isOwner ? [] : [userId]
-  );
-  return result.rows;
+  try {
+    const result = await db.query<BoardMeeting>(
+      `SELECT * FROM board_meetings
+       WHERE scheduled_at >= now() AND status != 'cancelled'
+         AND (${isOwner ? "true" : VISIBILITY_CLAUSE})
+       ORDER BY scheduled_at ASC`,
+      isOwner ? [] : [userId]
+    );
+    return result.rows;
+  } catch (error) {
+    if (!isMigrationNotAppliedError(error)) throw error;
+    console.error("[board-meetings] Migration not applied yet — returning no meetings instead of failing the page.");
+    return [];
+  }
 }
 
 /** Full history (including past and cancelled) a given member can see. */
 export async function listAllBoardMeetingsForUser(userId: string, isOwner: boolean) {
   const db = getDb();
   if (!db) return [];
-  const result = await db.query<BoardMeeting>(
-    `SELECT * FROM board_meetings
-     WHERE ${isOwner ? "true" : VISIBILITY_CLAUSE}
-     ORDER BY scheduled_at DESC`,
-    isOwner ? [] : [userId]
-  );
-  return result.rows;
+  try {
+    const result = await db.query<BoardMeeting>(
+      `SELECT * FROM board_meetings
+       WHERE ${isOwner ? "true" : VISIBILITY_CLAUSE}
+       ORDER BY scheduled_at DESC`,
+      isOwner ? [] : [userId]
+    );
+    return result.rows;
+  } catch (error) {
+    if (!isMigrationNotAppliedError(error)) throw error;
+    console.error("[board-meetings] Migration not applied yet — returning no meetings instead of failing the page.");
+    return [];
+  }
 }
 
 /** Internal/system use only (e.g. the reminder job) — every meeting,
