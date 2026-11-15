@@ -133,19 +133,20 @@ export default async function BoardPortalHubPage() {
             Everything you need to govern, collaborate, and support the academy.
           </p>
         </div>
-        <div className="hidden flex-shrink-0 flex-col items-center gap-1.5 sm:flex">
+        <div className="mr-4 hidden flex-shrink-0 flex-col items-center gap-2 sm:mr-10 sm:flex lg:mr-20">
           <Image
             src="/brand/stella-mark.png"
             alt=""
             aria-hidden
             width={1514}
             height={730}
-            className="h-12 w-auto drop-shadow-sm"
+            className="h-16 w-auto drop-shadow-sm"
           />
-          <p className="text-center font-display text-xs uppercase leading-tight tracking-wide text-white">
-            Stellar
-            <br />
-            Sports Academy
+          <p className="text-center leading-tight">
+            <span className="block font-display text-lg font-extrabold uppercase tracking-wide text-white">Stellar</span>
+            <span className="block text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-300">
+              Sports Academy
+            </span>
           </p>
         </div>
       </div>
