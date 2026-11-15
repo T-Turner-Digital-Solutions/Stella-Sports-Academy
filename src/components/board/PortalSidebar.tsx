@@ -16,6 +16,7 @@ import {
   Video,
   Settings,
   LayoutGrid,
+  FileSignature,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LogoutButton } from "@/components/admin/LogoutButton";
@@ -24,6 +25,7 @@ const navItems = [
   { href: "/board/dashboard", label: "Dashboard", icon: Home },
   { href: "/board/corporate-records", label: "Corporate Records", icon: FolderOpen },
   { href: "/board/meetings", label: "Board Meetings", icon: CalendarClock },
+  { href: "/board/minutes", label: "Meeting Minutes", icon: FileSignature },
   { href: "/board/financials", label: "Financials", icon: BarChart3 },
   { href: "/board/voting", label: "Voting & Approvals", icon: CheckSquare },
   { href: "/board/operations", label: "Board Operations", icon: Users },
