@@ -1,6 +1,7 @@
 import { getDb } from "@/lib/db";
 import { createBoardDocument } from "@/lib/board-documents";
 import { createVote, setVoteStatus } from "@/lib/board-votes";
+import { isMigrationNotAppliedError, MigrationNotAppliedError } from "@/lib/migration-guard";
 
 export type MinutesStatus = "draft" | "submitted" | "approved" | "rejected";
 
@@ -41,27 +42,41 @@ async function logHistory(minutesId: string, actorId: string | null, action: str
 export async function findMinutesForMeeting(meetingId: string) {
   const db = getDb();
   if (!db) return null;
-  const result = await db.query<BoardMeetingMinutes>(
-    `SELECT mm.*, m.title AS meeting_title, m.scheduled_at AS meeting_scheduled_at
-     FROM board_meeting_minutes mm
-     JOIN board_meetings m ON m.id = mm.meeting_id
-     WHERE mm.meeting_id = $1`,
-    [meetingId]
-  );
-  return result.rows[0] ?? null;
+  try {
+    const result = await db.query<BoardMeetingMinutes>(
+      `SELECT mm.*, m.title AS meeting_title, m.scheduled_at AS meeting_scheduled_at
+       FROM board_meeting_minutes mm
+       JOIN board_meetings m ON m.id = mm.meeting_id
+       WHERE mm.meeting_id = $1`,
+      [meetingId]
+    );
+    return result.rows[0] ?? null;
+  } catch (error) {
+    if (isMigrationNotAppliedError(error)) throw new MigrationNotAppliedError();
+    throw error;
+  }
 }
 
+/** Used only by the vote-decide cascade to check whether a vote has linked
+ * minutes — callers there should treat MigrationNotAppliedError as "no
+ * linked minutes" (null) rather than let it block deciding an unrelated
+ * vote; see the try/catch around this call in the votes API route. */
 export async function findMinutesByVoteId(voteId: string) {
   const db = getDb();
   if (!db) return null;
-  const result = await db.query<BoardMeetingMinutes>(
-    `SELECT mm.*, m.title AS meeting_title, m.scheduled_at AS meeting_scheduled_at
-     FROM board_meeting_minutes mm
-     JOIN board_meetings m ON m.id = mm.meeting_id
-     WHERE mm.vote_id = $1`,
-    [voteId]
-  );
-  return result.rows[0] ?? null;
+  try {
+    const result = await db.query<BoardMeetingMinutes>(
+      `SELECT mm.*, m.title AS meeting_title, m.scheduled_at AS meeting_scheduled_at
+       FROM board_meeting_minutes mm
+       JOIN board_meetings m ON m.id = mm.meeting_id
+       WHERE mm.vote_id = $1`,
+      [voteId]
+    );
+    return result.rows[0] ?? null;
+  } catch (error) {
+    if (isMigrationNotAppliedError(error)) throw new MigrationNotAppliedError();
+    throw error;
+  }
 }
 
 export async function getOrCreateDraft(meetingId: string, draftedBy: string) {
@@ -172,27 +187,37 @@ export async function listAllMinutesForUser(userId: string, isOwner: boolean) {
   const visibility = isOwner
     ? "true"
     : "(m.invitee_ids IS NULL OR $1 = ANY(m.invitee_ids) OR m.created_by = $1)";
-  const result = await db.query<BoardMeetingMinutes>(
-    `SELECT mm.*, m.title AS meeting_title, m.scheduled_at AS meeting_scheduled_at
-     FROM board_meeting_minutes mm
-     JOIN board_meetings m ON m.id = mm.meeting_id
-     WHERE ${visibility}
-     ORDER BY m.scheduled_at DESC`,
-    isOwner ? [] : [userId]
-  );
-  return result.rows;
+  try {
+    const result = await db.query<BoardMeetingMinutes>(
+      `SELECT mm.*, m.title AS meeting_title, m.scheduled_at AS meeting_scheduled_at
+       FROM board_meeting_minutes mm
+       JOIN board_meetings m ON m.id = mm.meeting_id
+       WHERE ${visibility}
+       ORDER BY m.scheduled_at DESC`,
+      isOwner ? [] : [userId]
+    );
+    return result.rows;
+  } catch (error) {
+    if (isMigrationNotAppliedError(error)) throw new MigrationNotAppliedError();
+    throw error;
+  }
 }
 
 export async function listMinutesHistory(minutesId: string) {
   const db = getDb();
   if (!db) return [];
-  const result = await db.query<MinutesHistoryEntry>(
-    `SELECT h.id, h.created_at, h.actor_id, u.name AS actor_name, h.action, h.note
-     FROM board_meeting_minutes_history h
-     LEFT JOIN admin_users u ON u.id = h.actor_id
-     WHERE h.minutes_id = $1
-     ORDER BY h.created_at ASC`,
-    [minutesId]
-  );
-  return result.rows;
+  try {
+    const result = await db.query<MinutesHistoryEntry>(
+      `SELECT h.id, h.created_at, h.actor_id, u.name AS actor_name, h.action, h.note
+       FROM board_meeting_minutes_history h
+       LEFT JOIN admin_users u ON u.id = h.actor_id
+       WHERE h.minutes_id = $1
+       ORDER BY h.created_at ASC`,
+      [minutesId]
+    );
+    return result.rows;
+  } catch (error) {
+    if (isMigrationNotAppliedError(error)) throw new MigrationNotAppliedError();
+    throw error;
+  }
 }

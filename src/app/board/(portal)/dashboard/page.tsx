@@ -7,12 +7,14 @@ import { StatCard } from "@/components/board/StatCard";
 import { MiniBoardCalendar } from "@/components/board/MiniBoardCalendar";
 import { isDatabaseConfigured } from "@/lib/db";
 import { getCurrentAdminSession } from "@/lib/auth";
-import { listUpcomingBoardMeetingsForUser, listAllBoardMeetingsForUser } from "@/lib/board-meetings";
+import { listUpcomingBoardMeetingsForUser, listAllBoardMeetingsForUser, type BoardMeeting } from "@/lib/board-meetings";
 import { listCurrentBoardDocuments, listAcknowledgedDocumentIds } from "@/lib/board-documents";
 import { findAdminUserById, firstName, formatPositionLabel, listAdminUsers } from "@/lib/admin-users";
 import { listMessagesForUser } from "@/lib/board-messages";
 import { listAllVotes } from "@/lib/board-votes";
 import { formatRelativeDayTime, formatDate } from "@/lib/utils";
+import { MigrationNotAppliedError } from "@/lib/migration-guard";
+import { MigrationPendingNotice } from "@/components/board/MigrationPendingNotice";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Dashboard" };
@@ -34,8 +36,18 @@ export default async function BoardDashboardPage() {
   const dbReady = isDatabaseConfigured();
   const session = await getCurrentAdminSession();
   const isOwner = session?.role === "owner";
-  const upcoming = dbReady && session ? await listUpcomingBoardMeetingsForUser(session.id, isOwner) : [];
-  const allMeetings = dbReady && session ? await listAllBoardMeetingsForUser(session.id, isOwner) : [];
+  let upcoming: BoardMeeting[] = [];
+  let allMeetings: BoardMeeting[] = [];
+  let meetingsUnavailable = false;
+  if (dbReady && session) {
+    try {
+      upcoming = await listUpcomingBoardMeetingsForUser(session.id, isOwner);
+      allMeetings = await listAllBoardMeetingsForUser(session.id, isOwner);
+    } catch (error) {
+      if (!(error instanceof MigrationNotAppliedError)) throw error;
+      meetingsUnavailable = true;
+    }
+  }
   const documents = dbReady ? await listCurrentBoardDocuments() : [];
   const acknowledgedIds = dbReady && session ? await listAcknowledgedDocumentIds(session.id) : [];
   const pendingDocs = documents.filter((d) => !acknowledgedIds.includes(d.id));
@@ -44,7 +56,16 @@ export default async function BoardDashboardPage() {
   const nextMeeting = upcoming[0];
   const member = dbReady && session ? await findAdminUserById(session.id) : null;
   const positionLabel = member ? formatPositionLabel(member) : null;
-  const recentMessages = dbReady && session ? await listMessagesForUser(session.id, 3) : [];
+  let recentMessages: Awaited<ReturnType<typeof listMessagesForUser>> = [];
+  let messagesUnavailable = false;
+  if (dbReady && session) {
+    try {
+      recentMessages = await listMessagesForUser(session.id, 3);
+    } catch (error) {
+      if (!(error instanceof MigrationNotAppliedError)) throw error;
+      messagesUnavailable = true;
+    }
+  }
   const votes = dbReady ? await listAllVotes() : [];
   const pendingVotes = votes.filter((v) => v.status === "pending").slice(0, 3);
 
@@ -72,14 +93,22 @@ export default async function BoardDashboardPage() {
         </div>
       </div>
 
+      {meetingsUnavailable && <div className="mt-6"><MigrationPendingNotice feature="Board Meetings" /></div>}
+
       <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
         <StatCard
           icon={CalendarClock}
           label="Next Meeting"
-          value={nextMeeting ? formatDateTime(nextMeeting.scheduled_at).split(",").slice(0, 2).join(",") : "None set"}
+          value={
+            meetingsUnavailable
+              ? "—"
+              : nextMeeting
+                ? formatDateTime(nextMeeting.scheduled_at).split(",").slice(0, 2).join(",")
+                : "None set"
+          }
         />
         <StatCard icon={FileCheck2} label="Documents to Acknowledge" value={pendingDocs.length} />
-        <StatCard icon={CalendarDays} label="Upcoming Meetings" value={upcoming.length} />
+        <StatCard icon={CalendarDays} label="Upcoming Meetings" value={meetingsUnavailable ? "—" : upcoming.length} />
         <StatCard icon={Users} label="Active Board Members" value={activeMemberCount} />
       </div>
 
@@ -89,7 +118,9 @@ export default async function BoardDashboardPage() {
             <Video className="h-3.5 w-3.5" />
             Upcoming Board Meeting
           </p>
-          {nextMeeting ? (
+          {meetingsUnavailable ? (
+            <p className="mt-2 text-sm text-ink/50">Meeting schedule temporarily unavailable.</p>
+          ) : nextMeeting ? (
             <>
               <p className="mt-2 text-lg font-semibold text-[#0b1f3a]">{nextMeeting.title}</p>
               <p className="mt-1 text-sm font-medium text-ink/60">{formatDateTime(nextMeeting.scheduled_at)}</p>
@@ -157,7 +188,9 @@ export default async function BoardDashboardPage() {
               View All
             </Link>
           </div>
-          {recentMessages.length === 0 ? (
+          {messagesUnavailable ? (
+            <p className="mt-3 text-sm text-ink/50">Messages temporarily unavailable.</p>
+          ) : recentMessages.length === 0 ? (
             <p className="mt-3 text-sm text-ink/50">No messages yet.</p>
           ) : (
             <div className="mt-3 flex flex-col gap-3">

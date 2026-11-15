@@ -18,8 +18,9 @@ import { Container } from "@/components/ui/Container";
 import { SectionTile } from "@/components/board/SectionTile";
 import { getCurrentAdminSession } from "@/lib/auth";
 import { isDatabaseConfigured } from "@/lib/db";
-import { listUpcomingBoardMeetingsForUser } from "@/lib/board-meetings";
+import { listUpcomingBoardMeetingsForUser, type BoardMeeting } from "@/lib/board-meetings";
 import { findAdminUserById, firstName, formatPositionLabel } from "@/lib/admin-users";
+import { MigrationNotAppliedError } from "@/lib/migration-guard";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Board Portal" };
@@ -104,8 +105,16 @@ function formatDateTime(iso: string) {
 export default async function BoardPortalHubPage() {
   const session = await getCurrentAdminSession();
   const dbReady = isDatabaseConfigured();
-  const upcoming =
-    dbReady && session ? await listUpcomingBoardMeetingsForUser(session.id, session.role === "owner") : [];
+  let upcoming: BoardMeeting[] = [];
+  let meetingsUnavailable = false;
+  if (dbReady && session) {
+    try {
+      upcoming = await listUpcomingBoardMeetingsForUser(session.id, session.role === "owner");
+    } catch (error) {
+      if (!(error instanceof MigrationNotAppliedError)) throw error;
+      meetingsUnavailable = true;
+    }
+  }
   const nextMeeting = upcoming[0];
   const member = dbReady && session ? await findAdminUserById(session.id) : null;
   const positionLabel = member ? formatPositionLabel(member) : null;
@@ -136,9 +145,11 @@ export default async function BoardPortalHubPage() {
         <div>
           <p className="text-sm font-semibold text-[#0b1f3a]">Upcoming Meetings &amp; Reminders</p>
           <p className="mt-0.5 text-sm text-ink/60">
-            {nextMeeting
-              ? `${nextMeeting.title} — ${formatDateTime(nextMeeting.scheduled_at)}`
-              : "Nothing scheduled right now."}
+            {meetingsUnavailable
+              ? "Meeting schedule temporarily unavailable."
+              : nextMeeting
+                ? `${nextMeeting.title} — ${formatDateTime(nextMeeting.scheduled_at)}`
+                : "Nothing scheduled right now."}
           </p>
         </div>
         <ArrowRight className="h-4 w-4 flex-shrink-0 text-blue-700" />

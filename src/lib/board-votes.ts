@@ -1,4 +1,5 @@
 import { getDb } from "@/lib/db";
+import { isMigrationNotAppliedError } from "@/lib/migration-guard";
 
 export type VoteCategory = "resolutions" | "policies" | "contracts" | "other";
 export type VoteStatus = "pending" | "approved" | "declined" | "withdrawn";
@@ -27,14 +28,6 @@ export type BoardVoteResponse = {
   responded_at: string;
 };
 
-// Postgres "undefined_column" (42703) or "undefined_table" (42P01) — see
-// the matching comment in @/lib/board-meetings for why this degrades
-// instead of failing the page.
-function isMigrationNotAppliedError(error: unknown): boolean {
-  if (!error || typeof error !== "object" || !("code" in error)) return false;
-  return error.code === "42703" || error.code === "42P01";
-}
-
 export async function listAllVotes() {
   const db = getDb();
   if (!db) return [];
@@ -56,6 +49,16 @@ export async function listAllVotes() {
 export async function listResponsesForVotes(voteIds: string[]) {
   const db = getDb();
   if (!db || voteIds.length === 0) return [];
+  try {
+    return await listResponsesForVotesQuery(db, voteIds);
+  } catch (error) {
+    if (!isMigrationNotAppliedError(error)) throw error;
+    console.error("[board-votes] Migration not applied yet — returning no responses instead of failing the page.");
+    return [];
+  }
+}
+
+async function listResponsesForVotesQuery(db: NonNullable<ReturnType<typeof getDb>>, voteIds: string[]) {
   const result = await db.query<BoardVoteResponse>(
     `SELECT r.*, u.name AS voter_name
      FROM board_vote_responses r

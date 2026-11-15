@@ -1,4 +1,5 @@
 import { getDb } from "@/lib/db";
+import { isMigrationNotAppliedError, MigrationNotAppliedError } from "@/lib/migration-guard";
 
 export type SuggestionCategory = "fundraising" | "programs" | "facilities" | "events" | "partnerships" | "other";
 export type SuggestionStatus = "submitted" | "under_review" | "approved" | "declined" | "in_progress" | "completed";
@@ -21,14 +22,19 @@ const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 export async function listBoardSuggestions(): Promise<BoardSuggestion[]> {
   const db = getDb();
   if (!db) return [];
-  const result = await db.query<BoardSuggestion>(
-    `SELECT s.id, s.created_at, s.created_by, u.name AS created_by_name, s.category, s.title,
-            s.description, s.status, s.admin_response, s.responded_at
-     FROM board_suggestions s
-     LEFT JOIN admin_users u ON u.id = s.created_by
-     ORDER BY s.created_at DESC`
-  );
-  return result.rows;
+  try {
+    const result = await db.query<BoardSuggestion>(
+      `SELECT s.id, s.created_at, s.created_by, u.name AS created_by_name, s.category, s.title,
+              s.description, s.status, s.admin_response, s.responded_at
+       FROM board_suggestions s
+       LEFT JOIN admin_users u ON u.id = s.created_by
+       ORDER BY s.created_at DESC`
+    );
+    return result.rows;
+  } catch (error) {
+    if (isMigrationNotAppliedError(error)) throw new MigrationNotAppliedError();
+    throw error;
+  }
 }
 
 export async function createBoardSuggestion(data: {

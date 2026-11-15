@@ -1,5 +1,6 @@
 import { getDb } from "@/lib/db";
 import type { AdminRole } from "@/lib/admin-users-shared";
+import { isMigrationNotAppliedError, MigrationNotAppliedError } from "@/lib/migration-guard";
 
 export type BoardMessage = {
   id: string;
@@ -14,13 +15,6 @@ export type BoardMessage = {
   author_title: string | null;
 };
 
-// Postgres "undefined_column" (42703) or "undefined_table" (42P01) — see
-// the matching comment in @/lib/board-meetings for why this degrades
-// instead of failing the page.
-function isMigrationNotAppliedError(error: unknown): boolean {
-  if (!error || typeof error !== "object" || !("code" in error)) return false;
-  return error.code === "42703" || error.code === "42P01";
-}
 
 /** Every message a given member is allowed to see: every broadcast
  * (recipient_ids IS NULL) plus any private message where they're the
@@ -47,9 +41,12 @@ export async function listMessagesForUser(userId: string, limit = 50) {
     );
     return result.rows;
   } catch (error) {
-    if (!isMigrationNotAppliedError(error)) throw error;
-    console.error("[board-messages] Migration not applied yet — returning no messages instead of failing the page.");
-    return [];
+    // Not returning [] here — an empty result would read as "no messages
+    // exist," which is exactly the misleading state the board asked us not
+    // to show. Callers must catch MigrationNotAppliedError and render an
+    // honest notice instead.
+    if (isMigrationNotAppliedError(error)) throw new MigrationNotAppliedError();
+    throw error;
   }
 }
 

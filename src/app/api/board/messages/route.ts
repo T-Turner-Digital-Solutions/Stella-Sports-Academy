@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getCurrentAdminSession } from "@/lib/auth";
 import { isDatabaseConfigured } from "@/lib/db";
 import { createMessage, deleteMessage, listMessagesForUser } from "@/lib/board-messages";
+import { MigrationNotAppliedError } from "@/lib/migration-guard";
 
 const createSchema = z.object({
   body: z.string().trim().min(1, "Write a message first.").max(2000),
@@ -22,8 +23,13 @@ export async function GET() {
   if (!session) {
     return NextResponse.json({ message: "Not authenticated." }, { status: 401 });
   }
-  const messages = await listMessagesForUser(session.id);
-  return NextResponse.json({ messages });
+  try {
+    const messages = await listMessagesForUser(session.id);
+    return NextResponse.json({ messages });
+  } catch (error) {
+    if (!(error instanceof MigrationNotAppliedError)) throw error;
+    return NextResponse.json({ message: "Messages isn't available yet.", unavailable: true }, { status: 503 });
+  }
 }
 
 export async function POST(request: Request) {

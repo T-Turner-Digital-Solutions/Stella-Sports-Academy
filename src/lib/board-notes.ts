@@ -1,4 +1,5 @@
 import { getDb } from "@/lib/db";
+import { isMigrationNotAppliedError, MigrationNotAppliedError } from "@/lib/migration-guard";
 
 export type BoardNote = {
   id: string;
@@ -12,14 +13,6 @@ export type BoardNote = {
   author_name: string;
   meeting_title: string | null;
 };
-
-// Postgres "undefined_column" (42703) or "undefined_table" (42P01) — see
-// the matching comment in @/lib/board-meetings for why this degrades
-// instead of failing the page.
-function isMigrationNotAppliedError(error: unknown): boolean {
-  if (!error || typeof error !== "object" || !("code" in error)) return false;
-  return error.code === "42703" || error.code === "42P01";
-}
 
 /** Every note a given member may see: their own, plus any note someone
  * else shared with them by name. Enforced in SQL, not the UI — a note with
@@ -40,9 +33,12 @@ export async function listNotesForUser(userId: string) {
     );
     return result.rows;
   } catch (error) {
-    if (!isMigrationNotAppliedError(error)) throw error;
-    console.error("[board-notes] Migration not applied yet — returning no notes instead of failing the page.");
-    return [];
+    // Not returning [] here — an empty result would read as "you have no
+    // notes," which is exactly the misleading state the board asked us
+    // not to show. Callers must catch MigrationNotAppliedError and render
+    // an honest notice instead.
+    if (isMigrationNotAppliedError(error)) throw new MigrationNotAppliedError();
+    throw error;
   }
 }
 

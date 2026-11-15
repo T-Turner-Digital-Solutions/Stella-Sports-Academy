@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getCurrentAdminSession } from "@/lib/auth";
 import { isDatabaseConfigured } from "@/lib/db";
 import { createNote, listNotesForUser } from "@/lib/board-notes";
+import { MigrationNotAppliedError } from "@/lib/migration-guard";
 
 const createSchema = z.object({
   title: z.string().trim().min(1, "Title is required").max(200),
@@ -19,8 +20,13 @@ export async function GET() {
   if (!session) {
     return NextResponse.json({ message: "Not authenticated." }, { status: 401 });
   }
-  const notes = await listNotesForUser(session.id);
-  return NextResponse.json({ notes });
+  try {
+    const notes = await listNotesForUser(session.id);
+    return NextResponse.json({ notes });
+  } catch (error) {
+    if (!(error instanceof MigrationNotAppliedError)) throw error;
+    return NextResponse.json({ message: "My Notes isn't available yet.", unavailable: true }, { status: 503 });
+  }
 }
 
 export async function POST(request: Request) {
