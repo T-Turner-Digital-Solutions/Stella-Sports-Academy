@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import { FileText } from "lucide-react";
 import { Container } from "@/components/ui/Container";
-import { EmptyState } from "@/components/ui/EmptyState";
 import { isDatabaseConfigured } from "@/lib/db";
 import { getCurrentAdminSession } from "@/lib/auth";
 import { listCurrentBoardDocuments, listAcknowledgedDocumentIds } from "@/lib/board-documents";
@@ -23,17 +21,8 @@ export default async function BoardCorporateRecordsPage() {
         title="Corporate Records"
         description="Official organizational records, governing documents, and compliance filings."
       />
-
-      <div>
-        {!dbReady || documents.length === 0 ? (
-          <EmptyState
-            icon={FileText}
-            title="No Records Available"
-            description="Corporate records will appear here once they are uploaded and approved."
-          />
-        ) : (
-          <CorporateRecordsBrowser documents={documents} acknowledgedIds={acknowledgedIds} />
-        )}
+      <div className="mt-6">
+        <CorporateRecordsBrowser documents={documents} acknowledgedIds={acknowledgedIds} />
       </div>
     </Container>
   );

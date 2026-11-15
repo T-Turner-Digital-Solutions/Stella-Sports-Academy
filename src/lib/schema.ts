@@ -84,6 +84,10 @@ CREATE TABLE IF NOT EXISTS admin_users (
   email               TEXT UNIQUE NOT NULL,
   name                TEXT NOT NULL,
   role                TEXT NOT NULL DEFAULT 'member' CHECK (role IN ('owner', 'member')),
+  -- Official board position (e.g. "Vice President", "Treasurer"), set by an
+  -- owner from /admin/team. Shown on the board portal's personalized
+  -- welcome message. NULL until an owner sets it — never inferred by name.
+  title               TEXT,
   password_hash       TEXT,
   invite_token        TEXT UNIQUE,
   invite_expires_at   TIMESTAMPTZ,
@@ -91,11 +95,19 @@ CREATE TABLE IF NOT EXISTS admin_users (
   last_login_at       TIMESTAMPTZ
 );
 
+-- title was added after some admin_users rows already existed.
+ALTER TABLE admin_users ADD COLUMN IF NOT EXISTS title TEXT;
+
 -- Board meetings and events. Any signed-in board member/admin account can
--- add or remove one — this is a scheduling convenience, not an
+-- create or manage one — this is a scheduling convenience, not an
 -- access-control surface, so it deliberately doesn't gate by role the way
 -- account management (admin_users) does. zoom_url is optional so this can
 -- also hold in-person events (e.g. a gala) that have no call link.
+-- invitee_ids NULL means the whole board is invited; a non-null array scopes
+-- visibility, reminders, and notification emails to just those accounts
+-- (plus whoever created it) — enforced in src/lib/board-meetings.ts queries,
+-- not just the UI. Cancelling sets status = 'cancelled' rather than
+-- deleting the row, so meeting history is never lost.
 CREATE TABLE IF NOT EXISTS board_meetings (
   id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -104,11 +116,33 @@ CREATE TABLE IF NOT EXISTS board_meetings (
   title               TEXT NOT NULL,
   scheduled_at        TIMESTAMPTZ NOT NULL,
   zoom_url            TEXT,
-  notes               TEXT
+  notes               TEXT,
+  invitee_ids         UUID[],
+
+  -- Manually controlled by an admin — never inferred from scheduled_at vs.
+  -- now(), per the board's explicit instruction not to fake a LIVE status
+  -- just because the scheduled time has arrived.
+  status              TEXT NOT NULL DEFAULT 'scheduled' CHECK (status IN ('scheduled', 'live', 'completed', 'cancelled')),
+
+  -- Set once each automatic reminder has actually been sent, so the
+  -- scheduled reminder function never double-sends.
+  reminder_24h_sent_at TIMESTAMPTZ,
+  reminder_1h_sent_at  TIMESTAMPTZ
 );
 
 -- zoom_url was originally NOT NULL — relax it for existing databases too.
 ALTER TABLE board_meetings ALTER COLUMN zoom_url DROP NOT NULL;
+
+-- Existing databases predate these columns.
+ALTER TABLE board_meetings ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'scheduled';
+ALTER TABLE board_meetings ADD COLUMN IF NOT EXISTS reminder_24h_sent_at TIMESTAMPTZ;
+ALTER TABLE board_meetings ADD COLUMN IF NOT EXISTS reminder_1h_sent_at TIMESTAMPTZ;
+ALTER TABLE board_meetings ADD COLUMN IF NOT EXISTS invitee_ids UUID[];
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'board_meetings_status_check') THEN
+    ALTER TABLE board_meetings ADD CONSTRAINT board_meetings_status_check CHECK (status IN ('scheduled', 'live', 'completed', 'cancelled'));
+  END IF;
+END $$;
 
 -- One row per completed Stripe Checkout session (one-time or the first
 -- payment of a recurring gift). Donor-level detail here is admin-only —
@@ -218,5 +252,120 @@ CREATE TABLE IF NOT EXISTS financial_goal_changes (
   previous_cents      INTEGER NOT NULL,
   new_cents           INTEGER NOT NULL,
   changed_by          UUID REFERENCES admin_users(id) ON DELETE SET NULL
+);
+
+-- Board Operations suggestion box. Any board member can submit; the owner
+-- reviews and moves status along. Starts empty — no sample ideas seeded.
+CREATE TABLE IF NOT EXISTS board_suggestions (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  created_by          UUID REFERENCES admin_users(id) ON DELETE SET NULL,
+  category            TEXT NOT NULL CHECK (category IN ('fundraising', 'programs', 'facilities', 'events', 'partnerships', 'other')),
+  title               TEXT NOT NULL,
+  description         TEXT NOT NULL,
+  status              TEXT NOT NULL DEFAULT 'submitted' CHECK (status IN ('submitted', 'under_review', 'approved', 'declined', 'in_progress', 'completed')),
+  admin_response      TEXT,
+  responded_by        UUID REFERENCES admin_users(id) ON DELETE SET NULL,
+  responded_at        TIMESTAMPTZ
+);
+
+-- Private board member notes. Strictly per-account by default: every query
+-- and write in @/lib/board-notes is scoped to admin_user_id, so a note is
+-- never readable or editable by another member unless the owner explicitly
+-- adds them to shared_with (NULL = private to the owner only). meeting_id
+-- optionally attaches a note to a specific meeting; it's independent of the
+-- official board_meeting_minutes record below.
+CREATE TABLE IF NOT EXISTS board_notes (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  admin_user_id       UUID NOT NULL REFERENCES admin_users(id) ON DELETE CASCADE,
+  title               TEXT NOT NULL,
+  body                TEXT NOT NULL DEFAULT '',
+  shared_with         UUID[],
+  meeting_id          UUID REFERENCES board_meetings(id) ON DELETE SET NULL
+);
+
+-- Existing databases predate these columns.
+ALTER TABLE board_notes ADD COLUMN IF NOT EXISTS shared_with UUID[];
+ALTER TABLE board_notes ADD COLUMN IF NOT EXISTS meeting_id UUID REFERENCES board_meetings(id) ON DELETE SET NULL;
+
+-- parent_message_id turns a message into a reply, grouping it into the
+-- parent's thread. A reply inherits the parent's audience (enforced in
+-- @/lib/board-messages, not just read from this column) so a thread can
+-- never leak a private conversation to someone outside the original
+-- recipient list.
+CREATE TABLE IF NOT EXISTS board_messages (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  admin_user_id       UUID NOT NULL REFERENCES admin_users(id) ON DELETE CASCADE,
+  body                TEXT NOT NULL,
+  recipient_ids       UUID[],
+  parent_message_id   UUID REFERENCES board_messages(id) ON DELETE SET NULL
+);
+
+-- Existing databases predate these columns.
+ALTER TABLE board_messages ADD COLUMN IF NOT EXISTS recipient_ids UUID[];
+ALTER TABLE board_messages ADD COLUMN IF NOT EXISTS parent_message_id UUID REFERENCES board_messages(id) ON DELETE SET NULL;
+
+-- Real votes/approvals and each member's individual response. Deliberately
+-- does NOT auto-compute pass/fail from quorum or threshold rules — those
+-- depend on the organization's actual bylaws, which haven't been provided.
+-- Instead every member's response is recorded and visible, and an owner
+-- manually records the final outcome (status) once decided. See
+-- src/lib/board-votes.ts.
+CREATE TABLE IF NOT EXISTS board_votes (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  created_by          UUID REFERENCES admin_users(id) ON DELETE SET NULL,
+  category            TEXT NOT NULL DEFAULT 'other' CHECK (category IN ('resolutions', 'policies', 'contracts', 'other')),
+  title               TEXT NOT NULL,
+  description         TEXT,
+  due_date            DATE,
+  status              TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'declined', 'withdrawn')),
+  decided_by          UUID REFERENCES admin_users(id) ON DELETE SET NULL,
+  decided_at          TIMESTAMPTZ
+);
+
+CREATE TABLE IF NOT EXISTS board_vote_responses (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  vote_id             UUID NOT NULL REFERENCES board_votes(id) ON DELETE CASCADE,
+  admin_user_id       UUID NOT NULL REFERENCES admin_users(id) ON DELETE CASCADE,
+  response            TEXT NOT NULL CHECK (response IN ('approve', 'decline', 'abstain')),
+  responded_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (vote_id, admin_user_id)
+);
+
+-- Official meeting minutes: one record per meeting. draft -> submitted
+-- (auto-creates a board_votes row so the board approves it through the
+-- same Voting & Approvals flow as any other resolution, rather than a
+-- second parallel approval system) -> approved/rejected, set manually by
+-- an owner once decided, matching how board_votes itself is decided.
+-- Approval auto-files the content into board_documents (category
+-- 'organizational-minutes') — see src/lib/board-meeting-minutes.ts.
+CREATE TABLE IF NOT EXISTS board_meeting_minutes (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  meeting_id          UUID NOT NULL UNIQUE REFERENCES board_meetings(id) ON DELETE CASCADE,
+  drafted_by          UUID REFERENCES admin_users(id) ON DELETE SET NULL,
+  content             TEXT NOT NULL DEFAULT '',
+  status              TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'submitted', 'approved', 'rejected')),
+  vote_id             UUID REFERENCES board_votes(id) ON DELETE SET NULL,
+  filed_document_id   UUID REFERENCES board_documents(id) ON DELETE SET NULL,
+  submitted_at        TIMESTAMPTZ,
+  decided_at          TIMESTAMPTZ
+);
+
+-- Audit trail: every drafted/submitted/approved/rejected/filed transition,
+-- who did it, and when — kept even as the minutes row itself is updated in
+-- place, per the requirement to preserve an audit trail.
+CREATE TABLE IF NOT EXISTS board_meeting_minutes_history (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  minutes_id          UUID NOT NULL REFERENCES board_meeting_minutes(id) ON DELETE CASCADE,
+  actor_id            UUID REFERENCES admin_users(id) ON DELETE SET NULL,
+  action              TEXT NOT NULL CHECK (action IN ('drafted', 'edited', 'submitted', 'approved', 'rejected', 'filed')),
+  note                TEXT
 );
 `;

@@ -1,30 +1,49 @@
 @import "tailwindcss";
 
 :root {
-  /* Brand palette — Stellar Blue / Grey / White, no red anywhere.
-     NOTE: these custom properties still use Tailwind's "red" scale names
-     (--color-red-700, bg-red-700, etc. throughout the codebase) because
-     Tailwind v4 generates utility classes straight from these token names.
-     Renaming them to "blue" would mean renaming every bg-red-700 and
-     text-red-700 class across every component, which is unnecessary risk
-     for a value-only rebrand. The values below are sampled directly from
-     the new logo. */
+  /* Brand palette — official brand sheet: Black #000000, Capri Blue
+     #00BFFF, White #FFFFFF. Capri Blue is hsl(195 100% 50%); the ramp below
+     holds that same hue at different lightness steps so every existing
+     bg-red-700 / text-red-700 etc. (Tailwind's "red" scale name, kept only
+     because renaming would mean touching every component) resolves to a
+     real shade of the brand's Capri Blue instead of the old hand-picked
+     #0066a8. CTA buttons/active states stay one step darker than the
+     literal #00BFFF (700/600, not 500) so white button text keeps usable
+     contrast, but are tuned as bright as that still allows; icons, badges,
+     and small accents can use the lighter/brighter steps that sit even
+     closer to the true brand color. */
   --color-ink: #333333;          /* charcoal grey — replaces black */
   --color-ink-soft: #4a4a4a;     /* lighter grey for hover states */
-  --color-red-900: #00243d;
-  --color-red-800: #003a63;
-  --color-red-700: #0066a8;      /* Stellar Blue — primary CTA */
-  --color-red-600: #007dc2;      /* hover blue */
-  --color-red-500: #0098dd;
-  --color-red-400: #4bc3ef;
-  --color-red-300: #8fdcf5;
-  --color-red-100: #e2f6fd;      /* light blue tint for badges/tints */
+  --color-red-900: hsl(206 85% 10%);
+  --color-red-800: hsl(200 95% 25%);
+  --color-red-700: hsl(197 100% 38%);   /* primary CTA — brightened closer to the brand color */
+  --color-red-600: hsl(196 100% 45%);   /* hover */
+  --color-red-500: hsl(195 100% 50%);   /* #00BFFF — exact brand Capri Blue */
+  --color-red-400: hsl(195 100% 61%);
+  --color-red-300: hsl(195 100% 73%);
+  --color-red-100: hsl(195 100% 92%);   /* light blue tint for badges/tints */
   --color-paper: #f7f7f7;        /* light grey background */
   --color-paper-dim: #ececec;
   --color-white: #ffffff;
 
   --background: var(--color-white);
   --foreground: var(--color-ink);
+
+  /* Board portal styling uses Tailwind's own blue-* scale directly
+     (bg-blue-700, border-blue-100, etc.) rather than the red-* tokens
+     above. Overriding it here keeps the whole site — public pages and the
+     portal alike — on one consistent Capri Blue ramp. */
+  --color-blue-50: hsl(195 100% 96%);
+  --color-blue-100: hsl(195 100% 92%);
+  --color-blue-200: hsl(195 100% 84%);
+  --color-blue-300: hsl(195 100% 73%);
+  --color-blue-400: hsl(195 100% 61%);
+  --color-blue-500: hsl(195 100% 50%);   /* #00BFFF — exact brand Capri Blue */
+  --color-blue-600: hsl(196 100% 45%);
+  --color-blue-700: hsl(197 100% 38%);
+  --color-blue-800: hsl(200 95% 25%);
+  --color-blue-900: hsl(203 90% 18%);
+  --color-blue-950: hsl(206 85% 10%);
 }
 
 @theme inline {
@@ -40,6 +59,18 @@
   --color-red-100: var(--color-red-100);
   --color-paper: var(--color-paper);
   --color-paper-dim: var(--color-paper-dim);
+
+  --color-blue-50: var(--color-blue-50);
+  --color-blue-100: var(--color-blue-100);
+  --color-blue-200: var(--color-blue-200);
+  --color-blue-300: var(--color-blue-300);
+  --color-blue-400: var(--color-blue-400);
+  --color-blue-500: var(--color-blue-500);
+  --color-blue-600: var(--color-blue-600);
+  --color-blue-700: var(--color-blue-700);
+  --color-blue-800: var(--color-blue-800);
+  --color-blue-900: var(--color-blue-900);
+  --color-blue-950: var(--color-blue-950);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -79,6 +110,13 @@ body {
 
 .font-display {
   font-family: var(--font-display), var(--font-sans), sans-serif;
+}
+
+/* Board portal headlines only — the reference design uses a bold serif
+   typeface, distinct from the public site's condensed all-caps Anton. */
+.font-portal-heading {
+  font-family: var(--font-merriweather), var(--font-sans), serif;
+  font-weight: 900;
 }
 
 @media (prefers-reduced-motion: reduce) {

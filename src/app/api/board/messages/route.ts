@@ -1,0 +1,71 @@
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { getCurrentAdminSession } from "@/lib/auth";
+import { isDatabaseConfigured } from "@/lib/db";
+import { createMessage, deleteMessage, listMessagesForUser } from "@/lib/board-messages";
+
+const createSchema = z.object({
+  body: z.string().trim().min(1, "Write a message first.").max(2000),
+  recipientIds: z.array(z.string().uuid()).optional(),
+  parentMessageId: z.string().uuid().optional(),
+});
+
+const deleteSchema = z.object({
+  id: z.string().uuid(),
+});
+
+export async function GET() {
+  if (!isDatabaseConfigured()) {
+    return NextResponse.json({ messages: [] });
+  }
+  const session = await getCurrentAdminSession();
+  if (!session) {
+    return NextResponse.json({ message: "Not authenticated." }, { status: 401 });
+  }
+  const messages = await listMessagesForUser(session.id);
+  return NextResponse.json({ messages });
+}
+
+export async function POST(request: Request) {
+  if (!isDatabaseConfigured()) {
+    return NextResponse.json({ message: "Set DATABASE_URL to post messages." }, { status: 501 });
+  }
+  const session = await getCurrentAdminSession();
+  if (!session) {
+    return NextResponse.json({ message: "Not authenticated." }, { status: 401 });
+  }
+
+  const body = await request.json().catch(() => null);
+  const parsed = createSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ message: "Write a message first." }, { status: 400 });
+  }
+
+  const message = await createMessage(session.id, parsed.data.body, parsed.data.recipientIds, parsed.data.parentMessageId);
+  if (!message) {
+    return NextResponse.json(
+      { message: parsed.data.parentMessageId ? "Could not reply — that message isn't visible to you." : "Could not post the message. Please try again." },
+      { status: parsed.data.parentMessageId ? 403 : 500 }
+    );
+  }
+  return NextResponse.json({ message: "Message posted." });
+}
+
+export async function DELETE(request: Request) {
+  if (!isDatabaseConfigured()) {
+    return NextResponse.json({ message: "Set DATABASE_URL to manage messages." }, { status: 501 });
+  }
+  const session = await getCurrentAdminSession();
+  if (!session) {
+    return NextResponse.json({ message: "Not authenticated." }, { status: 401 });
+  }
+
+  const body = await request.json().catch(() => null);
+  const parsed = deleteSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ message: "Invalid request." }, { status: 400 });
+  }
+
+  await deleteMessage(parsed.data.id, session.id, session.role === "owner");
+  return NextResponse.json({ message: "Message removed." });
+}

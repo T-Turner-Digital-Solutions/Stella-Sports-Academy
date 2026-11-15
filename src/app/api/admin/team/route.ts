@@ -2,11 +2,12 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getCurrentAdminSession } from "@/lib/auth";
 import { isDatabaseConfigured } from "@/lib/db";
-import { findAdminUserById, setAdminUserActive } from "@/lib/admin-users";
+import { findAdminUserById, setAdminUserActive, updateAdminUserTitle } from "@/lib/admin-users";
 
 const patchSchema = z.object({
   id: z.string().uuid(),
-  active: z.boolean(),
+  active: z.boolean().optional(),
+  title: z.string().trim().max(100).optional(),
 });
 
 export async function PATCH(request: Request) {
@@ -24,11 +25,11 @@ export async function PATCH(request: Request) {
 
   const body = await request.json().catch(() => null);
   const parsed = patchSchema.safeParse(body);
-  if (!parsed.success) {
+  if (!parsed.success || (parsed.data.active === undefined && parsed.data.title === undefined)) {
     return NextResponse.json({ message: "Invalid request." }, { status: 400 });
   }
 
-  if (parsed.data.id === session.id && !parsed.data.active) {
+  if (parsed.data.id === session.id && parsed.data.active === false) {
     return NextResponse.json({ message: "You can't deactivate your own account." }, { status: 400 });
   }
 
@@ -37,6 +38,12 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ message: "Board member not found." }, { status: 404 });
   }
 
-  await setAdminUserActive(parsed.data.id, parsed.data.active);
-  return NextResponse.json({ message: parsed.data.active ? "Account reactivated." : "Account deactivated." });
+  if (parsed.data.active !== undefined) {
+    await setAdminUserActive(parsed.data.id, parsed.data.active);
+  }
+  if (parsed.data.title !== undefined) {
+    await updateAdminUserTitle(parsed.data.id, parsed.data.title || null);
+  }
+
+  return NextResponse.json({ message: "Board member updated." });
 }

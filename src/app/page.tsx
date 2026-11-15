@@ -97,14 +97,14 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="hidden items-center justify-center lg:flex">
+          <div className="flex items-center justify-center">
             <Image
               src="/brand/stella-lockup.png"
               alt={`${site.name} logo`}
               width={1514}
               height={932}
               priority
-              className="h-auto w-full max-w-lg drop-shadow-[0_0_50px_rgba(0,152,221,0.6)]"
+              className="h-auto w-full max-w-[260px] drop-shadow-[0_0_50px_rgba(0,152,221,0.6)] sm:max-w-sm lg:max-w-lg"
             />
           </div>
         </Container>
@@ -132,14 +132,19 @@ export default function HomePage() {
       {/* CORE VALUES */}
       <section className="bg-white py-12 sm:py-16">
         <Container>
-          <div className="relative w-full overflow-hidden rounded-2xl" style={{ aspectRatio: "2000 / 668" }}>
-            <Image
-              src="/brand/sections/core-values-banner.webp"
-              alt="What we stand for: Core Values — Excellence, Discipline, Education, Character, Community"
-              fill
-              sizes="(min-width: 1280px) 1280px, 100vw"
-              className="object-cover object-center"
-            />
+          <div className="overflow-x-auto sm:overflow-visible">
+            <div
+              className="relative min-w-[720px] overflow-hidden rounded-2xl sm:min-w-0 sm:w-full"
+              style={{ aspectRatio: "2000 / 668" }}
+            >
+              <Image
+                src="/brand/sections/core-values-banner.webp"
+                alt="What we stand for: Core Values — Excellence, Discipline, Education, Character, Community"
+                fill
+                sizes="(min-width: 1280px) 1280px, 720px"
+                className="object-cover object-center"
+              />
+            </div>
           </div>
         </Container>
       </section>
@@ -218,14 +223,19 @@ export default function HomePage() {
       {/* WHY STELLAR MATTERS */}
       <section className="bg-paper py-12 sm:py-16">
         <Container>
-          <div className="relative w-full overflow-hidden rounded-2xl" style={{ aspectRatio: "2000 / 667" }}>
-            <Image
-              src="/brand/sections/why-stellar-matters-banner.webp"
-              alt="The Opportunity Gap: Why Stellar Matters. Many young athletes face real financial barriers that keep them from the resources their potential deserves. Stellar Sports Academy exists to help close that gap, connecting young athletes with quality coaching, athletic development, academic resources, college recruiting support, mentoring, and leadership opportunities, regardless of their family's ability to pay."
-              fill
-              sizes="(min-width: 1280px) 1280px, 100vw"
-              className="object-cover object-center"
-            />
+          <div className="overflow-x-auto sm:overflow-visible">
+            <div
+              className="relative min-w-[720px] overflow-hidden rounded-2xl sm:min-w-0 sm:w-full"
+              style={{ aspectRatio: "2000 / 667" }}
+            >
+              <Image
+                src="/brand/sections/why-stellar-matters-banner.webp"
+                alt="The Opportunity Gap: Why Stellar Matters. Many young athletes face real financial barriers that keep them from the resources their potential deserves. Stellar Sports Academy exists to help close that gap, connecting young athletes with quality coaching, athletic development, academic resources, college recruiting support, mentoring, and leadership opportunities, regardless of their family's ability to pay."
+                fill
+                sizes="(min-width: 1280px) 1280px, 720px"
+                className="object-cover object-center"
+              />
+            </div>
           </div>
         </Container>
       </section>

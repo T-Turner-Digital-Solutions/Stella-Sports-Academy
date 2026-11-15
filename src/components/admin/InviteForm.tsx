@@ -13,19 +13,21 @@ export function InviteForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<"owner" | "member">("member");
+  const [title, setTitle] = useState("");
   const [state, setState] = useState<SubmitState>({ status: "idle" });
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setState({ status: "submitting" });
 
-    const result = await postForm("/api/admin/invite", { name, email, role });
+    const result = await postForm("/api/admin/invite", { name, email, role, title: title.trim() || undefined });
 
     if (result.ok) {
       setState({ status: "success", message: result.message });
       setName("");
       setEmail("");
       setRole("member");
+      setTitle("");
       router.refresh();
     } else {
       setState({ status: "error", message: result.message });
@@ -58,6 +60,19 @@ export function InviteForm() {
           />
         </Field>
       </div>
+
+      <Field
+        label="Position"
+        htmlFor="invite-title"
+        hint="Their official board title, shown on their personalized portal welcome (e.g. Vice President, Secretary, Treasurer)."
+      >
+        <TextInput
+          id="invite-title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="e.g. Vice President"
+        />
+      </Field>
 
       <Field
         label="Role"

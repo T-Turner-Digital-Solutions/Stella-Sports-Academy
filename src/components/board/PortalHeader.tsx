@@ -1,43 +1,28 @@
-import Link from "next/link";
-import { KeyRound } from "lucide-react";
-import { Logo } from "@/components/layout/Logo";
-import { LogoutButton } from "@/components/admin/LogoutButton";
+import Image from "next/image";
+import { PortalUserMenu } from "@/components/board/PortalUserMenu";
+import { getCurrentAdminSession } from "@/lib/auth";
+import { isDatabaseConfigured } from "@/lib/db";
+import { findAdminUserById, formatPositionLabel } from "@/lib/admin-users";
 
-export function PortalHeader() {
+export async function PortalHeader() {
+  const session = await getCurrentAdminSession();
+  const member = isDatabaseConfigured() && session ? await findAdminUserById(session.id) : null;
+  const roleLabel = member ? formatPositionLabel(member) : session?.role === "owner" ? "Administrator" : "Board Member";
+
   return (
-    <header className="relative overflow-hidden border-b border-ink/10 bg-white">
-      {/* Diagonal brand accent, top-right — matches the reference design */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -right-6 -top-10 hidden h-32 w-40 bg-gradient-to-br from-blue-400 to-blue-700 opacity-90 sm:block"
-        style={{ clipPath: "polygon(55% 0, 100% 0, 45% 100%, 0 100%)" }}
-      />
-      <div className="relative flex items-center justify-between px-5 py-4 sm:px-8">
-        <div className="flex items-center gap-4">
-          <Logo />
-          <span className="hidden h-6 w-px bg-ink/15 sm:block" />
-          <span className="hidden font-display text-sm uppercase tracking-wide text-ink sm:block">
-            Board Management Portal
+    <header className="bg-[#0b1f3a]">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3 sm:px-8">
+        <div className="flex min-w-0 items-center gap-3">
+          <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-white/10">
+            <Image src="/brand/stella-mark.png" alt="" width={1514} height={730} className="h-6 w-auto" />
           </span>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-bold uppercase tracking-wide text-white">Stellar Sports Academy</p>
+            <p className="truncate text-xs text-white/60">Board Management Portal</p>
+          </div>
         </div>
-        <div className="flex items-center gap-4">
-          <Link href="/" className="text-sm font-medium text-ink/60 hover:text-ink">
-            Back to Website
-          </Link>
-          <Link
-            href="/admin/change-password"
-            className="flex items-center gap-1.5 text-sm font-medium text-ink/60 hover:text-ink"
-          >
-            <KeyRound className="h-4 w-4" />
-            Account Settings
-          </Link>
-          <LogoutButton
-            redirectTo="/board/login"
-            className="flex items-center gap-1.5 text-sm font-medium text-ink/60 hover:text-ink"
-          />
-        </div>
+        <PortalUserMenu roleLabel={roleLabel} light />
       </div>
-      <div className="h-1 w-full bg-gradient-to-r from-blue-700 via-blue-500 to-blue-700" />
     </header>
   );
 }

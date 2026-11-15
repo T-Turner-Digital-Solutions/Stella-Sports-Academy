@@ -1,17 +1,26 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { ClipboardList, FileText, CalendarClock, ArrowRight } from "lucide-react";
+import { CalendarClock, FileCheck2, CalendarDays, Users, Video, ClipboardList, ArrowRight, CheckSquare, Lock } from "lucide-react";
 import { Container } from "@/components/ui/Container";
-import { EmptyState } from "@/components/ui/EmptyState";
-import { PortalPageHero } from "@/components/board/PortalPageHero";
+import { StatCard } from "@/components/board/StatCard";
+import { MiniBoardCalendar } from "@/components/board/MiniBoardCalendar";
 import { isDatabaseConfigured } from "@/lib/db";
 import { getCurrentAdminSession } from "@/lib/auth";
-import { listUpcomingBoardMeetings } from "@/lib/board-meetings";
+import { listUpcomingBoardMeetingsForUser, listAllBoardMeetingsForUser } from "@/lib/board-meetings";
 import { listCurrentBoardDocuments, listAcknowledgedDocumentIds } from "@/lib/board-documents";
-import { ATHLETICS_TRACKER_URL } from "@/content/board";
+import { findAdminUserById, firstName, formatPositionLabel, listAdminUsers } from "@/lib/admin-users";
+import { listMessagesForUser } from "@/lib/board-messages";
+import { listAllVotes } from "@/lib/board-votes";
+import { formatRelativeDayTime, formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Dashboard" };
+
+function initials(name: string) {
+  const parts = name.trim().split(/\s+/);
+  return ((parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "")).toUpperCase() || "?";
+}
 
 function formatDateTime(iso: string) {
   return new Intl.DateTimeFormat("en-US", {
@@ -24,86 +33,189 @@ function formatDateTime(iso: string) {
 export default async function BoardDashboardPage() {
   const dbReady = isDatabaseConfigured();
   const session = await getCurrentAdminSession();
-  const meetings = dbReady ? await listUpcomingBoardMeetings() : [];
+  const isOwner = session?.role === "owner";
+  const upcoming = dbReady && session ? await listUpcomingBoardMeetingsForUser(session.id, isOwner) : [];
+  const allMeetings = dbReady && session ? await listAllBoardMeetingsForUser(session.id, isOwner) : [];
   const documents = dbReady ? await listCurrentBoardDocuments() : [];
   const acknowledgedIds = dbReady && session ? await listAcknowledgedDocumentIds(session.id) : [];
-  const pendingCount = documents.filter((d) => !acknowledgedIds.includes(d.id)).length;
-  const nextMeeting = meetings[0];
+  const pendingDocs = documents.filter((d) => !acknowledgedIds.includes(d.id));
+  const members = dbReady ? await listAdminUsers() : [];
+  const activeMemberCount = members.filter((m) => m.active).length;
+  const nextMeeting = upcoming[0];
+  const member = dbReady && session ? await findAdminUserById(session.id) : null;
+  const positionLabel = member ? formatPositionLabel(member) : null;
+  const recentMessages = dbReady && session ? await listMessagesForUser(session.id, 3) : [];
+  const votes = dbReady ? await listAllVotes() : [];
+  const pendingVotes = votes.filter((v) => v.status === "pending").slice(0, 3);
 
   return (
     <Container>
-      <PortalPageHero
-        eyebrow="Board Portal"
-        title={session?.name ? `Welcome, ${session.name}` : "Dashboard"}
-        description="Updates, action items, and key announcements."
-      />
-
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <Link
-          href="/board/meetings"
-          className="group flex flex-col gap-2 rounded-2xl border border-ink/10 bg-white p-6 transition-shadow hover:shadow-md"
-        >
-          <div className="flex items-center justify-between">
-            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-blue-100">
-              <CalendarClock className="h-5 w-5 text-blue-700" />
-            </span>
-            <span className="flex items-center gap-1.5 text-sm font-semibold text-blue-700">
-              Board Meetings
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </span>
-          </div>
-          <p className="mt-2 font-display text-lg text-ink">
-            {nextMeeting ? nextMeeting.title : "Nothing Scheduled"}
+      <div className="relative h-56 overflow-hidden rounded-xl bg-[#0b1f3a] sm:h-64">
+        <Image
+          src="/hero/athletes-hero.jpg"
+          alt=""
+          fill
+          priority
+          sizes="(min-width: 1024px) 1024px, 100vw"
+          className="object-cover object-[70%_30%] opacity-60"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0b1f3a] via-[#0b1f3a]/85 to-[#0b1f3a]/20" />
+        <div className="relative flex h-full flex-col justify-center p-6 sm:p-10">
+          <p className="text-xs font-bold uppercase tracking-widest text-blue-300">Board Portal</p>
+          <h1 className="mt-1.5 text-3xl font-bold text-white sm:text-4xl">
+            Welcome{session?.name ? `, ${firstName(session.name)}` : ""}!
+          </h1>
+          {positionLabel && <p className="mt-1 text-sm font-semibold text-blue-300">{positionLabel}</p>}
+          <p className="mt-2 max-w-md text-sm text-white/70">
+            Your board workspace for meetings, documents, decisions, and academy growth.
           </p>
-          <p className="text-sm font-medium text-ink/60">
-            {nextMeeting ? formatDateTime(nextMeeting.scheduled_at) : "Check back once a meeting is scheduled."}
-          </p>
-        </Link>
-
-        <Link
-          href="/board/corporate-records"
-          className="group flex flex-col gap-2 rounded-2xl border border-ink/10 bg-white p-6 transition-shadow hover:shadow-md"
-        >
-          <div className="flex items-center justify-between">
-            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-blue-100">
-              <FileText className="h-5 w-5 text-blue-700" />
-            </span>
-            <span className="flex items-center gap-1.5 text-sm font-semibold text-blue-700">
-              Corporate Records
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </span>
-          </div>
-          <p className="mt-2 font-display text-lg text-ink">
-            {pendingCount > 0 ? `${pendingCount} Awaiting Acknowledgment` : "All Caught Up"}
-          </p>
-          <p className="text-sm font-medium text-ink/60">
-            {pendingCount > 0 ? "Review and acknowledge the latest governance documents." : "No pending records to review."}
-          </p>
-        </Link>
+        </div>
       </div>
 
-      <section className="mt-8">
-        <div className="flex items-center gap-2.5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100">
-            <ClipboardList className="h-4 w-4 text-blue-700" />
-          </span>
-          <h2 className="font-display text-lg uppercase tracking-wide text-ink">Athletics Tracker</h2>
-        </div>
+      <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <StatCard
+          icon={CalendarClock}
+          label="Next Meeting"
+          value={nextMeeting ? formatDateTime(nextMeeting.scheduled_at).split(",").slice(0, 2).join(",") : "None set"}
+        />
+        <StatCard icon={FileCheck2} label="Documents to Acknowledge" value={pendingDocs.length} />
+        <StatCard icon={CalendarDays} label="Upcoming Meetings" value={upcoming.length} />
+        <StatCard icon={Users} label="Active Board Members" value={activeMemberCount} />
+      </div>
 
-        <div className="mt-4">
-          {ATHLETICS_TRACKER_URL ? (
-            <div className="overflow-hidden rounded-2xl border border-ink/10" style={{ aspectRatio: "16 / 7" }}>
-              <iframe src={ATHLETICS_TRACKER_URL} title="Athletics Tracker" className="h-full w-full" />
-            </div>
+      <div className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-3">
+        <div className="rounded-xl border border-ink/10 bg-white p-6">
+          <p className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-blue-700">
+            <Video className="h-3.5 w-3.5" />
+            Upcoming Board Meeting
+          </p>
+          {nextMeeting ? (
+            <>
+              <p className="mt-2 text-lg font-semibold text-[#0b1f3a]">{nextMeeting.title}</p>
+              <p className="mt-1 text-sm font-medium text-ink/60">{formatDateTime(nextMeeting.scheduled_at)}</p>
+              <div className="mt-4 flex flex-wrap gap-3">
+                {nextMeeting.zoom_url ? (
+                  <a
+                    href={nextMeeting.zoom_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full bg-blue-700 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-800"
+                  >
+                    <Video className="h-4 w-4" />
+                    Join Meeting
+                  </a>
+                ) : (
+                  <p className="text-sm text-ink/40">A meeting link hasn&apos;t been added yet.</p>
+                )}
+                <Link
+                  href="/board/meetings"
+                  className="inline-flex items-center gap-2 rounded-full border border-ink/15 px-5 py-2.5 text-sm font-semibold text-ink/70 transition-colors hover:bg-paper"
+                >
+                  <ClipboardList className="h-4 w-4" />
+                  View Agenda
+                </Link>
+              </div>
+            </>
           ) : (
-            <EmptyState
-              icon={ClipboardList}
-              title="Not Connected Yet"
-              description="The Google Sheets athletics tracker will appear here once the sheet link is shared and connected."
-            />
+            <p className="mt-2 text-sm text-ink/50">Nothing scheduled right now.</p>
           )}
         </div>
-      </section>
+
+        <MiniBoardCalendar meetingDates={allMeetings.map((m) => m.scheduled_at)} />
+
+        <div className="rounded-xl border border-ink/10 bg-white p-6">
+          <div className="flex items-center justify-between">
+            <p className="font-semibold text-base text-[#0b1f3a]">Documents Awaiting Acknowledgment</p>
+            <Link href="/board/corporate-records" className="text-xs font-semibold text-blue-700 hover:underline">
+              View All
+            </Link>
+          </div>
+          {pendingDocs.length === 0 ? (
+            <p className="mt-3 text-sm text-ink/50">All caught up — nothing pending.</p>
+          ) : (
+            <div className="mt-3 flex flex-col gap-3">
+              {pendingDocs.slice(0, 4).map((doc) => (
+                <Link
+                  key={doc.id}
+                  href={`/board/documents/${doc.id}`}
+                  className="group flex items-center justify-between gap-2 text-sm"
+                >
+                  <span className="text-ink/80 group-hover:text-blue-700">{doc.title}</span>
+                  <ArrowRight className="h-3.5 w-3.5 flex-shrink-0 text-ink/30 transition-transform group-hover:translate-x-1 group-hover:text-blue-700" />
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-2">
+        <div className="rounded-xl border border-ink/10 bg-white p-6">
+          <div className="flex items-center justify-between">
+            <p className="font-semibold text-base text-[#0b1f3a]">Recent Messages</p>
+            <Link href="/board/messages" className="text-xs font-semibold text-blue-700 hover:underline">
+              View All
+            </Link>
+          </div>
+          {recentMessages.length === 0 ? (
+            <p className="mt-3 text-sm text-ink/50">No messages yet.</p>
+          ) : (
+            <div className="mt-3 flex flex-col gap-3">
+              {recentMessages.map((m) => (
+                <div key={m.id} className="flex items-start gap-3">
+                  <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-700">
+                    {initials(m.author_name)}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-baseline justify-between gap-2">
+                      <p className="flex items-center gap-1 truncate text-sm font-semibold text-[#0b1f3a]">
+                        {m.author_name}
+                        {m.recipient_ids !== null && <Lock className="h-3 w-3 flex-shrink-0 text-blue-700" />}
+                      </p>
+                      <p className="flex-shrink-0 text-xs text-ink/40">{formatRelativeDayTime(m.created_at)}</p>
+                    </div>
+                    <p className="truncate text-sm text-ink/60">{m.body}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="rounded-xl border border-ink/10 bg-white p-6">
+          <div className="flex items-center justify-between">
+            <p className="font-semibold text-base text-[#0b1f3a]">Pending Votes &amp; Approvals</p>
+            <Link href="/board/voting" className="text-xs font-semibold text-blue-700 hover:underline">
+              View All
+            </Link>
+          </div>
+          {pendingVotes.length === 0 ? (
+            <p className="mt-3 text-sm text-ink/50">Nothing is currently up for a vote.</p>
+          ) : (
+            <div className="mt-3 flex flex-col gap-3">
+              {pendingVotes.map((v) => (
+                <Link
+                  key={v.id}
+                  href="/board/voting"
+                  className="group flex items-center justify-between gap-3 rounded-lg border border-ink/10 p-3 transition-colors hover:border-blue-200"
+                >
+                  <div className="flex min-w-0 items-start gap-2.5">
+                    <CheckSquare className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-700" />
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold text-[#0b1f3a]">{v.title}</p>
+                      {v.description && <p className="truncate text-xs text-ink/50">{v.description}</p>}
+                    </div>
+                  </div>
+                  <span className="flex flex-shrink-0 items-center gap-1.5 text-xs font-semibold text-blue-700">
+                    {v.due_date ? `Due ${formatDate(v.due_date)}` : "No deadline"}
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                  </span>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
     </Container>
   );
 }
