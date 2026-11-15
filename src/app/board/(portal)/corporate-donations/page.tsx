@@ -1,27 +1,27 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { HeartHandshake } from "lucide-react";
+import { HeartHandshake, BadgeCheck } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { PortalPageHero } from "@/components/board/PortalPageHero";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { StatusBadge } from "@/components/admin/StatusBadge";
-import { DonationInquiryStatusToggle } from "@/components/board/DonationInquiryStatusToggle";
+import { CorporateDonationStatusToggle } from "@/components/board/CorporateDonationStatusToggle";
 import { isDatabaseConfigured } from "@/lib/db";
 import { listSponsorshipInquiries } from "@/lib/submissions";
 import { formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Donation Inquiries" };
+export const metadata: Metadata = { title: "Zeffy Corporate Donations" };
 
-export default async function DonationInquiriesPage() {
+export default async function CorporateDonationsPage() {
   const dbReady = isDatabaseConfigured();
   const inquiries = dbReady ? await listSponsorshipInquiries() : [];
 
   return (
     <Container>
       <PortalPageHero
-        title="Donation Inquiries"
-        description="Companies that filled out the corporate sponsorship form on the website — follow up with each one here."
+        title="Zeffy Corporate Donations"
+        description="Companies that donated through the Donate Now flow (with their logo) or submitted a corporate sponsorship inquiry — follow up with each one here."
       />
 
       <div className="mt-6 flex flex-col gap-4">
@@ -29,8 +29,8 @@ export default async function DonationInquiriesPage() {
           <EmptyState
             theme="blue"
             icon={HeartHandshake}
-            title="No Donation Inquiries Yet"
-            description="When a company submits the corporate sponsorship form, it will show up here for follow-up."
+            title="No Corporate Donations Yet"
+            description="When a company donates through Donate Now or submits the sponsorship inquiry form, it will show up here for follow-up."
           />
         ) : (
           inquiries.map((inquiry) => (
@@ -39,7 +39,7 @@ export default async function DonationInquiriesPage() {
                 <div className="flex items-center gap-3">
                   {inquiry.logo_blob_key && (
                     <Image
-                      src={`/api/board/donation-inquiries/${inquiry.id}/logo`}
+                      src={`/api/board/corporate-donations/${inquiry.id}/logo`}
                       alt={`${inquiry.company_name} logo`}
                       width={48}
                       height={48}
@@ -48,7 +48,15 @@ export default async function DonationInquiriesPage() {
                     />
                   )}
                   <div>
-                    <p className="font-semibold text-base text-[#0b1f3a]">{inquiry.company_name}</p>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="font-semibold text-base text-[#0b1f3a]">{inquiry.company_name}</p>
+                      {inquiry.logo_blob_key && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-blue-700">
+                          <BadgeCheck className="h-3 w-3" />
+                          Via Zeffy
+                        </span>
+                      )}
+                    </div>
                     <p className="mt-0.5 text-xs text-ink/50">Submitted {formatDate(inquiry.created_at)}</p>
                   </div>
                 </div>
@@ -89,7 +97,7 @@ export default async function DonationInquiriesPage() {
               </div>
 
               <div className="mt-4 border-t border-ink/10 pt-4">
-                <DonationInquiryStatusToggle id={inquiry.id} status={inquiry.status} />
+                <CorporateDonationStatusToggle id={inquiry.id} status={inquiry.status} />
               </div>
             </div>
           ))
