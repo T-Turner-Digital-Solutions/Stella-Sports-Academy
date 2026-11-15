@@ -152,6 +152,41 @@ export async function updateAdminUserPassword(id: string, passwordHash: string) 
   return true;
 }
 
+/** Re-issues a fresh invite token/expiry for an account that hasn't
+ * accepted its invite yet (no password set) — e.g. the original email
+ * bounced, was missed, or its 7-day link expired. Returns null if the
+ * account already has a password (already active), so an owner can't
+ * accidentally lock out an existing member by "re-inviting" them. */
+export async function resendInvite(id: string) {
+  const db = getDb();
+  if (!db) return null;
+  const token = crypto.randomBytes(24).toString("hex");
+  const result = await db.query<AdminUserRecord>(
+    `UPDATE admin_users
+     SET invite_token = $1, invite_expires_at = now() + interval '${INVITE_DURATION}'
+     WHERE id = $2 AND password_hash IS NULL
+     RETURNING *`,
+    [token, id]
+  );
+  return result.rows[0] ?? null;
+}
+
+/** Owner-only — corrects a board member's email address (e.g. a typo on
+ * the original invite). Returns false if that email is already in use by
+ * another account, so the caller can show a clear error instead of a raw
+ * database constraint failure. */
+export async function updateAdminUserEmail(id: string, email: string) {
+  const db = getDb();
+  if (!db) return false;
+  try {
+    await db.query(`UPDATE admin_users SET email = $1 WHERE id = $2`, [email.trim().toLowerCase(), id]);
+    return true;
+  } catch (error) {
+    if (error && typeof error === "object" && "code" in error && error.code === "23505") return false;
+    throw error;
+  }
+}
+
 /** "Forgot password" — reuses the same invite_token/invite_expires_at
  * columns and the same acceptInvite() to actually set the new password, so
  * a reset link and an invite link both land on /admin/accept-invite. Only
