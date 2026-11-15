@@ -23,18 +23,29 @@ export function MeetingForm({
   meeting,
   members,
   onDone,
+  initialDate,
+  startOpen = false,
 }: {
   /** Omit to render a "Schedule a Meeting" create button; pass an existing
    * meeting to render inline, pre-filled for editing. */
   meeting?: BoardMeeting;
   members: Member[];
   onDone?: () => void;
+  /** Pre-fills the date (not time) for a new meeting — e.g. when scheduling
+   * from a clicked day on the Calendar page. Ignored when editing. */
+  initialDate?: string;
+  /** Renders already expanded instead of behind a "Schedule a Meeting"
+   * button — e.g. when opened from a calendar-day click, where the click
+   * itself is the open action. */
+  startOpen?: boolean;
 }) {
   const router = useRouter();
   const isEdit = Boolean(meeting);
-  const [open, setOpen] = useState(isEdit);
+  const [open, setOpen] = useState(isEdit || startOpen);
   const [title, setTitle] = useState(meeting?.title ?? "");
-  const [scheduledAt, setScheduledAt] = useState(meeting ? toLocalInputValue(meeting.scheduled_at) : "");
+  const [scheduledAt, setScheduledAt] = useState(
+    meeting ? toLocalInputValue(meeting.scheduled_at) : initialDate ? `${initialDate}T09:00` : ""
+  );
   const [zoomUrl, setZoomUrl] = useState(meeting?.zoom_url ?? "");
   const [notes, setNotes] = useState(meeting?.notes ?? "");
   const [inviteeIds, setInviteeIds] = useState<string[]>(meeting?.invitee_ids ?? []);
@@ -217,7 +228,7 @@ export function MeetingForm({
         </button>
         <button
           type="button"
-          onClick={() => (isEdit ? onDone?.() : setOpen(false))}
+          onClick={() => (isEdit || startOpen ? onDone?.() : setOpen(false))}
           className="text-sm font-medium text-ink/50 hover:text-ink"
         >
           Cancel
