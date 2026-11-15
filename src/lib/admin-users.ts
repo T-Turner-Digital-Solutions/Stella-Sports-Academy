@@ -152,6 +152,21 @@ export async function updateAdminUserPassword(id: string, passwordHash: string) 
   return true;
 }
 
+/** Owner-only — sets a board member's password directly and activates the
+ * account immediately, with no email round-trip at all. For when email
+ * delivery can't be relied on (or verified) in the moment and someone
+ * needs in right now. Clears any pending invite token so the account
+ * cleanly shows as Active rather than Invite Pending. */
+export async function setAdminUserPasswordDirect(id: string, passwordHash: string) {
+  const db = getDb();
+  if (!db) return false;
+  await db.query(
+    `UPDATE admin_users SET password_hash = $1, invite_token = NULL, invite_expires_at = NULL WHERE id = $2`,
+    [passwordHash, id]
+  );
+  return true;
+}
+
 /** Re-issues a fresh invite token/expiry for an account that hasn't
  * accepted its invite yet (no password set) — e.g. the original email
  * bounced, was missed, or its 7-day link expired. Returns null if the
