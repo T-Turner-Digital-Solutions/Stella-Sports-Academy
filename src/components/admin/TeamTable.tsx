@@ -2,6 +2,8 @@ import { cn, formatDate } from "@/lib/utils";
 import type { AdminUserRecord } from "@/lib/admin-users";
 import { ToggleAdminActiveButton } from "@/components/admin/ToggleAdminActiveButton";
 import { EditTitleButton } from "@/components/admin/EditTitleButton";
+import { EditEmailButton } from "@/components/admin/EditEmailButton";
+import { ResendInviteButton } from "@/components/admin/ResendInviteButton";
 
 function memberStatus(user: AdminUserRecord) {
   if (!user.active) return { label: "Deactivated", className: "bg-ink/5 text-ink/40" };
@@ -41,7 +43,9 @@ export function TeamTable({
                   {member.name}
                   {member.id === currentUserId && <span className="ml-2 text-xs font-normal text-ink/40">(you)</span>}
                 </td>
-                <td className="px-5 py-4 text-ink/70">{member.email}</td>
+                <td className="px-5 py-4 text-sm">
+                  {canManage ? <EditEmailButton id={member.id} email={member.email} /> : member.email}
+                </td>
                 <td className="px-5 py-4 text-ink/70 capitalize">{member.role}</td>
                 <td className="px-5 py-4 text-sm">
                   {canManage ? (
@@ -60,9 +64,12 @@ export function TeamTable({
                 </td>
                 {canManage && (
                   <td className="px-5 py-4">
-                    {member.id !== currentUserId && (
-                      <ToggleAdminActiveButton id={member.id} active={member.active} />
-                    )}
+                    <div className="flex items-center gap-4">
+                      {!member.password_hash && member.active && <ResendInviteButton id={member.id} />}
+                      {member.id !== currentUserId && (
+                        <ToggleAdminActiveButton id={member.id} active={member.active} />
+                      )}
+                    </div>
                   </td>
                 )}
               </tr>
