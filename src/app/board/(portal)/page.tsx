@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
   LayoutGrid,
@@ -121,15 +122,24 @@ export default async function BoardPortalHubPage() {
 
   return (
     <Container className="py-8">
-      <div className="rounded-xl bg-[#0b1f3a] p-6 sm:p-8">
-        <p className="text-xs font-bold uppercase tracking-widest text-blue-300">Board Portal</p>
-        <h1 className="mt-1.5 text-2xl font-bold text-white sm:text-3xl">
-          Welcome{session?.name ? `, ${firstName(session.name)}` : ""}!
-        </h1>
-        {positionLabel && <p className="mt-1 text-sm font-semibold text-blue-300">{positionLabel}</p>}
-        <p className="mt-2 max-w-xl text-sm text-white/70">
-          Everything you need to govern, collaborate, and support the academy.
-        </p>
+      <div className="flex items-start justify-between gap-4 rounded-xl bg-[#0b1f3a] p-6 sm:p-8">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-widest text-blue-300">Board Portal</p>
+          <h1 className="mt-1.5 text-2xl font-bold text-white sm:text-3xl">
+            Welcome{session?.name ? `, ${firstName(session.name)}` : ""}!
+          </h1>
+          {positionLabel && <p className="mt-1 text-sm font-semibold text-blue-300">{positionLabel}</p>}
+          <p className="mt-2 max-w-xl text-sm text-white/70">
+            Everything you need to govern, collaborate, and support the academy.
+          </p>
+        </div>
+        <Image
+          src="/brand/stella-mark.png"
+          alt="Stellar Sports Academy"
+          width={1514}
+          height={730}
+          className="hidden h-12 w-auto flex-shrink-0 drop-shadow-sm sm:block"
+        />
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
