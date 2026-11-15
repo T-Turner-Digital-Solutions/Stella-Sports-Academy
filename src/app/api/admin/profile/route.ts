@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { getCurrentAdminSession } from "@/lib/auth";
+import { getCurrentAdminSession, createSessionToken, SESSION_COOKIE, sessionCookieOptions } from "@/lib/auth";
 import { isDatabaseConfigured } from "@/lib/db";
 import { updateAdminUserName } from "@/lib/admin-users";
 
@@ -31,5 +31,16 @@ export async function POST(request: Request) {
   }
 
   await updateAdminUserName(session.id, parsed.data.name);
-  return NextResponse.json({ message: "Name updated." });
+
+  // The session cookie is a signed JWT carrying `name` as a claim set at
+  // login — getCurrentAdminSession() only decodes it, it never re-queries
+  // the database. Without reissuing it here, every page that reads
+  // session.name (the Dashboard/Board Portal greeting) would keep showing
+  // the pre-update name until the user logs out and back in, even though
+  // the database row was updated correctly.
+  const updatedSession = { ...session, name: parsed.data.name };
+  const token = await createSessionToken(updatedSession);
+  const response = NextResponse.json({ message: "Name updated." });
+  response.cookies.set(SESSION_COOKIE, token, sessionCookieOptions);
+  return response;
 }
