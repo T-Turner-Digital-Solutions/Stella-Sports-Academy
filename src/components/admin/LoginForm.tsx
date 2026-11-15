@@ -106,11 +106,10 @@ export function LoginForm({
         <FormStatus state={state} />
       </form>
       <p className="mt-4 text-center text-sm text-ink/60">
-        {activatePrompt}{" "}
+        <span className="block">{activatePrompt}</span>
         <Link href={activateHref} className={`font-semibold hover:underline ${t.link}`}>
           {activateLabel}
         </Link>
-        .
       </p>
     </div>
   );
