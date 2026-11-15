@@ -13,6 +13,14 @@ export type BoardNote = {
   meeting_title: string | null;
 };
 
+// Postgres "undefined_column" (42703) or "undefined_table" (42P01) — see
+// the matching comment in @/lib/board-meetings for why this degrades
+// instead of failing the page.
+function isMigrationNotAppliedError(error: unknown): boolean {
+  if (!error || typeof error !== "object" || !("code" in error)) return false;
+  return error.code === "42703" || error.code === "42P01";
+}
+
 /** Every note a given member may see: their own, plus any note someone
  * else shared with them by name. Enforced in SQL, not the UI — a note with
  * shared_with set is invisible to anyone not in that list and not its
@@ -20,16 +28,22 @@ export type BoardNote = {
 export async function listNotesForUser(userId: string) {
   const db = getDb();
   if (!db) return [];
-  const result = await db.query<BoardNote>(
-    `SELECT n.*, u.name AS author_name, m.title AS meeting_title
-     FROM board_notes n
-     JOIN admin_users u ON u.id = n.admin_user_id
-     LEFT JOIN board_meetings m ON m.id = n.meeting_id
-     WHERE n.admin_user_id = $1 OR $1 = ANY(n.shared_with)
-     ORDER BY n.updated_at DESC`,
-    [userId]
-  );
-  return result.rows;
+  try {
+    const result = await db.query<BoardNote>(
+      `SELECT n.*, u.name AS author_name, m.title AS meeting_title
+       FROM board_notes n
+       JOIN admin_users u ON u.id = n.admin_user_id
+       LEFT JOIN board_meetings m ON m.id = n.meeting_id
+       WHERE n.admin_user_id = $1 OR $1 = ANY(n.shared_with)
+       ORDER BY n.updated_at DESC`,
+      [userId]
+    );
+    return result.rows;
+  } catch (error) {
+    if (!isMigrationNotAppliedError(error)) throw error;
+    console.error("[board-notes] Migration not applied yet — returning no notes instead of failing the page.");
+    return [];
+  }
 }
 
 export async function findNoteById(id: string) {
