@@ -1,6 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { LayoutGrid, FolderOpen, CalendarClock, BarChart3, CheckSquare, Users, ArrowRight } from "lucide-react";
+import {
+  LayoutGrid,
+  FolderOpen,
+  CalendarClock,
+  BarChart3,
+  CheckSquare,
+  Users,
+  CalendarDays,
+  NotebookPen,
+  MessageCircle,
+  HelpCircle,
+  Video,
+  ArrowRight,
+} from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionTile } from "@/components/board/SectionTile";
 import { getCurrentAdminSession } from "@/lib/auth";
@@ -47,6 +60,36 @@ const SECTIONS = [
     icon: Users,
     title: "Board Operations",
     description: "Directory, tasks, committees, and policies",
+  },
+  {
+    href: "/board/calendar",
+    icon: CalendarDays,
+    title: "Calendar",
+    description: "Every scheduled board meeting in one view",
+  },
+  {
+    href: "/board/notes",
+    icon: NotebookPen,
+    title: "My Notes",
+    description: "Private notes only you can see",
+  },
+  {
+    href: "/board/messages",
+    icon: MessageCircle,
+    title: "Messages",
+    description: "Share quick updates with the board",
+  },
+  {
+    href: "/board/open-questions",
+    icon: HelpCircle,
+    title: "Open Questions",
+    description: "Ask the administrator a question",
+  },
+  {
+    href: "/board/external-meetings",
+    icon: Video,
+    title: "External Meetings",
+    description: "Sponsor, donor, and partner meetings",
   },
 ] as const;
 

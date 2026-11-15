@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 const THEMES = {
   red: { badge: "bg-red-100", icon: "text-red-700", heading: "font-display uppercase tracking-wide text-lg" },
-  blue: { badge: "bg-blue-50", icon: "text-blue-700", heading: "font-portal-heading text-lg" },
+  blue: { badge: "bg-blue-50", icon: "text-blue-700", heading: "text-lg font-semibold" },
 } as const;
 
 export function EmptyState({

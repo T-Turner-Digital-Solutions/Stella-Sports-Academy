@@ -17,6 +17,10 @@ const EXPECTED_TABLES = [
   "financial_goals",
   "financial_goal_changes",
   "board_suggestions",
+  "board_notes",
+  "board_messages",
+  "board_votes",
+  "board_vote_responses",
 ];
 
 /** Owners can always use this; DB_SETUP_SECRET is an optional extra way in

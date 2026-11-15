@@ -259,3 +259,53 @@ CREATE TABLE IF NOT EXISTS board_suggestions (
   responded_by        UUID REFERENCES admin_users(id) ON DELETE SET NULL,
   responded_at        TIMESTAMPTZ
 );
+
+-- Private board member notes. Strictly per-account: every query and write in
+-- @/lib/board-notes is scoped to admin_user_id, so one member's notes are
+-- never readable or editable by another, owners included.
+CREATE TABLE IF NOT EXISTS board_notes (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  admin_user_id       UUID NOT NULL REFERENCES admin_users(id) ON DELETE CASCADE,
+  title               TEXT NOT NULL,
+  body                TEXT NOT NULL DEFAULT ''
+);
+
+-- Shared board message board. Every signed-in board member/admin can read
+-- and post; a message can be removed by its author or an owner. This is a
+-- single shared channel (not private DMs) — see src/lib/board-messages.ts.
+CREATE TABLE IF NOT EXISTS board_messages (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  admin_user_id       UUID NOT NULL REFERENCES admin_users(id) ON DELETE CASCADE,
+  body                TEXT NOT NULL
+);
+
+-- Real votes/approvals and each member's individual response. Deliberately
+-- does NOT auto-compute pass/fail from quorum or threshold rules — those
+-- depend on the organization's actual bylaws, which haven't been provided.
+-- Instead every member's response is recorded and visible, and an owner
+-- manually records the final outcome (status) once decided. See
+-- src/lib/board-votes.ts.
+CREATE TABLE IF NOT EXISTS board_votes (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  created_by          UUID REFERENCES admin_users(id) ON DELETE SET NULL,
+  category            TEXT NOT NULL DEFAULT 'other' CHECK (category IN ('resolutions', 'policies', 'contracts', 'other')),
+  title               TEXT NOT NULL,
+  description         TEXT,
+  due_date            DATE,
+  status              TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'declined', 'withdrawn')),
+  decided_by          UUID REFERENCES admin_users(id) ON DELETE SET NULL,
+  decided_at          TIMESTAMPTZ
+);
+
+CREATE TABLE IF NOT EXISTS board_vote_responses (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  vote_id             UUID NOT NULL REFERENCES board_votes(id) ON DELETE CASCADE,
+  admin_user_id       UUID NOT NULL REFERENCES admin_users(id) ON DELETE CASCADE,
+  response            TEXT NOT NULL CHECK (response IN ('approve', 'decline', 'abstain')),
+  responded_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (vote_id, admin_user_id)
+);

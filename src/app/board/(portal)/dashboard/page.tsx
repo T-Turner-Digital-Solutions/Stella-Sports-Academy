@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { CalendarClock, FileCheck2, CalendarDays, Users, Video, ClipboardList, ArrowRight } from "lucide-react";
+import { CalendarClock, FileCheck2, CalendarDays, Users, Video, ClipboardList, ArrowRight, CheckSquare } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { StatCard } from "@/components/board/StatCard";
 import { MiniBoardCalendar } from "@/components/board/MiniBoardCalendar";
@@ -10,9 +10,17 @@ import { getCurrentAdminSession } from "@/lib/auth";
 import { listUpcomingBoardMeetings, listAllBoardMeetings } from "@/lib/board-meetings";
 import { listCurrentBoardDocuments, listAcknowledgedDocumentIds } from "@/lib/board-documents";
 import { findAdminUserById, firstName, formatPositionLabel, listAdminUsers } from "@/lib/admin-users";
+import { listRecentMessages } from "@/lib/board-messages";
+import { listAllVotes } from "@/lib/board-votes";
+import { formatRelativeDayTime, formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Dashboard" };
+
+function initials(name: string) {
+  const parts = name.trim().split(/\s+/);
+  return ((parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "")).toUpperCase() || "?";
+}
 
 function formatDateTime(iso: string) {
   return new Intl.DateTimeFormat("en-US", {
@@ -35,6 +43,9 @@ export default async function BoardDashboardPage() {
   const nextMeeting = upcoming[0];
   const member = dbReady && session ? await findAdminUserById(session.id) : null;
   const positionLabel = member ? formatPositionLabel(member) : null;
+  const recentMessages = dbReady ? await listRecentMessages(3) : [];
+  const votes = dbReady ? await listAllVotes() : [];
+  const pendingVotes = votes.filter((v) => v.status === "pending").slice(0, 3);
 
   return (
     <Container>
@@ -130,6 +141,71 @@ export default async function BoardDashboardPage() {
                 >
                   <span className="text-ink/80 group-hover:text-blue-700">{doc.title}</span>
                   <ArrowRight className="h-3.5 w-3.5 flex-shrink-0 text-ink/30 transition-transform group-hover:translate-x-1 group-hover:text-blue-700" />
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-2">
+        <div className="rounded-xl border border-ink/10 bg-white p-6">
+          <div className="flex items-center justify-between">
+            <p className="font-semibold text-base text-[#0b1f3a]">Recent Messages</p>
+            <Link href="/board/messages" className="text-xs font-semibold text-blue-700 hover:underline">
+              View All
+            </Link>
+          </div>
+          {recentMessages.length === 0 ? (
+            <p className="mt-3 text-sm text-ink/50">No messages yet.</p>
+          ) : (
+            <div className="mt-3 flex flex-col gap-3">
+              {recentMessages.map((m) => (
+                <div key={m.id} className="flex items-start gap-3">
+                  <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-700">
+                    {initials(m.author_name)}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-baseline justify-between gap-2">
+                      <p className="truncate text-sm font-semibold text-[#0b1f3a]">{m.author_name}</p>
+                      <p className="flex-shrink-0 text-xs text-ink/40">{formatRelativeDayTime(m.created_at)}</p>
+                    </div>
+                    <p className="truncate text-sm text-ink/60">{m.body}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="rounded-xl border border-ink/10 bg-white p-6">
+          <div className="flex items-center justify-between">
+            <p className="font-semibold text-base text-[#0b1f3a]">Pending Votes &amp; Approvals</p>
+            <Link href="/board/voting" className="text-xs font-semibold text-blue-700 hover:underline">
+              View All
+            </Link>
+          </div>
+          {pendingVotes.length === 0 ? (
+            <p className="mt-3 text-sm text-ink/50">Nothing is currently up for a vote.</p>
+          ) : (
+            <div className="mt-3 flex flex-col gap-3">
+              {pendingVotes.map((v) => (
+                <Link
+                  key={v.id}
+                  href="/board/voting"
+                  className="group flex items-center justify-between gap-3 rounded-lg border border-ink/10 p-3 transition-colors hover:border-blue-200"
+                >
+                  <div className="flex min-w-0 items-start gap-2.5">
+                    <CheckSquare className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-700" />
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold text-[#0b1f3a]">{v.title}</p>
+                      {v.description && <p className="truncate text-xs text-ink/50">{v.description}</p>}
+                    </div>
+                  </div>
+                  <span className="flex flex-shrink-0 items-center gap-1.5 text-xs font-semibold text-blue-700">
+                    {v.due_date ? `Due ${formatDate(v.due_date)}` : "No deadline"}
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                  </span>
                 </Link>
               ))}
             </div>
