@@ -7,6 +7,10 @@ type Status = {
   connected: boolean;
   adminUserCount?: number | null;
   titleColumnExists?: boolean | null;
+  meetingManagementReady?: boolean | null;
+  notesReady?: boolean | null;
+  messageThreadsReady?: boolean | null;
+  minutesReady?: boolean | null;
   message?: string;
 };
 
@@ -47,8 +51,9 @@ export function DbSetupPanel() {
         <h2 className="font-display text-lg uppercase tracking-wide text-ink">Database Update</h2>
       </div>
       <p className="text-sm text-ink/60">
-        Adds the new &quot;Position&quot; field to board member accounts. This only adds what&apos;s missing — it
-        never deletes or changes existing accounts, passwords, or roles. Safe to run more than once.
+        Adds the &quot;Position&quot; field on board member accounts, meeting invitations/status/reminders, shared
+        notes, meeting minutes, and message threads. This only adds what&apos;s missing — it never deletes or
+        changes existing accounts, meetings, documents, or messages. Safe to run more than once.
       </p>
 
       <div className="flex flex-wrap gap-3">
@@ -80,6 +85,18 @@ export function DbSetupPanel() {
           )}
           {status.titleColumnExists !== null && status.titleColumnExists !== undefined && (
             <StatusRow ok={status.titleColumnExists} label="Position field ready" />
+          )}
+          {status.meetingManagementReady !== null && status.meetingManagementReady !== undefined && (
+            <StatusRow ok={status.meetingManagementReady} label="Meeting invitations, status & reminders ready" />
+          )}
+          {status.notesReady !== null && status.notesReady !== undefined && (
+            <StatusRow ok={status.notesReady} label="Shared notes ready" />
+          )}
+          {status.messageThreadsReady !== null && status.messageThreadsReady !== undefined && (
+            <StatusRow ok={status.messageThreadsReady} label="Message replies/threads ready" />
+          )}
+          {status.minutesReady !== null && status.minutesReady !== undefined && (
+            <StatusRow ok={status.minutesReady} label="Meeting minutes workflow ready" />
           )}
         </div>
       )}
