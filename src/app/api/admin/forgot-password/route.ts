@@ -27,14 +27,14 @@ export async function POST(request: Request) {
 
   const user = await createPasswordResetToken(parsed.data.email);
   if (user?.invite_token) {
-    const resetUrl = `${site.url}/admin/accept-invite?token=${user.invite_token}`;
+    const resetUrl = `${site.url}/board/accept-invite?token=${user.invite_token}`;
     await sendConfirmationEmail(
       user.email,
-      `Reset your ${site.name} admin password`,
+      `Set your ${site.name} Board Portal password`,
       `<p>Hi ${escapeHtml(user.name)},</p>
-       <p>A password reset was requested for your ${escapeHtml(site.name)} admin account. If this was
-       you, set a new password here:</p>
-       <p><a href="${resetUrl}">Reset your password</a></p>
+       <p>A secure link was requested to activate or reset the password on your ${escapeHtml(site.name)}
+       Board Management Portal account. If this was you, set your password here:</p>
+       <p><a href="${resetUrl}">Set your password</a></p>
        <p>This link expires in 1 hour. If you didn't request this, you can safely ignore this email —
        your password hasn't been changed.</p>`
     );

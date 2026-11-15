@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { UserPlus } from "lucide-react";
 import { Field, TextInput } from "@/components/forms/fields";
 import { FormStatus } from "@/components/forms/FormStatus";
-import { Button } from "@/components/ui/Button";
 import { postForm, type SubmitState } from "@/lib/forms-client";
 
 type InviteLookup =
@@ -13,7 +12,20 @@ type InviteLookup =
   | { status: "invalid" }
   | { status: "ready"; name: string; email: string };
 
-export function AcceptInviteForm() {
+const THEMES = {
+  red: { badge: "bg-red-100", icon: "text-red-700", button: "bg-red-700 hover:bg-red-800" },
+  blue: { badge: "bg-blue-100", icon: "text-blue-700", button: "bg-blue-700 hover:bg-blue-800" },
+} as const;
+
+export function AcceptInviteForm({
+  theme = "red",
+  afterAcceptRedirect = "/admin",
+}: {
+  /** "blue" matches the board portal's branding; "red" matches the admin backend. */
+  theme?: "red" | "blue";
+  afterAcceptRedirect?: string;
+}) {
+  const t = THEMES[theme];
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token") || "";
@@ -41,7 +53,7 @@ export function AcceptInviteForm() {
     const result = await postForm("/api/admin/accept-invite", { token, password });
 
     if (result.ok) {
-      router.push("/admin");
+      router.push(afterAcceptRedirect);
       router.refresh();
     } else {
       setState({ status: "error", message: result.message });
@@ -66,12 +78,12 @@ export function AcceptInviteForm() {
   return (
     <div className="mx-auto w-full max-w-sm">
       <div className="flex flex-col items-center gap-3 text-center">
-        <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
-          <UserPlus className="h-6 w-6 text-red-700" />
+        <span className={`flex h-12 w-12 items-center justify-center rounded-full ${t.badge}`}>
+          <UserPlus className={`h-6 w-6 ${t.icon}`} />
         </span>
         <h1 className="font-display text-2xl uppercase tracking-wide text-ink">Set Your Password</h1>
         <p className="text-sm text-ink/60">
-          Welcome, {lookup.name} — finish setting up your admin account for {lookup.email}.
+          Welcome, {lookup.name} — finish setting up your account for {lookup.email}.
         </p>
       </div>
 
@@ -98,9 +110,13 @@ export function AcceptInviteForm() {
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </Field>
-        <Button type="submit" size="md" disabled={state.status === "submitting"}>
+        <button
+          type="submit"
+          disabled={state.status === "submitting"}
+          className={`rounded-full px-6 py-3 text-sm font-semibold text-white transition-colors disabled:opacity-50 ${t.button}`}
+        >
           {state.status === "submitting" ? "Setting up…" : "Set Password & Sign In"}
-        </Button>
+        </button>
         <FormStatus state={state} />
       </form>
     </div>

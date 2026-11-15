@@ -30,12 +30,18 @@ export function LoginForm({
   description = "Stellar Sports Academy — internal review access only.",
   defaultRedirect = "/admin",
   theme = "red",
+  activateHref = "/admin/forgot-password",
+  activatePrompt = "Already a member but haven't set a password yet?",
+  activateLabel = "Set one here",
 }: {
   heading?: string;
   description?: string;
   defaultRedirect?: string;
   /** "blue" matches the board portal's branding; "red" matches the admin backend. */
   theme?: "red" | "blue";
+  activateHref?: string;
+  activatePrompt?: string;
+  activateLabel?: string;
 }) {
   const t = THEMES[theme];
   const router = useRouter();
@@ -100,9 +106,9 @@ export function LoginForm({
         <FormStatus state={state} />
       </form>
       <p className="mt-4 text-center text-sm text-ink/60">
-        Already a member but haven&apos;t set a password yet?{" "}
-        <Link href="/admin/forgot-password" className={`font-semibold hover:underline ${t.link}`}>
-          Set one here
+        {activatePrompt}{" "}
+        <Link href={activateHref} className={`font-semibold hover:underline ${t.link}`}>
+          {activateLabel}
         </Link>
         .
       </p>

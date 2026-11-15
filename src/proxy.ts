@@ -6,8 +6,8 @@ export async function proxy(request: NextRequest) {
 
   const isBoardArea = pathname.startsWith("/board");
   const isLoginPage = pathname === "/admin/login" || pathname === "/board/login";
-  const isAcceptInvitePage = pathname === "/admin/accept-invite";
-  const isForgotPasswordPage = pathname === "/admin/forgot-password";
+  const isAcceptInvitePage = pathname === "/admin/accept-invite" || pathname === "/board/accept-invite";
+  const isForgotPasswordPage = pathname === "/admin/forgot-password" || pathname === "/board/activate";
   const isLoginApi = pathname === "/api/admin/login";
   const isAcceptInviteApi = pathname === "/api/admin/accept-invite";
   const isForgotPasswordApi = pathname === "/api/admin/forgot-password";

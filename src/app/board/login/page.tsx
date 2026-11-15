@@ -13,6 +13,9 @@ export default function BoardLoginPage() {
           description="Stellar Sports Academy — private access for board members."
           defaultRedirect="/board"
           theme="blue"
+          activateHref="/board/activate"
+          activatePrompt="Haven't activated your account yet?"
+          activateLabel="Activate it here"
         />
       </Suspense>
     </div>
