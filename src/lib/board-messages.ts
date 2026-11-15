@@ -8,6 +8,7 @@ export type BoardMessage = {
   body: string;
   recipient_ids: string[] | null;
   recipient_names: string[] | null;
+  parent_message_id: string | null;
   author_name: string;
   author_role: AdminRole;
   author_title: string | null;
@@ -21,7 +22,7 @@ export async function listMessagesForUser(userId: string, limit = 50) {
   const db = getDb();
   if (!db) return [];
   const result = await db.query<BoardMessage>(
-    `SELECT m.id, m.created_at, m.admin_user_id, m.body, m.recipient_ids,
+    `SELECT m.id, m.created_at, m.admin_user_id, m.body, m.recipient_ids, m.parent_message_id,
             u.name AS author_name, u.role AS author_role, u.title AS author_title,
             (
               SELECT array_agg(ru.name ORDER BY ru.name)
@@ -38,15 +39,37 @@ export async function listMessagesForUser(userId: string, limit = 50) {
   return result.rows;
 }
 
-/** recipientIds omitted/empty = broadcast to everyone. Otherwise the
- * message is private to those specific accounts plus the sender. */
-export async function createMessage(adminUserId: string, body: string, recipientIds?: string[]) {
+/** recipientIds omitted/empty = broadcast to everyone, for a new top-level
+ * message. A reply (parentMessageId set) always inherits the parent
+ * thread's actual audience instead — any recipientIds passed alongside a
+ * reply are ignored — and is refused outright if the replying account
+ * can't currently see the parent message, so a private thread's audience
+ * can never be widened or leaked by replying to it. */
+export async function createMessage(
+  adminUserId: string,
+  body: string,
+  recipientIds?: string[],
+  parentMessageId?: string
+) {
   const db = getDb();
   if (!db) return null;
-  const recipients = recipientIds && recipientIds.length > 0 ? recipientIds : null;
+
+  let recipients = recipientIds && recipientIds.length > 0 ? recipientIds : null;
+
+  if (parentMessageId) {
+    const parentResult = await db.query<{ recipient_ids: string[] | null }>(
+      `SELECT recipient_ids FROM board_messages
+       WHERE id = $1 AND (recipient_ids IS NULL OR $2 = ANY(recipient_ids) OR admin_user_id = $2)`,
+      [parentMessageId, adminUserId]
+    );
+    const parent = parentResult.rows[0];
+    if (!parent) return null;
+    recipients = parent.recipient_ids;
+  }
+
   const result = await db.query<{ id: string }>(
-    `INSERT INTO board_messages (admin_user_id, body, recipient_ids) VALUES ($1, $2, $3) RETURNING id`,
-    [adminUserId, body, recipients]
+    `INSERT INTO board_messages (admin_user_id, body, recipient_ids, parent_message_id) VALUES ($1, $2, $3, $4) RETURNING id`,
+    [adminUserId, body, recipients, parentMessageId || null]
   );
   return result.rows[0] ?? null;
 }

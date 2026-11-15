@@ -7,6 +7,7 @@ import { createMessage, deleteMessage, listMessagesForUser } from "@/lib/board-m
 const createSchema = z.object({
   body: z.string().trim().min(1, "Write a message first.").max(2000),
   recipientIds: z.array(z.string().uuid()).optional(),
+  parentMessageId: z.string().uuid().optional(),
 });
 
 const deleteSchema = z.object({
@@ -40,9 +41,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Write a message first." }, { status: 400 });
   }
 
-  const message = await createMessage(session.id, parsed.data.body, parsed.data.recipientIds);
+  const message = await createMessage(session.id, parsed.data.body, parsed.data.recipientIds, parsed.data.parentMessageId);
   if (!message) {
-    return NextResponse.json({ message: "Could not post the message. Please try again." }, { status: 500 });
+    return NextResponse.json(
+      { message: parsed.data.parentMessageId ? "Could not reply — that message isn't visible to you." : "Could not post the message. Please try again." },
+      { status: parsed.data.parentMessageId ? 403 : 500 }
+    );
   }
   return NextResponse.json({ message: "Message posted." });
 }

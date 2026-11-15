@@ -18,7 +18,7 @@ import { Container } from "@/components/ui/Container";
 import { SectionTile } from "@/components/board/SectionTile";
 import { getCurrentAdminSession } from "@/lib/auth";
 import { isDatabaseConfigured } from "@/lib/db";
-import { listUpcomingBoardMeetings } from "@/lib/board-meetings";
+import { listUpcomingBoardMeetingsForUser } from "@/lib/board-meetings";
 import { findAdminUserById, firstName, formatPositionLabel } from "@/lib/admin-users";
 
 export const dynamic = "force-dynamic";
@@ -104,7 +104,8 @@ function formatDateTime(iso: string) {
 export default async function BoardPortalHubPage() {
   const session = await getCurrentAdminSession();
   const dbReady = isDatabaseConfigured();
-  const upcoming = dbReady ? await listUpcomingBoardMeetings() : [];
+  const upcoming =
+    dbReady && session ? await listUpcomingBoardMeetingsForUser(session.id, session.role === "owner") : [];
   const nextMeeting = upcoming[0];
   const member = dbReady && session ? await findAdminUserById(session.id) : null;
   const positionLabel = member ? formatPositionLabel(member) : null;

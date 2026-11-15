@@ -115,10 +115,6 @@ export default function AboutPage() {
               />
             </div>
           </div>
-          <p className="mt-4 text-center text-sm italic text-ink/45">
-            Full founder biography coming soon — this section will be updated with approved
-            organizational content.
-          </p>
         </Container>
       </section>
 

@@ -5,7 +5,8 @@ import { Container } from "@/components/ui/Container";
 import { PortalPageHero } from "@/components/board/PortalPageHero";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { isDatabaseConfigured } from "@/lib/db";
-import { listAllBoardMeetings } from "@/lib/board-meetings";
+import { listAllBoardMeetingsForUser } from "@/lib/board-meetings";
+import { getCurrentAdminSession } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Calendar" };
@@ -42,7 +43,9 @@ export default async function BoardCalendarPage({
 }) {
   const { y, m } = await searchParams;
   const dbReady = isDatabaseConfigured();
-  const allMeetings = dbReady ? await listAllBoardMeetings() : [];
+  const session = await getCurrentAdminSession();
+  const allMeetings =
+    dbReady && session ? await listAllBoardMeetingsForUser(session.id, session.role === "owner") : [];
 
   const todayKey = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Chicago" }).format(new Date());
   const [todayYear, todayMonth, todayDay] = todayKey.split("-").map(Number);

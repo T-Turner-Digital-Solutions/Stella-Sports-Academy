@@ -7,7 +7,7 @@ import { StatCard } from "@/components/board/StatCard";
 import { MiniBoardCalendar } from "@/components/board/MiniBoardCalendar";
 import { isDatabaseConfigured } from "@/lib/db";
 import { getCurrentAdminSession } from "@/lib/auth";
-import { listUpcomingBoardMeetings, listAllBoardMeetings } from "@/lib/board-meetings";
+import { listUpcomingBoardMeetingsForUser, listAllBoardMeetingsForUser } from "@/lib/board-meetings";
 import { listCurrentBoardDocuments, listAcknowledgedDocumentIds } from "@/lib/board-documents";
 import { findAdminUserById, firstName, formatPositionLabel, listAdminUsers } from "@/lib/admin-users";
 import { listMessagesForUser } from "@/lib/board-messages";
@@ -33,8 +33,9 @@ function formatDateTime(iso: string) {
 export default async function BoardDashboardPage() {
   const dbReady = isDatabaseConfigured();
   const session = await getCurrentAdminSession();
-  const upcoming = dbReady ? await listUpcomingBoardMeetings() : [];
-  const allMeetings = dbReady ? await listAllBoardMeetings() : [];
+  const isOwner = session?.role === "owner";
+  const upcoming = dbReady && session ? await listUpcomingBoardMeetingsForUser(session.id, isOwner) : [];
+  const allMeetings = dbReady && session ? await listAllBoardMeetingsForUser(session.id, isOwner) : [];
   const documents = dbReady ? await listCurrentBoardDocuments() : [];
   const acknowledgedIds = dbReady && session ? await listAcknowledgedDocumentIds(session.id) : [];
   const pendingDocs = documents.filter((d) => !acknowledgedIds.includes(d.id));
