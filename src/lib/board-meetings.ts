@@ -1,4 +1,5 @@
 import { getDb } from "@/lib/db";
+import { isMigrationNotAppliedError, MigrationNotAppliedError } from "@/lib/migration-guard";
 
 export type BoardMeetingStatus = "scheduled" | "live" | "completed" | "cancelled";
 
@@ -14,21 +15,10 @@ export type BoardMeeting = {
   status: BoardMeetingStatus;
   reminder_24h_sent_at: string | null;
   reminder_1h_sent_at: string | null;
+  google_event_id: string | null;
 };
 
 const VISIBILITY_CLAUSE = `(invitee_ids IS NULL OR $1 = ANY(invitee_ids) OR created_by = $1)`;
-
-// Postgres "undefined_column" (42703) or "undefined_table" (42P01) —
-// thrown if this code runs against a database that hasn't had the
-// migration applied yet (missing status/invitee_ids, or the table itself).
-// Degrading to an empty list here, instead of letting the whole page 500,
-// is a deliberate stop-gap: it keeps /board and everything else that calls
-// these functions usable (just showing "nothing scheduled") until the
-// migration runs, rather than the entire portal going down over one query.
-function isMigrationNotAppliedError(error: unknown): boolean {
-  if (!error || typeof error !== "object" || !("code" in error)) return false;
-  return error.code === "42703" || error.code === "42P01";
-}
 
 /** Upcoming, non-cancelled meetings a given member can see — every
  * board-wide meeting, plus any invite-only meeting they were actually
@@ -47,9 +37,13 @@ export async function listUpcomingBoardMeetingsForUser(userId: string, isOwner: 
     );
     return result.rows;
   } catch (error) {
-    if (!isMigrationNotAppliedError(error)) throw error;
-    console.error("[board-meetings] Migration not applied yet — returning no meetings instead of failing the page.");
-    return [];
+    // Deliberately NOT returning [] here anymore — on this specific query,
+    // an empty result silently misclassifies a real, genuinely-upcoming
+    // meeting as "past" wherever a caller treats "not in the upcoming
+    // list" as history (see the Board Meetings page). Callers must handle
+    // MigrationNotAppliedError explicitly and show an honest notice.
+    if (isMigrationNotAppliedError(error)) throw new MigrationNotAppliedError();
+    throw error;
   }
 }
 
@@ -66,9 +60,8 @@ export async function listAllBoardMeetingsForUser(userId: string, isOwner: boole
     );
     return result.rows;
   } catch (error) {
-    if (!isMigrationNotAppliedError(error)) throw error;
-    console.error("[board-meetings] Migration not applied yet — returning no meetings instead of failing the page.");
-    return [];
+    if (isMigrationNotAppliedError(error)) throw new MigrationNotAppliedError();
+    throw error;
   }
 }
 
@@ -173,6 +166,20 @@ export async function markMeetingReminderSent(id: string, window: "24h" | "1h") 
   if (!db) return false;
   const column = window === "24h" ? "reminder_24h_sent_at" : "reminder_1h_sent_at";
   await db.query(`UPDATE board_meetings SET ${column} = now() WHERE id = $1`, [id]);
+  return true;
+}
+
+/** Links a meeting to the Google Calendar event created for it, and writes
+ * the auto-generated Google Meet link into the existing zoom_url field —
+ * reusing it rather than adding a parallel link column, since it's already
+ * "the video link for this meeting" regardless of provider. */
+export async function setBoardMeetingGoogleEventId(id: string, googleEventId: string, meetLink: string | null) {
+  const db = getDb();
+  if (!db) return false;
+  await db.query(
+    `UPDATE board_meetings SET google_event_id = $2, zoom_url = COALESCE($3, zoom_url) WHERE id = $1`,
+    [id, googleEventId, meetLink]
+  );
   return true;
 }
 

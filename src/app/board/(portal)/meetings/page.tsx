@@ -10,6 +10,8 @@ import { listAdminUsers } from "@/lib/admin-users";
 import { getCurrentAdminSession } from "@/lib/auth";
 import { MeetingForm } from "@/components/board/MeetingForm";
 import { MeetingCardActions } from "@/components/board/MeetingCardActions";
+import { MigrationPendingNotice } from "@/components/board/MigrationPendingNotice";
+import { MigrationNotAppliedError } from "@/lib/migration-guard";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Board Meetings" };
@@ -30,9 +32,18 @@ export default async function BoardMeetingsPage() {
   const members = allMembers.filter((m) => m.active).map((m) => ({ id: m.id, name: m.name }));
   const memberNameById = new Map(allMembers.map((m) => [m.id, m.name]));
 
-  const upcoming =
-    dbReady && session ? await listUpcomingBoardMeetingsForUser(session.id, isOwner) : [];
-  const all = dbReady && session ? await listAllBoardMeetingsForUser(session.id, isOwner) : [];
+  let upcoming: BoardMeeting[] = [];
+  let all: BoardMeeting[] = [];
+  let unavailable = false;
+  if (dbReady && session) {
+    try {
+      upcoming = await listUpcomingBoardMeetingsForUser(session.id, isOwner);
+      all = await listAllBoardMeetingsForUser(session.id, isOwner);
+    } catch (error) {
+      if (!(error instanceof MigrationNotAppliedError)) throw error;
+      unavailable = true;
+    }
+  }
   const nextMeeting = upcoming[0];
   const otherUpcoming = upcoming.slice(1);
   const past = all.filter((m) => !upcoming.some((u) => u.id === m.id));
@@ -51,13 +62,14 @@ export default async function BoardMeetingsPage() {
         badge={nextMeeting ? "Upcoming" : undefined}
       />
       <div className="mt-6">
-      <div className="flex justify-end">
+      {unavailable && <MigrationPendingNotice feature="Board Meetings" />}
+      <div className="mt-4 flex justify-end">
         <MeetingForm members={members} />
       </div>
 
       {/* NEXT MEETING */}
       <div className="mt-4">
-        {!dbReady || !nextMeeting ? (
+        {unavailable ? null : !dbReady || !nextMeeting ? (
           <EmptyState
             theme="blue"
             icon={CalendarClock}
@@ -195,6 +207,7 @@ export default async function BoardMeetingsPage() {
       )}
 
       {/* PAST MEETINGS */}
+      {!unavailable && (
       <section className="mt-10">
         <h2 className="font-semibold text-lg text-[#0b1f3a]">Previous Meetings</h2>
         <div className="mt-4">
@@ -226,6 +239,7 @@ export default async function BoardMeetingsPage() {
           )}
         </div>
       </section>
+      )}
       </div>
     </Container>
   );

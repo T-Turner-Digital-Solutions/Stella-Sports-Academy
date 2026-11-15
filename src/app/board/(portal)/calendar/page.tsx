@@ -5,8 +5,10 @@ import { Container } from "@/components/ui/Container";
 import { PortalPageHero } from "@/components/board/PortalPageHero";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { isDatabaseConfigured } from "@/lib/db";
-import { listAllBoardMeetingsForUser } from "@/lib/board-meetings";
+import { listAllBoardMeetingsForUser, type BoardMeeting } from "@/lib/board-meetings";
 import { getCurrentAdminSession } from "@/lib/auth";
+import { MigrationNotAppliedError } from "@/lib/migration-guard";
+import { MigrationPendingNotice } from "@/components/board/MigrationPendingNotice";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Calendar" };
@@ -44,8 +46,16 @@ export default async function BoardCalendarPage({
   const { y, m } = await searchParams;
   const dbReady = isDatabaseConfigured();
   const session = await getCurrentAdminSession();
-  const allMeetings =
-    dbReady && session ? await listAllBoardMeetingsForUser(session.id, session.role === "owner") : [];
+  let allMeetings: BoardMeeting[] = [];
+  let unavailable = false;
+  if (dbReady && session) {
+    try {
+      allMeetings = await listAllBoardMeetingsForUser(session.id, session.role === "owner");
+    } catch (error) {
+      if (!(error instanceof MigrationNotAppliedError)) throw error;
+      unavailable = true;
+    }
+  }
 
   const todayKey = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Chicago" }).format(new Date());
   const [todayYear, todayMonth, todayDay] = todayKey.split("-").map(Number);
@@ -77,6 +87,7 @@ export default async function BoardCalendarPage({
         title="Calendar"
         description="Every scheduled board meeting in one place, pulled directly from Board Meetings."
       />
+      {unavailable && <div className="mt-6"><MigrationPendingNotice feature="Calendar" /></div>}
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr]">
         <div className="rounded-xl border border-ink/10 bg-white p-5 sm:p-6">
           <div className="flex items-center justify-between">
@@ -144,7 +155,14 @@ export default async function BoardCalendarPage({
             {MONTH_LABELS[month - 1]} Meetings
           </p>
           <div className="mt-3 flex flex-col gap-3">
-            {monthMeetings.length === 0 ? (
+            {unavailable ? (
+              <EmptyState
+                theme="blue"
+                icon={CalendarClock}
+                title="Temporarily Unavailable"
+                description="Meeting data can't be loaded right now."
+              />
+            ) : monthMeetings.length === 0 ? (
               <EmptyState
                 theme="blue"
                 icon={CalendarClock}

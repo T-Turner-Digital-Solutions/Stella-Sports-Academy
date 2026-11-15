@@ -9,6 +9,8 @@ import { isDatabaseConfigured } from "@/lib/db";
 import { getCurrentAdminSession } from "@/lib/auth";
 import { listBoardSuggestions } from "@/lib/board-suggestions";
 import { listAdminUsers, formatPositionLabel } from "@/lib/admin-users";
+import { MigrationPendingNotice } from "@/components/board/MigrationPendingNotice";
+import { MigrationNotAppliedError } from "@/lib/migration-guard";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Board Operations" };
@@ -16,7 +18,17 @@ export const metadata: Metadata = { title: "Board Operations" };
 export default async function BoardOperationsPage() {
   const dbReady = isDatabaseConfigured();
   const session = await getCurrentAdminSession();
-  const suggestions = dbReady ? await listBoardSuggestions() : [];
+
+  let suggestions: Awaited<ReturnType<typeof listBoardSuggestions>> = [];
+  let suggestionsUnavailable = false;
+  if (dbReady) {
+    try {
+      suggestions = await listBoardSuggestions();
+    } catch (error) {
+      if (!(error instanceof MigrationNotAppliedError)) throw error;
+      suggestionsUnavailable = true;
+    }
+  }
   const openSuggestions = suggestions.filter((s) => s.status !== "completed" && s.status !== "declined").length;
   // Real approved accounts, not the static public-site leadership file —
   // name and position only, nothing an active member couldn't already see
@@ -36,10 +48,14 @@ export default async function BoardOperationsPage() {
           <StatCard icon={ClipboardList} label="Open Tasks" value={0} />
           <StatCard icon={Users} label="Active Committees" value={0} />
           <StatCard icon={CalendarDays} label="Upcoming Events" value={0} />
-          <StatCard icon={Lightbulb} label="Suggestions" value={openSuggestions} />
+          <StatCard icon={Lightbulb} label="Suggestions" value={suggestionsUnavailable ? "—" : openSuggestions} />
         </div>
 
-        <OperationsTabs suggestions={suggestions} isOwner={session?.role === "owner"} />
+        {suggestionsUnavailable ? (
+          <MigrationPendingNotice feature="Suggestions" />
+        ) : (
+          <OperationsTabs suggestions={suggestions} isOwner={session?.role === "owner"} />
+        )}
 
         <section className="mt-8">
           <div className="flex items-center gap-2.5">

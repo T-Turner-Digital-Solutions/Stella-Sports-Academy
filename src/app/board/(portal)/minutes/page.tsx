@@ -7,6 +7,8 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { isDatabaseConfigured } from "@/lib/db";
 import { getCurrentAdminSession } from "@/lib/auth";
 import { listAllMinutesForUser, type MinutesStatus } from "@/lib/board-meeting-minutes";
+import { MigrationNotAppliedError } from "@/lib/migration-guard";
+import { MigrationPendingNotice } from "@/components/board/MigrationPendingNotice";
 import { formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -34,7 +36,17 @@ export default async function MeetingMinutesLibraryPage() {
   const dbReady = isDatabaseConfigured();
   const session = await getCurrentAdminSession();
   const isOwner = session?.role === "owner";
-  const allMinutes = dbReady && session ? await listAllMinutesForUser(session.id, isOwner) : [];
+
+  let allMinutes: Awaited<ReturnType<typeof listAllMinutesForUser>> = [];
+  let unavailable = false;
+  if (dbReady && session) {
+    try {
+      allMinutes = await listAllMinutesForUser(session.id, isOwner);
+    } catch (error) {
+      if (!(error instanceof MigrationNotAppliedError)) throw error;
+      unavailable = true;
+    }
+  }
 
   return (
     <Container>
@@ -43,7 +55,9 @@ export default async function MeetingMinutesLibraryPage() {
         description="Every meeting's minutes in one place — draft, pending approval, or filed in Corporate Records."
       />
       <div className="mt-6">
-        {allMinutes.length === 0 ? (
+        {unavailable ? (
+          <MigrationPendingNotice feature="Meeting Minutes" />
+        ) : allMinutes.length === 0 ? (
           <EmptyState
             theme="blue"
             icon={FileSignature}
