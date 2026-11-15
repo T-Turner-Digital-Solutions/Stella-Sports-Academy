@@ -17,6 +17,7 @@ import {
   Settings,
   LayoutGrid,
   FileSignature,
+  HeartHandshake,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LogoutButton } from "@/components/admin/LogoutButton";
@@ -27,6 +28,7 @@ const navItems = [
   { href: "/board/meetings", label: "Board Meetings", icon: CalendarClock },
   { href: "/board/minutes", label: "Meeting Minutes", icon: FileSignature },
   { href: "/board/financials", label: "Financials", icon: BarChart3 },
+  { href: "/board/donation-inquiries", label: "Donation Inquiries", icon: HeartHandshake },
   { href: "/board/voting", label: "Voting & Approvals", icon: CheckSquare },
   { href: "/board/operations", label: "Board Operations", icon: Users },
   { href: "/board/calendar", label: "Calendar", icon: CalendarDays },

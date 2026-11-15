@@ -58,7 +58,7 @@ export function EventPopupModal() {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/80 p-4"
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-ink/80 p-4"
       onClick={close}
     >
       <div

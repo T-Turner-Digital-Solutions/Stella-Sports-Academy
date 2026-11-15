@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import { Check } from "lucide-react";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Button } from "@/components/ui/Button";
 import { CorporateSponsorshipForm } from "@/components/forms/CorporateSponsorshipForm";
-import { sponsorshipTiers, stellarNightsIntro, stellarNightsSponsorshipTiers } from "@/content/sponsorship";
-import { cn } from "@/lib/utils";
+import { stellarNightsIntro, stellarNightsSponsorshipTiers } from "@/content/sponsorship";
 import { site } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -32,6 +31,16 @@ export default function CorporateSponsorshipPage() {
             {stellarNightsIntro.body}
           </p>
 
+          <div className="mt-8 flex justify-center">
+            <Button href="#corporate-sponsor-form" size="lg" className="inline-flex items-center gap-2">
+              Donate Now
+            </Button>
+          </div>
+          <p className="mx-auto mt-3 max-w-md text-center text-xs text-ink/45">
+            Every corporate donation starts with the short form below, including your company logo, before you&rsquo;re
+            taken to Zeffy to complete your gift.
+          </p>
+
           <div className="mt-12 overflow-x-auto rounded-2xl border border-ink/10 bg-white">
             <table className="w-full min-w-[640px] text-left text-sm">
               <thead>
@@ -55,49 +64,7 @@ export default function CorporateSponsorshipPage() {
         </Container>
       </section>
 
-      <section className="bg-white py-20 sm:py-24">
-        <Container>
-          <SectionHeading eyebrow="Sponsorship Levels" title="Choose a Level" align="center" className="mx-auto" />
-          <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
-            {sponsorshipTiers.map((tier) => {
-              const Icon = tier.icon;
-              return (
-                <div
-                  key={tier.name}
-                  className={cn(
-                    "relative flex flex-col gap-4 rounded-2xl border p-6 text-center",
-                    tier.featured ? "border-red-700 bg-red-100 shadow-lg" : "border-ink/10 bg-paper"
-                  )}
-                >
-                  {tier.featured && (
-                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-red-700 px-4 py-1 text-xs font-bold uppercase tracking-wide text-white">
-                      Most Popular
-                    </span>
-                  )}
-                  <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-red-100">
-                    <Icon className="h-7 w-7 text-red-700" strokeWidth={1.75} />
-                  </span>
-                  <p className="font-display text-lg uppercase tracking-wide text-ink">{tier.name}</p>
-                  <p className="mx-auto w-fit rounded-full bg-white px-4 py-1.5 text-sm font-bold text-red-700">
-                    {tier.price}
-                  </p>
-                  <p className="text-xs leading-relaxed text-ink/60">{tier.tagline}</p>
-                  <ul className="mt-2 flex flex-col gap-2 text-left">
-                    {tier.benefits.map((benefit) => (
-                      <li key={benefit} className="flex items-start gap-2 text-xs text-ink/70">
-                        <Check className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-red-700" />
-                        {benefit}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              );
-            })}
-          </div>
-        </Container>
-      </section>
-
-      <section className="bg-paper py-20 sm:py-24">
+      <section id="corporate-sponsor-form" className="scroll-mt-24 bg-white py-20 sm:py-24">
         <Container className="max-w-3xl">
           <SectionHeading eyebrow="Ready to Partner?" title="Become a Corporate Sponsor" />
           <div className="mt-10 rounded-2xl border border-ink/10 bg-white p-7 sm:p-9">

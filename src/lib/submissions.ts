@@ -1,3 +1,4 @@
+import { getStore } from "@netlify/blobs";
 import { getDb } from "@/lib/db";
 
 export type SubmissionStatus = "new" | "reviewed" | "archived";
@@ -48,6 +49,9 @@ export type SponsorshipInquiryRecord = {
   phone: string | null;
   interested_tier: string | null;
   message: string | null;
+  logo_blob_key: string | null;
+  logo_file_name: string | null;
+  logo_content_type: string | null;
 };
 
 export type ContactSubmissionRecord = {
@@ -130,6 +134,17 @@ export async function insertVolunteerApplication(data: {
   return result.rows[0]?.id as string | undefined;
 }
 
+function sponsorLogoStore() {
+  return getStore("sponsor-logos");
+}
+
+/** Every corporate donor uploads their logo along with the inquiry — stored
+ * in Netlify Blobs, never a public URL, only readable through the
+ * authenticated board route that streams it back out. */
+export async function getSponsorLogoBytes(blobKey: string) {
+  return sponsorLogoStore().get(blobKey, { type: "arrayBuffer" });
+}
+
 export async function insertSponsorshipInquiry(data: {
   companyName: string;
   contactName: string;
@@ -137,15 +152,35 @@ export async function insertSponsorshipInquiry(data: {
   phone?: string;
   interestedTier?: string;
   message?: string;
+  logoBytes: ArrayBuffer;
+  logoFileName: string;
+  logoContentType: string;
 }) {
   const db = getDb();
   if (!db) return null;
+
+  const logoBlobKey = crypto.randomUUID();
+  await sponsorLogoStore().set(logoBlobKey, data.logoBytes, {
+    metadata: { fileName: data.logoFileName, contentType: data.logoContentType },
+  });
+
   const result = await db.query(
     `INSERT INTO corporate_sponsorship_inquiries
-      (company_name, contact_name, email, phone, interested_tier, message)
-     VALUES ($1,$2,$3,$4,$5,$6)
+      (company_name, contact_name, email, phone, interested_tier, message,
+       logo_blob_key, logo_file_name, logo_content_type)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
      RETURNING id`,
-    [data.companyName, data.contactName, data.email, data.phone || null, data.interestedTier || null, data.message || null]
+    [
+      data.companyName,
+      data.contactName,
+      data.email,
+      data.phone || null,
+      data.interestedTier || null,
+      data.message || null,
+      logoBlobKey,
+      data.logoFileName,
+      data.logoContentType,
+    ]
   );
   return result.rows[0]?.id as string | undefined;
 }
@@ -205,6 +240,16 @@ export async function listSponsorshipInquiries() {
     `SELECT * FROM corporate_sponsorship_inquiries ORDER BY created_at DESC`
   );
   return result.rows;
+}
+
+export async function getSponsorshipInquiryById(id: string) {
+  const db = getDb();
+  if (!db) return null;
+  const result = await db.query<SponsorshipInquiryRecord>(
+    `SELECT * FROM corporate_sponsorship_inquiries WHERE id = $1`,
+    [id]
+  );
+  return result.rows[0] ?? null;
 }
 
 export async function listContactSubmissions() {

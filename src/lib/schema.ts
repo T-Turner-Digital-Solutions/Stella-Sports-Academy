@@ -56,8 +56,16 @@ CREATE TABLE IF NOT EXISTS corporate_sponsorship_inquiries (
   email               TEXT NOT NULL,
   phone               TEXT,
   interested_tier     TEXT,
-  message              TEXT
+  message              TEXT,
+
+  logo_blob_key       TEXT,
+  logo_file_name      TEXT,
+  logo_content_type   TEXT
 );
+
+ALTER TABLE corporate_sponsorship_inquiries ADD COLUMN IF NOT EXISTS logo_blob_key TEXT;
+ALTER TABLE corporate_sponsorship_inquiries ADD COLUMN IF NOT EXISTS logo_file_name TEXT;
+ALTER TABLE corporate_sponsorship_inquiries ADD COLUMN IF NOT EXISTS logo_content_type TEXT;
 
 CREATE TABLE IF NOT EXISTS contact_submissions (
   id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),

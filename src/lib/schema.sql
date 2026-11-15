@@ -49,6 +49,10 @@ CREATE TABLE IF NOT EXISTS volunteer_applications (
   message             TEXT
 );
 
+-- Every corporate donor fills this out (and uploads their logo) before being
+-- sent to Zeffy to complete the gift — logo_blob_key points at Netlify
+-- Blobs (store "sponsor-logos"), never a public URL; only served through an
+-- authenticated route for board members reviewing inquiries.
 CREATE TABLE IF NOT EXISTS corporate_sponsorship_inquiries (
   id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -60,8 +64,17 @@ CREATE TABLE IF NOT EXISTS corporate_sponsorship_inquiries (
   email               TEXT NOT NULL,
   phone               TEXT,
   interested_tier     TEXT,
-  message              TEXT
+  message              TEXT,
+
+  logo_blob_key       TEXT,
+  logo_file_name      TEXT,
+  logo_content_type   TEXT
 );
+
+-- Existing databases predate the logo columns.
+ALTER TABLE corporate_sponsorship_inquiries ADD COLUMN IF NOT EXISTS logo_blob_key TEXT;
+ALTER TABLE corporate_sponsorship_inquiries ADD COLUMN IF NOT EXISTS logo_file_name TEXT;
+ALTER TABLE corporate_sponsorship_inquiries ADD COLUMN IF NOT EXISTS logo_content_type TEXT;
 
 CREATE TABLE IF NOT EXISTS contact_submissions (
   id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
