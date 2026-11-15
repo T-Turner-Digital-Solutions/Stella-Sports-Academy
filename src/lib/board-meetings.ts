@@ -110,7 +110,13 @@ export async function updateBoardMeeting(id: string, data: BoardMeetingUpdate) {
          scheduled_at = COALESCE($3, scheduled_at),
          zoom_url = CASE WHEN $4::boolean THEN $5 ELSE zoom_url END,
          notes = CASE WHEN $6::boolean THEN $7 ELSE notes END,
-         invitee_ids = CASE WHEN $8::boolean THEN $9 ELSE invitee_ids END
+         invitee_ids = CASE WHEN $8::boolean THEN $9 ELSE invitee_ids END,
+         -- Rescheduling to a genuinely different time means any reminder
+         -- already sent was for the old time — reset both flags so the
+         -- new time gets its own 24h/1h reminders instead of staying
+         -- silently suppressed.
+         reminder_24h_sent_at = CASE WHEN $3 IS NOT NULL AND $3::timestamptz IS DISTINCT FROM scheduled_at THEN NULL ELSE reminder_24h_sent_at END,
+         reminder_1h_sent_at = CASE WHEN $3 IS NOT NULL AND $3::timestamptz IS DISTINCT FROM scheduled_at THEN NULL ELSE reminder_1h_sent_at END
      WHERE id = $1
      RETURNING *`,
     [
