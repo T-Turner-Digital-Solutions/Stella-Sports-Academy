@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { FileText } from "lucide-react";
+import Link from "next/link";
+import { FileText, ArrowUpRight } from "lucide-react";
 import { isDatabaseConfigured } from "@/lib/db";
 import { listAllBoardDocuments, listAcknowledgmentsWithNames } from "@/lib/board-documents";
 import { listAdminUsers } from "@/lib/admin-users";
@@ -10,7 +11,7 @@ import { DocumentsList, type DocumentAcknowledgment } from "@/components/admin/D
 import { EmptyState } from "@/components/ui/EmptyState";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Corporate Records" };
+export const metadata: Metadata = { title: "Corporate Records (Manage)" };
 
 export default async function AdminDocumentsPage() {
   const dbReady = isDatabaseConfigured();
@@ -31,10 +32,21 @@ export default async function AdminDocumentsPage() {
 
   return (
     <div>
-      <h1 className="font-display text-2xl uppercase tracking-wide text-ink">Corporate Records</h1>
-      <p className="mt-1 text-sm text-ink/60">
-        Governance documents board members can view and acknowledge on their private dashboard.
-      </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="font-display text-2xl uppercase tracking-wide text-ink">Corporate Records (Manage)</h1>
+          <p className="mt-1 text-sm text-ink/60">
+            Governance documents board members can view and acknowledge on their private dashboard.
+          </p>
+        </div>
+        <Link
+          href="/board/corporate-records"
+          className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-ink/15 px-4 py-2 text-sm font-semibold text-ink/70 transition-colors hover:bg-paper"
+        >
+          View Board Portal Page
+          <ArrowUpRight className="h-4 w-4" />
+        </Link>
+      </div>
 
       <div className="mt-8 flex flex-col gap-6">
         {!dbReady ? (

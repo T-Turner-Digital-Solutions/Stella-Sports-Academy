@@ -15,6 +15,7 @@ import {
   HelpCircle,
   Video,
   Settings,
+  LayoutGrid,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LogoutButton } from "@/components/admin/LogoutButton";
@@ -33,7 +34,7 @@ const navItems = [
   { href: "/board/external-meetings", label: "External Meetings", icon: Video },
 ];
 
-export function PortalSidebar() {
+export function PortalSidebar({ isOwner = false }: { isOwner?: boolean }) {
   const pathname = usePathname();
 
   return (
@@ -58,6 +59,15 @@ export function PortalSidebar() {
       </nav>
 
       <div className="mt-4 flex flex-col gap-1 border-t border-ink/10 px-3 pt-4">
+        {isOwner && (
+          <Link
+            href="/admin"
+            className="flex items-center gap-2.5 rounded-lg px-3.5 py-2.5 text-sm font-medium text-red-700 transition-colors hover:bg-red-50"
+          >
+            <LayoutGrid className="h-4 w-4 flex-shrink-0" />
+            Website Administration
+          </Link>
+        )}
         <Link
           href="/admin/change-password"
           className="flex items-center gap-2.5 rounded-lg px-3.5 py-2.5 text-sm font-medium text-ink/70 transition-colors hover:bg-paper hover:text-ink"
@@ -79,7 +89,7 @@ export function PortalSidebar() {
  * visitor has no way to move between sections at all. Account Settings and
  * Sign Out are reachable from the header's account menu on every size, so
  * they're left out here to keep this bar scannable. */
-export function PortalMobileNav() {
+export function PortalMobileNav({ isOwner = false }: { isOwner?: boolean }) {
   const pathname = usePathname();
 
   return (
@@ -100,6 +110,15 @@ export function PortalMobileNav() {
           </Link>
         );
       })}
+      {isOwner && (
+        <Link
+          href="/admin"
+          className="flex flex-shrink-0 items-center gap-1.5 rounded-full bg-red-50 px-3.5 py-2 text-xs font-semibold text-red-700"
+        >
+          <LayoutGrid className="h-3.5 w-3.5" />
+          Website Administration
+        </Link>
+      )}
     </nav>
   );
 }

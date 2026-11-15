@@ -16,7 +16,10 @@ export async function proxy(request: NextRequest) {
   // DATABASE_URL is first connected or rotated.
   const isDbSetupApi = pathname === "/api/admin/db-setup";
   const isApiRoute = pathname.startsWith("/api/admin/") || pathname.startsWith("/api/board/");
-  const defaultArea = isBoardArea ? "/board" : "/admin";
+  // The Board Portal is everyone's primary workspace — Website Administration
+  // is a secondary area reached from inside it, never a default landing spot,
+  // so an already-signed-in visitor hitting either login page lands there.
+  const defaultArea = "/board";
 
   if (isLoginApi || isAcceptInviteApi || isForgotPasswordApi || isDbSetupApi) {
     return NextResponse.next();

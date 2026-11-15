@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { History } from "lucide-react";
+import Link from "next/link";
+import { History, ArrowUpRight } from "lucide-react";
 import { isDatabaseConfigured } from "@/lib/db";
 import { getCurrentAdminSession } from "@/lib/auth";
 import { listFinancialGoalYears, listGoalChangeHistory, type GoalCategory } from "@/lib/financial-goals";
@@ -27,11 +28,22 @@ export default async function AdminFinancialGoalsPage() {
 
   return (
     <div>
-      <h1 className="font-display text-2xl uppercase tracking-wide text-ink">Financial Goals</h1>
-      <p className="mt-1 text-sm text-ink/60">
-        Fundraising targets shown on the board&apos;s Financials page. These are goals only — they never change actual
-        money received.
-      </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="font-display text-2xl uppercase tracking-wide text-ink">Financial Goals</h1>
+          <p className="mt-1 text-sm text-ink/60">
+            Fundraising targets shown on the board&apos;s Financials page. These are goals only — they never change
+            actual money received.
+          </p>
+        </div>
+        <Link
+          href="/board/financials"
+          className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-ink/15 px-4 py-2 text-sm font-semibold text-ink/70 transition-colors hover:bg-paper"
+        >
+          View Board Portal Page
+          <ArrowUpRight className="h-4 w-4" />
+        </Link>
+      </div>
 
       <div className="mt-8 flex flex-col gap-6">
         {!dbReady ? (

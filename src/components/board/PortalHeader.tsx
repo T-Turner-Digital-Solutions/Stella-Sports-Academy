@@ -4,7 +4,7 @@ import { getCurrentAdminSession } from "@/lib/auth";
 import { isDatabaseConfigured } from "@/lib/db";
 import { findAdminUserById, formatPositionLabel } from "@/lib/admin-users";
 
-export async function PortalHeader() {
+export async function PortalHeader({ subtitle = "Board Management Portal" }: { subtitle?: string }) {
   const session = await getCurrentAdminSession();
   const member = isDatabaseConfigured() && session ? await findAdminUserById(session.id) : null;
   const roleLabel = member ? formatPositionLabel(member) : session?.role === "owner" ? "Administrator" : "Board Member";
@@ -18,7 +18,7 @@ export async function PortalHeader() {
           </span>
           <div className="min-w-0">
             <p className="truncate text-sm font-bold uppercase tracking-wide text-white">Stellar Sports Academy</p>
-            <p className="truncate text-xs text-white/60">Board Management Portal</p>
+            <p className="truncate text-xs text-white/60">{subtitle}</p>
           </div>
         </div>
         <PortalUserMenu roleLabel={roleLabel} light />
