@@ -2,13 +2,18 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getCurrentAdminSession } from "@/lib/auth";
 import { isDatabaseConfigured } from "@/lib/db";
-import { createBoardMeeting, deleteBoardMeeting } from "@/lib/board-meetings";
+import { createBoardMeeting, deleteBoardMeeting, updateBoardMeeting } from "@/lib/board-meetings";
 
 const createSchema = z.object({
   title: z.string().trim().min(1, "Title is required").max(200),
   scheduledAt: z.string().trim().min(1, "Date and time are required"),
   zoomUrl: z.string().trim().url("Enter a valid link").optional().or(z.literal("")),
   notes: z.string().trim().max(2000).optional(),
+});
+
+const updateSchema = z.object({
+  id: z.string().uuid(),
+  zoomUrl: z.string().trim().url("Enter a valid link").optional().or(z.literal("")),
 });
 
 const deleteSchema = z.object({
@@ -44,6 +49,30 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.json({ message: "Meeting scheduled." });
+}
+
+export async function PATCH(request: Request) {
+  if (!isDatabaseConfigured()) {
+    return NextResponse.json({ message: "Set DATABASE_URL to manage board meetings." }, { status: 501 });
+  }
+
+  const session = await getCurrentAdminSession();
+  if (!session) {
+    return NextResponse.json({ message: "Not authenticated." }, { status: 401 });
+  }
+
+  const body = await request.json().catch(() => null);
+  const parsed = updateSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ message: "Enter a valid link." }, { status: 400 });
+  }
+
+  const meeting = await updateBoardMeeting(parsed.data.id, { zoomUrl: parsed.data.zoomUrl });
+  if (!meeting) {
+    return NextResponse.json({ message: "Could not update the meeting. Please try again." }, { status: 500 });
+  }
+
+  return NextResponse.json({ message: "Meeting link updated." });
 }
 
 export async function DELETE(request: Request) {

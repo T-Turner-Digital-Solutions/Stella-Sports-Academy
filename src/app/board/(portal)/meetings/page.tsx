@@ -6,6 +6,7 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { PortalPageHero } from "@/components/board/PortalPageHero";
 import { isDatabaseConfigured } from "@/lib/db";
 import { listUpcomingBoardMeetings, listAllBoardMeetings } from "@/lib/board-meetings";
+import { MeetingLinkEditor } from "@/components/board/MeetingLinkEditor";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Board Meetings" };
@@ -52,7 +53,7 @@ export default async function BoardMeetingsPage() {
             <h2 className="font-semibold mt-2 text-2xl text-[#0b1f3a]">{nextMeeting.title}</h2>
             <p className="mt-2 text-sm font-medium text-ink/60">{formatDateTime(nextMeeting.scheduled_at)}</p>
             {nextMeeting.notes && <p className="mt-3 max-w-2xl text-sm text-ink/60">{nextMeeting.notes}</p>}
-            {nextMeeting.zoom_url ? (
+            {nextMeeting.zoom_url && (
               <a
                 href={nextMeeting.zoom_url}
                 target="_blank"
@@ -62,18 +63,17 @@ export default async function BoardMeetingsPage() {
                 <Video className="h-4 w-4" />
                 Join Meeting
               </a>
-            ) : (
-              <p className="mt-5 text-sm text-ink/40">A meeting link hasn&apos;t been added yet.</p>
             )}
+            <MeetingLinkEditor meetingId={nextMeeting.id} zoomUrl={nextMeeting.zoom_url} />
           </div>
         )}
       </div>
 
       {/* AGENDA / MINUTES / ATTENDANCE / DOCUMENTS */}
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div id="agenda" className="flex items-center gap-4 rounded-xl border-l-4 border-blue-700 bg-white p-5">
-          <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-blue-50">
-            <ClipboardList className="h-5 w-5 text-blue-700" />
+        <div id="agenda" className="flex items-center gap-4 rounded-xl border border-dashed border-ink/15 bg-paper p-5">
+          <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-ink/5">
+            <ClipboardList className="h-5 w-5 text-ink/40" />
           </span>
           <div className="flex-1">
             <p className="font-semibold text-base text-[#0b1f3a]">Meeting Agenda</p>
@@ -83,15 +83,13 @@ export default async function BoardMeetingsPage() {
           </div>
         </div>
 
-        <div id="attendance" className="flex items-center gap-4 rounded-xl border-l-4 border-blue-700 bg-white p-5">
-          <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-blue-50">
-            <Users className="h-5 w-5 text-blue-700" />
+        <div id="attendance" className="flex items-center gap-4 rounded-xl border border-dashed border-ink/15 bg-paper p-5">
+          <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-ink/5">
+            <Users className="h-5 w-5 text-ink/40" />
           </span>
           <div className="flex-1">
             <p className="font-semibold text-base text-[#0b1f3a]">Attendance</p>
-            <p className="mt-1 text-sm text-ink/60">
-              Attendance is recorded by the board secretary after each meeting and will appear here.
-            </p>
+            <p className="mt-1 text-sm text-ink/50">Not yet tracked — coming soon.</p>
           </div>
         </div>
 

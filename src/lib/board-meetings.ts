@@ -51,6 +51,33 @@ export async function createBoardMeeting(data: {
   return result.rows[0] ?? null;
 }
 
+export async function updateBoardMeeting(
+  id: string,
+  data: { title?: string; scheduledAt?: string; zoomUrl?: string | null; notes?: string | null }
+) {
+  const db = getDb();
+  if (!db) return null;
+  const result = await db.query<BoardMeeting>(
+    `UPDATE board_meetings
+     SET title = COALESCE($2, title),
+         scheduled_at = COALESCE($3, scheduled_at),
+         zoom_url = CASE WHEN $4::boolean THEN $5 ELSE zoom_url END,
+         notes = CASE WHEN $6::boolean THEN $7 ELSE notes END
+     WHERE id = $1
+     RETURNING *`,
+    [
+      id,
+      data.title ?? null,
+      data.scheduledAt ?? null,
+      data.zoomUrl !== undefined,
+      data.zoomUrl || null,
+      data.notes !== undefined,
+      data.notes || null,
+    ]
+  );
+  return result.rows[0] ?? null;
+}
+
 export async function deleteBoardMeeting(id: string) {
   const db = getDb();
   if (!db) return false;
