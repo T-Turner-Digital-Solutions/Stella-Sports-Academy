@@ -122,7 +122,7 @@ export default async function BoardPortalHubPage() {
 
   return (
     <Container className="py-8">
-      <div className="flex items-start justify-between gap-4 rounded-xl bg-[#0b1f3a] p-6 sm:p-8">
+      <div className="flex items-center justify-between gap-4 rounded-xl bg-[#0b1f3a] p-6 sm:p-8">
         <div>
           <p className="text-xs font-bold uppercase tracking-widest text-blue-300">Board Portal</p>
           <h1 className="mt-1.5 text-2xl font-bold text-white sm:text-3xl">
@@ -133,13 +133,21 @@ export default async function BoardPortalHubPage() {
             Everything you need to govern, collaborate, and support the academy.
           </p>
         </div>
-        <Image
-          src="/brand/stella-mark.png"
-          alt="Stellar Sports Academy"
-          width={1514}
-          height={730}
-          className="hidden h-12 w-auto flex-shrink-0 drop-shadow-sm sm:block"
-        />
+        <div className="hidden flex-shrink-0 flex-col items-center gap-1.5 sm:flex">
+          <Image
+            src="/brand/stella-mark.png"
+            alt=""
+            aria-hidden
+            width={1514}
+            height={730}
+            className="h-12 w-auto drop-shadow-sm"
+          />
+          <p className="text-center font-display text-xs uppercase leading-tight tracking-wide text-white">
+            Stellar
+            <br />
+            Sports Academy
+          </p>
+        </div>
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
