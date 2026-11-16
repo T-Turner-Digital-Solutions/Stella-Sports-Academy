@@ -202,7 +202,7 @@ export default function HomePage() {
           <SectionHeading
             eyebrow="The Stellar Promise"
             title="Building Champions. Creating Opportunity."
-            description="&ldquo;We're laying the foundation for a future where young athletes have access to the training, education, mentorship, and support they need to thrive.&rdquo;"
+            description="“We’re laying the foundation for a future where young athletes have access to the training, education, mentorship, and support they need to thrive.”"
             align="center"
             light
             className="mx-auto"
