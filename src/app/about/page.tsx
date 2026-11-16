@@ -53,7 +53,7 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div>
+          <div id="mission">
             <span className="mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-red-100">
               <Users className="h-4 w-4 text-red-700" />
             </span>

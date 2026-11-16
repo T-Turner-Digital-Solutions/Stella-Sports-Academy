@@ -3,14 +3,14 @@ import { ArrowRight, GraduationCap, HeartHandshake, Sparkles } from "lucide-reac
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
-import { ImpactStatCard } from "@/components/ui/ImpactStatCard";
+import { StellarPromiseCard } from "@/components/ui/StellarPromiseCard";
 import { ProgramCard } from "@/components/programs/ProgramCard";
 import { CampaignCard } from "@/components/campaigns/CampaignCard";
 import { NewsletterForm } from "@/components/home/NewsletterForm";
 import { site } from "@/content/site";
 import { programs } from "@/content/programs";
 import { campaigns } from "@/content/campaigns";
-import { impactStats } from "@/content/impact";
+import { stellarPromisePillars } from "@/content/stellar-promise";
 
 export default function HomePage() {
   return (
@@ -195,26 +195,26 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* IMPACT STATS */}
+      {/* THE STELLAR PROMISE */}
       <section className="relative overflow-hidden bg-ink py-20 sm:py-28">
         <div className="absolute inset-0 bg-gradient-to-br from-red-900/60 via-ink to-ink" />
         <Container className="relative">
           <SectionHeading
-            eyebrow="Our Impact"
-            title="Growing Every Season"
-            description="These figures update as Stellar confirms new milestones — we'd rather show real progress than invented numbers."
+            eyebrow="The Stellar Promise"
+            title="Building Champions. Creating Opportunity."
+            description="&ldquo;We're laying the foundation for a future where young athletes have access to the training, education, mentorship, and support they need to thrive.&rdquo;"
             align="center"
             light
             className="mx-auto"
           />
-          <div className="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-            {impactStats.map((stat) => (
-              <ImpactStatCard key={stat.key} stat={stat} light />
+          <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            {stellarPromisePillars.map((pillar) => (
+              <StellarPromiseCard key={pillar.key} pillar={pillar} />
             ))}
           </div>
           <div className="mt-10 text-center">
-            <Button href="/impact" variant="outline-light" size="md">
-              See Our Full Impact
+            <Button href="/about#mission" variant="outline-light" size="md">
+              Discover Our Mission
             </Button>
           </div>
         </Container>

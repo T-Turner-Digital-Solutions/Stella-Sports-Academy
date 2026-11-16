@@ -6,6 +6,7 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ImpactStatCard } from "@/components/ui/ImpactStatCard";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { LeaderCard } from "@/components/leadership/LeaderCard";
 import { impactStats, successStories } from "@/content/impact";
@@ -67,6 +68,7 @@ export default function ImpactPage() {
                   <GraduationCap className="h-5 w-5 text-red-700" />
                 </span>
                 <h2 className="font-display text-lg uppercase tracking-wide text-ink">College Placements & Scholarships</h2>
+                <Badge tone="neutral" className="ml-auto">Coming Soon</Badge>
               </div>
               <span className="mt-3 block h-0.5 w-10 rounded-full bg-red-600" />
               <div className="relative mt-5 overflow-hidden rounded-xl bg-paper">
@@ -92,6 +94,7 @@ export default function ImpactPage() {
                   <Users2 className="h-5 w-5 text-red-700" />
                 </span>
                 <h2 className="font-display text-lg uppercase tracking-wide text-ink">Program Outcomes</h2>
+                <Badge tone="neutral" className="ml-auto">Coming Soon</Badge>
               </div>
               <span className="mt-3 block h-0.5 w-10 rounded-full bg-red-600" />
               <div className="relative mt-5 overflow-hidden rounded-xl bg-paper">
