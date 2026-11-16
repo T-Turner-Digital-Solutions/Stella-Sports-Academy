@@ -6,7 +6,7 @@ import { Check, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import type { SubmissionStatus } from "@/lib/submissions";
 
-export function DonationInquiryStatusToggle({ id, status }: { id: string; status: SubmissionStatus }) {
+export function CorporateDonationStatusToggle({ id, status }: { id: string; status: SubmissionStatus }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -14,7 +14,7 @@ export function DonationInquiryStatusToggle({ id, status }: { id: string; status
   function setStatus(next: SubmissionStatus) {
     setError(null);
     startTransition(async () => {
-      const res = await fetch("/api/board/donation-inquiries", {
+      const res = await fetch("/api/board/corporate-donations", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, status: next }),

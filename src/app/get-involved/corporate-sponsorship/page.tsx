@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { Button } from "@/components/ui/Button";
 import { CorporateSponsorshipForm } from "@/components/forms/CorporateSponsorshipForm";
+import { DonateNowModal } from "@/components/forms/DonateNowModal";
 import { stellarNightsIntro, stellarNightsSponsorshipTiers } from "@/content/sponsorship";
 import { site } from "@/content/site";
 
@@ -32,13 +32,10 @@ export default function CorporateSponsorshipPage() {
           </p>
 
           <div className="mt-8 flex justify-center">
-            <Button href="#corporate-sponsor-form" size="lg" className="inline-flex items-center gap-2">
-              Donate Now
-            </Button>
+            <DonateNowModal />
           </div>
           <p className="mx-auto mt-3 max-w-md text-center text-xs text-ink/45">
-            Every corporate donation starts with the short form below, including your company logo, before you&rsquo;re
-            taken to Zeffy to complete your gift.
+            Fill out a short form with your company logo, then donate through Zeffy to receive your donation letter.
           </p>
 
           <div className="mt-12 overflow-x-auto rounded-2xl border border-ink/10 bg-white">
@@ -64,7 +61,7 @@ export default function CorporateSponsorshipPage() {
         </Container>
       </section>
 
-      <section id="corporate-sponsor-form" className="scroll-mt-24 bg-white py-20 sm:py-24">
+      <section className="bg-white py-20 sm:py-24">
         <Container className="max-w-3xl">
           <SectionHeading eyebrow="Ready to Partner?" title="Become a Corporate Sponsor" />
           <div className="mt-10 rounded-2xl border border-ink/10 bg-white p-7 sm:p-9">

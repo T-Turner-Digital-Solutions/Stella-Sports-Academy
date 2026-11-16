@@ -145,6 +145,9 @@ export async function getSponsorLogoBytes(blobKey: string) {
   return sponsorLogoStore().get(blobKey, { type: "arrayBuffer" });
 }
 
+/** General sponsorship inquiries (the "Become a Corporate Sponsor" form)
+ * carry no logo — only the dedicated Donate Now flow uploads one, since
+ * that's the only path that leads straight to Zeffy. */
 export async function insertSponsorshipInquiry(data: {
   companyName: string;
   contactName: string;
@@ -152,17 +155,20 @@ export async function insertSponsorshipInquiry(data: {
   phone?: string;
   interestedTier?: string;
   message?: string;
-  logoBytes: ArrayBuffer;
-  logoFileName: string;
-  logoContentType: string;
+  logoBytes?: ArrayBuffer;
+  logoFileName?: string;
+  logoContentType?: string;
 }) {
   const db = getDb();
   if (!db) return null;
 
-  const logoBlobKey = crypto.randomUUID();
-  await sponsorLogoStore().set(logoBlobKey, data.logoBytes, {
-    metadata: { fileName: data.logoFileName, contentType: data.logoContentType },
-  });
+  let logoBlobKey: string | null = null;
+  if (data.logoBytes && data.logoFileName && data.logoContentType) {
+    logoBlobKey = crypto.randomUUID();
+    await sponsorLogoStore().set(logoBlobKey, data.logoBytes, {
+      metadata: { fileName: data.logoFileName, contentType: data.logoContentType },
+    });
+  }
 
   const result = await db.query(
     `INSERT INTO corporate_sponsorship_inquiries
@@ -178,8 +184,8 @@ export async function insertSponsorshipInquiry(data: {
       data.interestedTier || null,
       data.message || null,
       logoBlobKey,
-      data.logoFileName,
-      data.logoContentType,
+      logoBlobKey ? data.logoFileName : null,
+      logoBlobKey ? data.logoContentType : null,
     ]
   );
   return result.rows[0]?.id as string | undefined;
