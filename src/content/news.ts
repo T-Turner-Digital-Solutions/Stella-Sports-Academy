@@ -37,6 +37,8 @@ export type StellarEvent = {
   location: string;
   description: string;
   registrationUrl?: string;
+  /** Optional event flyer image, shown on the events list and detail page. */
+  flyerImage?: string;
 };
 
 export const events: StellarEvent[] = [
@@ -49,5 +51,6 @@ export const events: StellarEvent[] = [
     location: "Pinnacle Financial, 569 Brookwood Village Ste 705, Birmingham, AL 35209",
     description:
       "An evening of purpose, possibility & impact. Join us for a special holiday gathering as we celebrate the launch of Stellar Sports Academy and the bright future of young athletes.",
+    flyerImage: "/events/stellar-nights-2026.jpg",
   },
 ];

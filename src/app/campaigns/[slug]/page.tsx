@@ -102,7 +102,7 @@ export default async function CampaignDetailPage({
 
           <aside className="h-fit rounded-2xl border border-ink/10 bg-paper p-7 lg:sticky lg:top-28">
             <Badge tone={campaign.status === "active" ? "red" : "neutral"}>
-              {campaign.status === "active" ? "Active Campaign" : "Planned"}
+              {campaign.status === "active" ? "Active Campaign" : "Coming Soon"}
             </Badge>
 
             <div className="mt-5">

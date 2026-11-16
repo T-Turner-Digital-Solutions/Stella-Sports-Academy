@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { CalendarDays, MapPin, Clock } from "lucide-react";
 import { PageHero } from "@/components/ui/PageHero";
@@ -38,6 +39,16 @@ export default async function EventDetailPage({
       <section className="bg-white py-16 sm:py-24">
         <Container className="grid gap-10 lg:grid-cols-[1fr_320px]">
           <div className="flex flex-col gap-4 text-base leading-relaxed text-ink/70">
+            {event.flyerImage && (
+              <Image
+                src={event.flyerImage}
+                alt={`${event.title} flyer`}
+                width={1000}
+                height={1250}
+                sizes="(min-width: 1024px) 60vw, 100vw"
+                className="w-full rounded-2xl border border-ink/10 object-cover"
+              />
+            )}
             <p>{event.description}</p>
           </div>
           <aside className="h-fit rounded-2xl border border-ink/10 bg-paper p-6">

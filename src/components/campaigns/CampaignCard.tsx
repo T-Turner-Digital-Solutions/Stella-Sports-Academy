@@ -23,7 +23,7 @@ export function CampaignCard({ campaign }: { campaign: Campaign }) {
           {campaign.title}
         </span>
         <Badge tone="white" className="absolute right-3 top-3">
-          {campaign.status === "active" ? "Active" : "Planned"}
+          {campaign.status === "active" ? "Active" : "Coming Soon"}
         </Badge>
       </div>
 

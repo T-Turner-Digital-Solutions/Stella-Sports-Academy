@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { CalendarDays, MapPin, Clock } from "lucide-react";
 import { PageHero } from "@/components/ui/PageHero";
@@ -31,20 +32,32 @@ export default function EventsPage() {
                 <Link
                   key={event.slug}
                   href={`/events/${event.slug}`}
-                  className="flex flex-col gap-3 rounded-2xl border border-ink/10 bg-paper p-6 transition-shadow hover:shadow-lg"
+                  className="flex flex-col overflow-hidden rounded-2xl border border-ink/10 bg-paper transition-shadow hover:shadow-lg"
                 >
-                  <Badge tone="red">{event.type}</Badge>
-                  <h2 className="font-display text-lg uppercase tracking-wide text-ink">{event.title}</h2>
-                  <div className="flex flex-col gap-1.5 text-sm text-ink/60">
-                    <span className="flex items-center gap-2">
-                      <CalendarDays className="h-4 w-4" /> {formatDate(event.date)}
-                    </span>
-                    <span className="flex items-center gap-2">
-                      <Clock className="h-4 w-4" /> {event.time}
-                    </span>
-                    <span className="flex items-center gap-2">
-                      <MapPin className="h-4 w-4" /> {event.location}
-                    </span>
+                  {event.flyerImage && (
+                    <Image
+                      src={event.flyerImage}
+                      alt={`${event.title} flyer`}
+                      width={640}
+                      height={800}
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      className="h-56 w-full object-cover"
+                    />
+                  )}
+                  <div className="flex flex-col gap-3 p-6">
+                    <Badge tone="red">{event.type}</Badge>
+                    <h2 className="font-display text-lg uppercase tracking-wide text-ink">{event.title}</h2>
+                    <div className="flex flex-col gap-1.5 text-sm text-ink/60">
+                      <span className="flex items-center gap-2">
+                        <CalendarDays className="h-4 w-4" /> {formatDate(event.date)}
+                      </span>
+                      <span className="flex items-center gap-2">
+                        <Clock className="h-4 w-4" /> {event.time}
+                      </span>
+                      <span className="flex items-center gap-2">
+                        <MapPin className="h-4 w-4" /> {event.location}
+                      </span>
+                    </div>
                   </div>
                 </Link>
               ))}
