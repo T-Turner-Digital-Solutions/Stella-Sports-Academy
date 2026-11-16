@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container } from "@/components/ui/Container";
 import { site } from "@/content/site";
@@ -16,6 +17,7 @@ const paths = [
     image: "/brand/get-involved/sponsor-an-athlete.webp",
     width: 860,
     height: 350,
+    comingSoon: true,
   },
   {
     title: "Corporate Sponsorship",
@@ -23,6 +25,7 @@ const paths = [
     image: "/brand/get-involved/corporate-sponsorship.webp",
     width: 860,
     height: 350,
+    comingSoon: false,
   },
   {
     title: "Volunteer",
@@ -30,6 +33,7 @@ const paths = [
     image: "/brand/get-involved/volunteer.webp",
     width: 860,
     height: 355,
+    comingSoon: true,
   },
   {
     title: "Attend an Event",
@@ -37,6 +41,7 @@ const paths = [
     image: "/brand/get-involved/attend-an-event.webp",
     width: 860,
     height: 355,
+    comingSoon: true,
   },
 ];
 
@@ -52,23 +57,40 @@ export default function GetInvolvedPage() {
       <section className="bg-white py-20 sm:py-28">
         <Container>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-            {paths.map((path) => (
-              <div key={path.href} className="relative overflow-hidden rounded-2xl">
-                <Image
-                  src={path.image}
-                  alt={path.title}
-                  width={path.width}
-                  height={path.height}
-                  sizes="(min-width: 640px) 50vw, 100vw"
-                  className="h-auto w-full grayscale"
-                />
-                <div className="absolute inset-0 flex items-center justify-center bg-ink/80">
-                  <span className="rounded-full bg-white px-5 py-2 text-sm font-bold uppercase tracking-wide text-ink">
-                    Coming Soon
-                  </span>
+            {paths.map((path) =>
+              path.comingSoon ? (
+                <div key={path.href} className="relative overflow-hidden rounded-2xl">
+                  <Image
+                    src={path.image}
+                    alt={path.title}
+                    width={path.width}
+                    height={path.height}
+                    sizes="(min-width: 640px) 50vw, 100vw"
+                    className="h-auto w-full grayscale"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-ink/80">
+                    <span className="rounded-full bg-white px-5 py-2 text-sm font-bold uppercase tracking-wide text-ink">
+                      Coming Soon
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ) : (
+                <Link
+                  key={path.href}
+                  href={path.href}
+                  className="group overflow-hidden rounded-2xl transition-transform duration-300 hover:-translate-y-1"
+                >
+                  <Image
+                    src={path.image}
+                    alt={path.title}
+                    width={path.width}
+                    height={path.height}
+                    sizes="(min-width: 640px) 50vw, 100vw"
+                    className="h-auto w-full"
+                  />
+                </Link>
+              )
+            )}
           </div>
         </Container>
       </section>

@@ -128,9 +128,15 @@ export default async function CampaignDetailPage({
             </div>
 
             <div className="mt-6 flex flex-col gap-3">
-              <Button href={`/donate?designation=${campaign.designation}`} size="lg">
-                Donate to This Campaign
-              </Button>
+              {campaign.status === "active" ? (
+                <Button href={`/donate?designation=${campaign.designation}`} size="lg">
+                  Donate to This Campaign
+                </Button>
+              ) : (
+                <Button type="button" disabled size="lg">
+                  Donate to This Campaign
+                </Button>
+              )}
               <ShareButton title={campaign.title} />
             </div>
 
