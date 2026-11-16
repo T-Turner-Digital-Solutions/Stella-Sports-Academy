@@ -102,7 +102,7 @@ export default async function CampaignDetailPage({
 
           <aside className="h-fit rounded-2xl border border-ink/10 bg-paper p-7 lg:sticky lg:top-28">
             <Badge tone={campaign.status === "active" ? "red" : "neutral"}>
-              {campaign.status === "active" ? "Active Campaign" : "Planned"}
+              {campaign.status === "active" ? "Active Campaign" : "Coming Soon"}
             </Badge>
 
             <div className="mt-5">
@@ -128,9 +128,15 @@ export default async function CampaignDetailPage({
             </div>
 
             <div className="mt-6 flex flex-col gap-3">
-              <Button href={`/donate?designation=${campaign.designation}`} size="lg">
-                Donate to This Campaign
-              </Button>
+              {campaign.status === "active" ? (
+                <Button href={`/donate?designation=${campaign.designation}`} size="lg">
+                  Donate to This Campaign
+                </Button>
+              ) : (
+                <Button type="button" disabled size="lg">
+                  Donate to This Campaign
+                </Button>
+              )}
               <ShareButton title={campaign.title} />
             </div>
 

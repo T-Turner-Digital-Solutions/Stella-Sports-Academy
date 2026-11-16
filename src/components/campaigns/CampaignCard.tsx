@@ -23,7 +23,7 @@ export function CampaignCard({ campaign }: { campaign: Campaign }) {
           {campaign.title}
         </span>
         <Badge tone="white" className="absolute right-3 top-3">
-          {campaign.status === "active" ? "Active" : "Planned"}
+          {campaign.status === "active" ? "Active" : "Coming Soon"}
         </Badge>
       </div>
 
@@ -54,9 +54,15 @@ export function CampaignCard({ campaign }: { campaign: Campaign }) {
         </div>
 
         <div className="flex gap-2 pt-1">
-          <Button href={`/donate?designation=${campaign.designation}`} size="md" className="flex-1">
-            Donate
-          </Button>
+          {campaign.status === "active" ? (
+            <Button href={`/donate?designation=${campaign.designation}`} size="md" className="flex-1">
+              Donate
+            </Button>
+          ) : (
+            <Button type="button" disabled size="md" className="flex-1">
+              Donate
+            </Button>
+          )}
           <Button href={`/campaigns/${campaign.slug}`} variant="ghost" size="md" className="border border-ink/15">
             View
           </Button>

@@ -116,8 +116,8 @@ export function VolunteerForm() {
         label="I consent to Stellar Sports Academy contacting me about volunteer opportunities."
       />
 
-      <Button type="submit" size="lg" disabled={state.status === "submitting"} className="self-start">
-        {state.status === "submitting" ? "Submitting…" : "Submit Application"}
+      <Button type="submit" size="lg" disabled className="self-start opacity-50">
+        Coming Soon
       </Button>
 
       <FormStatus state={state} />
