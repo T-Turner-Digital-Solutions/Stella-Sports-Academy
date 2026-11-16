@@ -4,11 +4,11 @@ import { GraduationCap, Trophy, Quote, Users2 } from "lucide-react";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { ImpactStatCard } from "@/components/ui/ImpactStatCard";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { LeaderCard } from "@/components/leadership/LeaderCard";
-import { impactStats, successStories } from "@/content/impact";
+import { successStories } from "@/content/impact";
 import { leadership } from "@/content/leadership";
 import { site } from "@/content/site";
 
@@ -28,11 +28,35 @@ export default function ImpactPage() {
 
       <section className="bg-white py-20 sm:py-28">
         <Container>
-          <SectionHeading eyebrow="By the Numbers" title="Program Metrics" />
-          <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-            {impactStats.map((stat) => (
-              <ImpactStatCard key={stat.key} stat={stat} />
+          <SectionHeading
+            eyebrow="Our Plan"
+            title="What We're Building Toward"
+            description="Stellar Sports Academy is newly established — we haven't yet served athletes or completed the programs that would generate verified outcomes. Rather than publish estimated numbers, we're sharing what we're working to build."
+            align="center"
+            className="mx-auto"
+          />
+          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { icon: GraduationCap, title: "Athletic & Academic Training", description: "Hands-on coaching paired with academic accountability and support." },
+              { icon: Users2, title: "Mentorship Connections", description: "Pairing young athletes with coaches, trainers, and community leaders." },
+              { icon: Trophy, title: "Community Events", description: "Training camps, clinics, and gatherings that bring the community together." },
+              { icon: Quote, title: "Verified Results", description: "Real, confirmed figures — athletes served, milestones reached — published here as they happen." },
+            ].map((item) => (
+              <div key={item.title} className="flex flex-col items-center gap-3 rounded-2xl border border-ink/10 bg-paper px-6 py-8 text-center">
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+                  <item.icon className="h-6 w-6 text-red-700" strokeWidth={1.75} />
+                </span>
+                <p className="font-display text-sm uppercase tracking-wide text-ink">{item.title}</p>
+                <p className="text-sm leading-relaxed text-ink/60">{item.description}</p>
+              </div>
             ))}
+          </div>
+          <div className="mt-8">
+            <EmptyState
+              icon={Trophy}
+              title="Verified Metrics Coming Soon"
+              description="As programs launch and real outcomes are confirmed, Stellar will publish athletes served, academic milestones, mentor connections, and community events here — real figures only, never estimates."
+            />
           </div>
         </Container>
       </section>
@@ -67,6 +91,7 @@ export default function ImpactPage() {
                   <GraduationCap className="h-5 w-5 text-red-700" />
                 </span>
                 <h2 className="font-display text-lg uppercase tracking-wide text-ink">College Placements & Scholarships</h2>
+                <Badge tone="neutral" className="ml-auto">Coming Soon</Badge>
               </div>
               <span className="mt-3 block h-0.5 w-10 rounded-full bg-red-600" />
               <div className="relative mt-5 overflow-hidden rounded-xl bg-paper">
@@ -92,6 +117,7 @@ export default function ImpactPage() {
                   <Users2 className="h-5 w-5 text-red-700" />
                 </span>
                 <h2 className="font-display text-lg uppercase tracking-wide text-ink">Program Outcomes</h2>
+                <Badge tone="neutral" className="ml-auto">Coming Soon</Badge>
               </div>
               <span className="mt-3 block h-0.5 w-10 rounded-full bg-red-600" />
               <div className="relative mt-5 overflow-hidden rounded-xl bg-paper">
