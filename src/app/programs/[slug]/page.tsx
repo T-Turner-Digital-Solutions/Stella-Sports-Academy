@@ -47,8 +47,8 @@ export default async function ProgramDetailPage({
             </div>
             <SectionHeading className="mt-6" title="What's Included" />
             <div className="mt-8 flex flex-col gap-3">
-              <Button href="/apply" size="md">
-                Apply Now
+              <Button type="button" size="md" disabled className="opacity-50">
+                Coming Soon
               </Button>
               <Button href="/donate" variant="ghost" size="md" className="border border-ink/15">
                 Support This Program

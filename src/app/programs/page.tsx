@@ -39,8 +39,8 @@ export default function ProgramsPage() {
             description="Athlete applications are reviewed by our team, with program placement based on need and availability."
             align="center"
           />
-          <Button href="/apply" size="lg">
-            Start an Athlete Application
+          <Button type="button" size="lg" disabled className="opacity-50">
+            Coming Soon
           </Button>
         </Container>
       </section>

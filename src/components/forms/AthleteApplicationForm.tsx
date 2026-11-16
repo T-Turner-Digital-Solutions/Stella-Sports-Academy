@@ -224,8 +224,8 @@ export function AthleteApplicationForm() {
         label="I am the parent/guardian of the athlete named above and I consent to submitting this application to Stellar Sports Academy. I understand this information will be kept confidential and reviewed by authorized program staff only."
       />
 
-      <Button type="submit" size="lg" disabled={state.status === "submitting"} className="self-start">
-        {state.status === "submitting" ? "Submitting…" : "Submit Application"}
+      <Button type="submit" size="lg" disabled className="self-start opacity-50">
+        Coming Soon
       </Button>
 
       <FormStatus state={state} />
