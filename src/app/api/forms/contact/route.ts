@@ -3,6 +3,7 @@ import { contactSchema } from "@/lib/validation";
 import { sendAdminNotification, sendConfirmationEmail, escapeHtml } from "@/lib/email";
 import { firstFieldErrors } from "@/lib/forms-server";
 import { insertContactSubmission } from "@/lib/submissions";
+import { verifyCaptcha } from "@/lib/captcha";
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
@@ -17,6 +18,14 @@ export async function POST(request: Request) {
 
   if (parsed.data.website) {
     return NextResponse.json({ message: "Thanks for reaching out — we'll be in touch soon." });
+  }
+
+  const captchaOk = await verifyCaptcha(parsed.data.captchaToken);
+  if (!captchaOk) {
+    return NextResponse.json(
+      { message: "Captcha verification failed. Please try again.", fieldErrors: { captchaToken: "Please complete the captcha." } },
+      { status: 400 }
+    );
   }
 
   const c = parsed.data;
