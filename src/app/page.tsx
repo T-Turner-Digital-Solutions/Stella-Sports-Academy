@@ -86,12 +86,12 @@ export default function HomePage() {
                 <ArrowRight className="h-4 w-4" />
               </Button>
               <Button
-                href="/programs"
+                href="/get-involved/corporate-sponsorship"
                 variant="ghost"
                 size="lg"
                 className="border-2 border-red-500 text-white shadow-[0_0_20px_-4px_rgba(0,152,221,0.8)] hover:bg-red-700/10"
               >
-                Explore Programs
+                Corporate Sponsorship
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </div>
