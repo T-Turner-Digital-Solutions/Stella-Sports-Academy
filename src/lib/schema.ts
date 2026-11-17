@@ -2,6 +2,14 @@
 // (see that route for how/when it runs). Every statement is idempotent, so
 // re-running this is always safe and never destroys data.
 export const SCHEMA_SQL = `
+-- Stellar Sports Academy — admin review database schema.
+-- Run this once against your Postgres database (see README "Admin Section"
+-- for setup). Safe to re-run — every statement is idempotent.
+--
+-- Kept in sync by hand with src/lib/schema.ts, which exports this same SQL
+-- as a string for POST /api/admin/db-setup (an in-app alternative to running
+-- this file with psql — useful when nobody has direct database access).
+
 -- Needed for gen_random_uuid() below. Postgres 13+ ships this built in via
 -- this extension; managed providers (Neon, Supabase, RDS) all support it.
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
@@ -77,15 +85,22 @@ CREATE TABLE IF NOT EXISTS contact_submissions (
   email               TEXT NOT NULL,
   phone               TEXT,
   inquiry_type        TEXT NOT NULL,
-  message             TEXT NOT NULL
+  message             TEXT NOT NULL,
+
+  ip_address          TEXT,
+  spam_status         TEXT NOT NULL DEFAULT 'clean' CHECK (spam_status IN ('clean', 'quarantined', 'reviewed_legitimate')),
+  spam_reason         TEXT
 );
+
+ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS ip_address TEXT;
+ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS spam_status TEXT NOT NULL DEFAULT 'clean';
+ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS spam_reason TEXT;
 
 -- Board member / admin accounts. The first account is bootstrapped from the
 -- ADMIN_EMAIL / ADMIN_PASSWORD_HASH env vars the first time someone signs in
--- — every account after that is created by an "owner" sending an invite from
--- /admin/team, which emails a one-time link for the invitee to set their own
--- password. The same invite_token/invite_expires_at columns are reused for
--- "forgot password" resets on existing accounts.
+-- (see README "Admin Section") — every account after that is created by an
+-- "owner" sending an invite from /admin/team, which emails a one-time link
+-- for the invitee to set their own password.
 CREATE TABLE IF NOT EXISTS admin_users (
   id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -127,13 +142,8 @@ CREATE TABLE IF NOT EXISTS board_meetings (
   notes               TEXT,
   invitee_ids         UUID[],
 
-  -- Manually controlled by an admin — never inferred from scheduled_at vs.
-  -- now(), per the board's explicit instruction not to fake a LIVE status
-  -- just because the scheduled time has arrived.
   status              TEXT NOT NULL DEFAULT 'scheduled' CHECK (status IN ('scheduled', 'live', 'completed', 'cancelled')),
 
-  -- Set once each automatic reminder has actually been sent, so the
-  -- scheduled reminder function never double-sends.
   reminder_24h_sent_at TIMESTAMPTZ,
   reminder_1h_sent_at  TIMESTAMPTZ
 );
@@ -298,6 +308,12 @@ CREATE TABLE IF NOT EXISTS board_notes (
 ALTER TABLE board_notes ADD COLUMN IF NOT EXISTS shared_with UUID[];
 ALTER TABLE board_notes ADD COLUMN IF NOT EXISTS meeting_id UUID REFERENCES board_meetings(id) ON DELETE SET NULL;
 
+-- Board message board. recipient_ids NULL means a broadcast to every
+-- signed-in board member/admin; a non-null array scopes the message to only
+-- those specific accounts (plus the sender) — a private message, not a
+-- public one. Visibility and delete permissions are enforced entirely in
+-- src/lib/board-messages.ts, never just in the UI, per the requirement that
+-- private messages be protected at the database/server level.
 -- parent_message_id turns a message into a reply, grouping it into the
 -- parent's thread. A reply inherits the parent's audience (enforced in
 -- @/lib/board-messages, not just read from this column) so a thread can

@@ -76,6 +76,12 @@ ALTER TABLE corporate_sponsorship_inquiries ADD COLUMN IF NOT EXISTS logo_blob_k
 ALTER TABLE corporate_sponsorship_inquiries ADD COLUMN IF NOT EXISTS logo_file_name TEXT;
 ALTER TABLE corporate_sponsorship_inquiries ADD COLUMN IF NOT EXISTS logo_content_type TEXT;
 
+-- spam_status/spam_reason/ip_address support the Contact form's spam
+-- filter: 'quarantined' submissions are stored here (never deleted) but
+-- never trigger the admin/confirmation emails and are hidden from the
+-- normal Contact Submissions admin view — they're reviewed separately at
+-- /admin/contact/quarantine, where an owner can mark one 'reviewed_legitimate'
+-- to move it back into the regular list.
 CREATE TABLE IF NOT EXISTS contact_submissions (
   id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -86,8 +92,17 @@ CREATE TABLE IF NOT EXISTS contact_submissions (
   email               TEXT NOT NULL,
   phone               TEXT,
   inquiry_type        TEXT NOT NULL,
-  message             TEXT NOT NULL
+  message             TEXT NOT NULL,
+
+  ip_address          TEXT,
+  spam_status         TEXT NOT NULL DEFAULT 'clean' CHECK (spam_status IN ('clean', 'quarantined', 'reviewed_legitimate')),
+  spam_reason         TEXT
 );
+
+-- Existing databases predate the spam-filter columns.
+ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS ip_address TEXT;
+ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS spam_status TEXT NOT NULL DEFAULT 'clean';
+ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS spam_reason TEXT;
 
 -- Board member / admin accounts. The first account is bootstrapped from the
 -- ADMIN_EMAIL / ADMIN_PASSWORD_HASH env vars the first time someone signs in

@@ -54,6 +54,8 @@ export type SponsorshipInquiryRecord = {
   logo_content_type: string | null;
 };
 
+export type SpamStatus = "clean" | "quarantined" | "reviewed_legitimate";
+
 export type ContactSubmissionRecord = {
   id: string;
   created_at: string;
@@ -64,6 +66,9 @@ export type ContactSubmissionRecord = {
   phone: string | null;
   inquiry_type: string;
   message: string;
+  ip_address: string | null;
+  spam_status: SpamStatus;
+  spam_reason: string | null;
 };
 
 // --- Inserts (called from public form API routes) ---
@@ -197,14 +202,26 @@ export async function insertContactSubmission(data: {
   phone?: string;
   inquiryType: string;
   message: string;
+  ipAddress?: string | null;
+  spamStatus: SpamStatus;
+  spamReason?: string | null;
 }) {
   const db = getDb();
   if (!db) return null;
   const result = await db.query(
-    `INSERT INTO contact_submissions (name, email, phone, inquiry_type, message)
-     VALUES ($1,$2,$3,$4,$5)
+    `INSERT INTO contact_submissions (name, email, phone, inquiry_type, message, ip_address, spam_status, spam_reason)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
      RETURNING id`,
-    [data.name, data.email, data.phone || null, data.inquiryType, data.message]
+    [
+      data.name,
+      data.email,
+      data.phone || null,
+      data.inquiryType,
+      data.message,
+      data.ipAddress || null,
+      data.spamStatus,
+      data.spamReason || null,
+    ]
   );
   return result.rows[0]?.id as string | undefined;
 }
@@ -258,13 +275,39 @@ export async function getSponsorshipInquiryById(id: string) {
   return result.rows[0] ?? null;
 }
 
+// Quarantined submissions never show up in the normal inbox view — they're
+// reviewed separately at /admin/contact/quarantine. A "reviewed_legitimate"
+// submission (an owner un-quarantined it) belongs back in the regular list.
 export async function listContactSubmissions() {
   const db = getDb();
   if (!db) return [];
   const result = await db.query<ContactSubmissionRecord>(
-    `SELECT * FROM contact_submissions ORDER BY created_at DESC`
+    `SELECT * FROM contact_submissions WHERE spam_status != 'quarantined' ORDER BY created_at DESC`
   );
   return result.rows;
+}
+
+export async function listQuarantinedContactSubmissions() {
+  const db = getDb();
+  if (!db) return [];
+  const result = await db.query<ContactSubmissionRecord>(
+    `SELECT * FROM contact_submissions WHERE spam_status = 'quarantined' ORDER BY created_at DESC`
+  );
+  return result.rows;
+}
+
+/** An owner reviewing a quarantined submission and confirming it's a real
+ * inquiry — moves it back into the normal Contact Submissions list. This
+ * never re-sends the admin/confirmation emails that were suppressed at
+ * submission time, since the owner is looking at it directly right now. */
+export async function markContactSubmissionLegitimate(id: string) {
+  const db = getDb();
+  if (!db) return false;
+  await db.query(
+    `UPDATE contact_submissions SET spam_status = 'reviewed_legitimate' WHERE id = $1 AND spam_status = 'quarantined'`,
+    [id]
+  );
+  return true;
 }
 
 const TABLES_BY_TYPE = {
@@ -299,7 +342,7 @@ export async function getSubmissionCounts() {
     db.query(`SELECT status, count(*) FROM athlete_applications GROUP BY status`),
     db.query(`SELECT status, count(*) FROM volunteer_applications GROUP BY status`),
     db.query(`SELECT status, count(*) FROM corporate_sponsorship_inquiries GROUP BY status`),
-    db.query(`SELECT status, count(*) FROM contact_submissions GROUP BY status`),
+    db.query(`SELECT status, count(*) FROM contact_submissions WHERE spam_status != 'quarantined' GROUP BY status`),
   ]);
 
   const tally = (rows: { status: string; count: string }[]) => {
