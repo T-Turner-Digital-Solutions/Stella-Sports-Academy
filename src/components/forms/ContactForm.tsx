@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Field, TextInput, TextArea, Select, HoneypotField } from "@/components/forms/fields";
+import { Captcha, type CaptchaHandle } from "@/components/forms/Captcha";
 import { FormStatus } from "@/components/forms/FormStatus";
 import { Button } from "@/components/ui/Button";
 import { postForm, type SubmitState } from "@/lib/forms-client";
@@ -23,6 +24,8 @@ export function ContactForm({ initialReason }: { initialReason?: string }) {
       : "",
   });
   const [website, setWebsite] = useState("");
+  const [captchaToken, setCaptchaToken] = useState("");
+  const captchaRef = useRef<CaptchaHandle>(null);
   const [state, setState] = useState<SubmitState>({ status: "idle" });
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
@@ -32,10 +35,24 @@ export function ContactForm({ initialReason }: { initialReason?: string }) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    if (!captchaToken) {
+      setState({ status: "error", message: "Please complete the captcha before sending." });
+      return;
+    }
+
     setState({ status: "submitting" });
     setFieldErrors({});
 
-    const result = await postForm("/api/forms/contact", { ...form, website });
+    const result = await postForm("/api/forms/contact", { ...form, website, captchaToken });
+
+    // An hCaptcha token is single-use and short-lived — whether the
+    // submission succeeded or failed, it can't be reused, so always clear
+    // and re-arm the widget. Everything the visitor typed stays as-is on
+    // failure (form fields are untouched here) so they never have to
+    // retype anything just to retry.
+    setCaptchaToken("");
+    captchaRef.current?.reset();
 
     if (result.ok) {
       setState({ status: "success", message: result.message });
@@ -82,6 +99,8 @@ export function ContactForm({ initialReason }: { initialReason?: string }) {
       <Field label="Message" htmlFor="ct-message" required error={fieldErrors.message}>
         <TextArea id="ct-message" required value={form.message} onChange={(e) => update("message", e.target.value)} />
       </Field>
+
+      <Captcha ref={captchaRef} onVerify={setCaptchaToken} />
 
       <Button type="submit" size="lg" disabled={state.status === "submitting"} className="self-start">
         {state.status === "submitting" ? "Sending…" : "Send Message"}

@@ -29,6 +29,7 @@ export const contactSchema = z.object({
   inquiryType: z.enum(contactReasons, { error: "Select an inquiry type" }),
   message: z.string().trim().min(10, "Please share a few more details").max(4000),
   website: z.string().max(0).optional(), // honeypot
+  captchaToken: z.string().min(1, "Please complete the captcha"),
 });
 export type ContactInput = z.infer<typeof contactSchema>;
 
