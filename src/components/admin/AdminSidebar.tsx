@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowLeft, UserRound, HeartHandshake, Building2, MessageSquare, Gift, Users, KeyRound, FileText, BarChart3, LayoutGrid } from "lucide-react";
+import { ArrowLeft, UserRound, HeartHandshake, Building2, MessageSquare, Gift, Users, KeyRound, FileText, BarChart3, LayoutGrid, ShieldAlert } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LogoutButton } from "@/components/admin/LogoutButton";
 
@@ -16,7 +16,8 @@ const navItems = [
   { href: "/admin/applications", label: "Athlete Applications", icon: UserRound },
   { href: "/admin/volunteers", label: "Volunteers", icon: HeartHandshake },
   { href: "/admin/sponsorships", label: "Sponsorships", icon: Building2 },
-  { href: "/admin/contact", label: "Contact Submissions", icon: MessageSquare },
+  { href: "/admin/contact", label: "Contact Submissions", icon: MessageSquare, exact: true },
+  { href: "/admin/contact/quarantine", label: "Quarantined Spam", icon: ShieldAlert },
   { href: "/admin/documents", label: "Corporate Records (Manage)", icon: FileText },
   { href: "/admin/financial-goals", label: "Financial Goals", icon: BarChart3 },
   { href: "/admin/team", label: "Board Members", icon: Users },
